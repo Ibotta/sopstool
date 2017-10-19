@@ -36,7 +36,7 @@ func NormalizeToSopsFile(fn string) string {
 // ListIndexOf gets index of element in list, or -1
 func ListIndexOf(files []string, fn string) int {
 	found := -1
-	fn = NormalizeToPlaintextFile(fn)
+	fn = NormalizeToPlaintextFile(fn) //TODO is this always redundant?
 	for i, f := range files {
 		if f == fn {
 			found = i

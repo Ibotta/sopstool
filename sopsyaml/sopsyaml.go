@@ -12,8 +12,9 @@ import (
 // This is all the stuff needed to import the sops.yaml config file
 
 const (
-	maxDepth       = 100
-	configFileName = ".sops.yaml"
+	maxDepth          = 100
+	configFileName    = ".sops.yaml"
+	encryptedFilesKey = "encrypted_files"
 )
 
 type fileSystem interface {
@@ -24,6 +25,7 @@ type osFS struct {
 	stat func(string) (os.FileInfo, error)
 }
 
+// SopsConfig holds info about an instance of the config file
 type SopsConfig struct {
 	Path           string
 	Tree           *yaml.MapSlice
@@ -37,6 +39,7 @@ func (fs osFS) Stat(name string) (os.FileInfo, error) {
 var fs fileSystem = osFS{stat: os.Stat}
 
 // FindConfigFile looks for a sops config file in the current working directory and on parent directories, up to the limit defined by the maxDepth constant.
+// TODO only recurse to top of `git root`
 func FindConfigFile(start string) (string, error) {
 	filepath := path.Dir(start)
 	for i := 0; i < maxDepth; i++ {
@@ -47,6 +50,7 @@ func FindConfigFile(start string) (string, error) {
 			return path.Join(filepath, configFileName), nil
 		}
 	}
+	//TODO gracefully create a file at `git root`
 	return "", fmt.Errorf("Config file not found")
 }
 
@@ -80,15 +84,20 @@ func WriteConfigFile(confPath string, yamlMap *yaml.MapSlice) error {
 func ExtractConfigEncryptFiles(data *yaml.MapSlice) ([]string, error) {
 	encFiles := []string{}
 	for _, item := range *data {
-		if item.Key == "encrypted_files" {
+		if item.Key == encryptedFilesKey {
 			//assert that this is a slice
 			listSlice, ok := item.Value.([]interface{})
 			if !ok {
-				return nil, fmt.Errorf("encrypted_files is not a slice")
+				return nil, fmt.Errorf("encrypted_files is not an array")
 			}
 			for _, v := range listSlice {
-				encFiles = append(encFiles, v.(string))
+				value, ok := v.(string)
+				if !ok {
+					return nil, fmt.Errorf("encrypted_files must be an array of strings")
+				}
+				encFiles = append(encFiles, value)
 			}
+			break
 		}
 	}
 	return encFiles, nil
@@ -116,11 +125,17 @@ func GetConfigEncryptFiles(basePath string) ([]string, error) {
 func ReplaceConfigEncryptFiles(data *yaml.MapSlice, encFiles []string) (*yaml.MapSlice, error) {
 	//remake the root data
 	out := make(yaml.MapSlice, 0)
+	found := false
 	for _, item := range *data {
-		if item.Key == "encrypted_files" {
+		if item.Key == encryptedFilesKey {
+			found = true
 			item.Value = encFiles
 		}
 		out = append(out, item)
+	}
+	if !found {
+		//didnt find an existing encrypted_files element, add it
+		out = append(out, yaml.MapItem{Key: encryptedFilesKey, Value: encFiles})
 	}
 	return &out, nil
 }
