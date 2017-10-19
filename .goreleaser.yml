@@ -1,0 +1,86 @@
+# Build customization
+builds:
+  - binary: sopstool
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - 386
+
+archive:
+  name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+  replacements:
+    amd64: x86_64
+    386: i386
+
+# fpm:
+#   name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+
+#   # Replacements for GOOS and GOARCH in the package name.
+#   # Keys should be valid GOOSs or GOARCHs.
+#   # Values are the respective replacements.
+#   # Default is empty.
+#   replacements:
+#     amd64: x86_64
+#     386: i386
+
+#   # Your app's vendor.
+#   # Default is empty.
+#   vendor: Ibotta
+
+#   # Your app's homepage.
+#   # Default is empty.
+#   homepage: https://github.com/Ibotta/sopstool
+
+#   # Formats to be generated.
+#   formats:
+#     - deb
+#     - rpm
+
+#   # Packages your package depends on.
+#   dependencies:
+#     - sops
+
+brew:
+  # # Reporitory to push the tap to.
+  github:
+    owner: user
+    name: homebrew-tap
+
+  # Git author used to commit to the repository.
+  # Defaults are shown.
+  # commit_author:
+  #   name: goreleaserbot
+  #   email: goreleaser@carlosbecker.com
+
+  # Folder inside the repository to put the formula.
+  # Default is the root folder.
+  # folder: Formula
+
+  # Caveats for the user of your binary.
+  # Default is empty.
+  # caveats: "How to use this binary"
+
+  # Your app's homepage.
+  # Default is empty.
+  homepage: "https://github.com/Ibotta/sopstool"
+
+  # Your app's description.
+  # Default is empty.
+  # description: "Software to create fast and easy drum rolls."
+
+  # Setting this will prevent goreleaser to actually try to commit the updated
+  # formula - instead, the formula file will be stored on the dist folder only,
+  # leaving the responsibility of publishing it to the user.
+  # Default is false.
+  skip_upload: true
+
+  # Packages your package depends on.
+  dependencies:
+    - sops
+
+  # So you can `brew test` your formula.
+  # Default is empty.
+  test: |
+    system "#{bin}/sopstool version"

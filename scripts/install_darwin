@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+if which sops 2>/dev/null >/dev/null; then
+  echo "SOPS already installed"
+else
+  brew install sops
+fi
+
+#TODO rewrite this for github binary deploy

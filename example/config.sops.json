@@ -1,0 +1,23 @@
+{
+	"anKey": "ENC[AES256_GCM,data:sQ/OJ0ZRvQ==,iv:iDEm7ETwK/BELJed+VTwiGygSh9I3Cv17VPcgLHJypI=,tag:rxXJiVOl1iDTcYImAVByJQ==,type:str]",
+	"another": [
+		{
+			"key": "ENC[AES256_GCM,data:Vdu+AfPtfgZO8A==,iv:Y1yF5XO10D9kG5QTdeq1aYODYfcut9iyPo3YZOXBnBA=,tag:bMj+0hkCpvWLGazuV88KKQ==,type:str]"
+		}
+	],
+	"sops": {
+		"kms": [
+			{
+				"arn": "arn:aws:kms:regon:account:key/key-id",
+				"created_at": "2017-10-17T17:49:10Z",
+				"enc": "AQECAHjyZFUi6ejyL3Q7XkoZ8ogRNW+kQgEcGB4RxEba+1kRTAAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDAwbbADoLnGlEza+1wIBEIA73aEB8PXLmdmrAcC1saEc2wtlmCN2oXWEQu58727qkgXexba4PHg46qPBuiBGTxNo7x1ovTQrcR7S5p4="
+			}
+		],
+		"gcp_kms": null,
+		"lastmodified": "2017-10-30T22:10:44Z",
+		"mac": "ENC[AES256_GCM,data:eaG2pUCNq72c8u6tK213Zvo2nxjU1nju5V+i5qKH+IKLeBHa3yzNJeySY0NEhMxaTfc4ZR8vuQuhght/gS7vYjXl51VW+Lu53RalwDhfzMKFlEC60xcAYD3JVgEexyWkX+SbeJuhkoCK6J/frLnjxglfLZlqbA08tsAU/fIpsrs=,iv:Cy0t6Fvni6uXAUPWw3wqEea4O5EblE8KuTSGUyblspI=,tag:t4ttddH3Lt17t//PCSTe+g==,type:str]",
+		"pgp": null,
+		"unencrypted_suffix": "_unencrypted",
+		"version": "3.0.0"
+	}
+}
