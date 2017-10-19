@@ -1,8 +1,10 @@
-package fileutil
+package fileutil_test
 
 import (
 	"reflect"
 	"testing"
+
+	"github.com/Ibotta/go-commons/sopstool/fileutil"
 )
 
 func TestNormalizeToPlaintextFile(t *testing.T) {
@@ -23,7 +25,7 @@ func TestNormalizeToPlaintextFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NormalizeToPlaintextFile(tt.args.fn); got != tt.want {
+			if got := fileutil.NormalizeToPlaintextFile(tt.args.fn); got != tt.want {
 				t.Errorf("NormalizeToPlaintextFile() = %v, want %v", got, tt.want)
 			}
 		})
@@ -52,7 +54,7 @@ func TestNormalizeToSopsFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := NormalizeToSopsFile(tt.args.fn); got != tt.want {
+			if got := fileutil.NormalizeToSopsFile(tt.args.fn); got != tt.want {
 				t.Errorf("NormalizeToSopsFile() = %v, want %v", got, tt.want)
 			}
 		})
@@ -106,7 +108,7 @@ func TestListIndexOf(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := ListIndexOf(tt.args.files, tt.args.fn); got != tt.want {
+			if got := fileutil.ListIndexOf(tt.args.files, tt.args.fn); got != tt.want {
 				t.Errorf("ListIndexOf() = %v, want %v", got, tt.want)
 			}
 		})
@@ -173,7 +175,7 @@ func TestSomeOrAllFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := SomeOrAllFiles(tt.args.args, tt.args.encFiles)
+			got, err := fileutil.SomeOrAllFiles(tt.args.args, tt.args.encFiles)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SomeOrAllFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return

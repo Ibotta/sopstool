@@ -1,9 +1,10 @@
-package sopsyaml
+package sopsyaml_test
 
 import (
 	"reflect"
 	"testing"
 
+	"github.com/Ibotta/go-commons/sopstool/sopsyaml"
 	"github.com/mozilla-services/yaml"
 )
 
@@ -25,7 +26,7 @@ func TestFindConfigFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := FindConfigFile(tt.args.start)
+			got, err := sopsyaml.FindConfigFile(tt.args.start)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FindConfigFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -56,7 +57,7 @@ func TestLoadConfigFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := LoadConfigFile(tt.args.confPath)
+			got, err := sopsyaml.LoadConfigFile(tt.args.confPath)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("LoadConfigFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -87,7 +88,7 @@ func TestWriteConfigFile(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := WriteConfigFile(tt.args.confPath, tt.args.yamlMap); (err != nil) != tt.wantErr {
+			if err := sopsyaml.WriteConfigFile(tt.args.confPath, tt.args.yamlMap); (err != nil) != tt.wantErr {
 				t.Errorf("WriteConfigFile() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -115,7 +116,7 @@ func TestExtractConfigEncryptFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ExtractConfigEncryptFiles(tt.args.data)
+			got, err := sopsyaml.ExtractConfigEncryptFiles(tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ExtractConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -145,7 +146,7 @@ func TestGetConfigEncryptFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetConfigEncryptFiles(tt.args.basePath)
+			got, err := sopsyaml.GetConfigEncryptFiles(tt.args.basePath)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -178,7 +179,7 @@ func TestReplaceConfigEncryptFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ReplaceConfigEncryptFiles(tt.args.data, tt.args.encFiles)
+			got, err := sopsyaml.ReplaceConfigEncryptFiles(tt.args.data, tt.args.encFiles)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ReplaceConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -209,7 +210,7 @@ func TestWriteEncryptFilesToDisk(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := WriteEncryptFilesToDisk(tt.args.confPath, tt.args.data, tt.args.encFiles); (err != nil) != tt.wantErr {
+			if err := sopsyaml.WriteEncryptFilesToDisk(tt.args.confPath, tt.args.data, tt.args.encFiles); (err != nil) != tt.wantErr {
 				t.Errorf("WriteEncryptFilesToDisk() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
