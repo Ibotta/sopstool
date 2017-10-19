@@ -13,11 +13,12 @@ import (
 
 // removeCmd represents the remove command
 var removeCmd = &cobra.Command{
-	Use:   "remove [files ...]",
-	Short: "remove file from the encryption list",
-	Args:  cobra.MinimumNArgs(1),
-	Long:  `Remove files to the list of files managed by sopstool`,
-	RunE:  RemoveCommand,
+	Aliases: []string{"rm"},
+	Use:     "remove [files ...]",
+	Short:   "remove file from the encryption list",
+	Args:    cobra.MinimumNArgs(1),
+	Long:    `Remove files to the list of files managed by sopstool`,
+	RunE:    RemoveCommand,
 }
 
 var deleteFiles bool

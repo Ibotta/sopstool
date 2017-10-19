@@ -9,11 +9,12 @@ import (
 
 // entrypointCmd represents the entrypoint command
 var entrypointCmd = &cobra.Command{
-	Use:   "entrypoint",
-	Short: "execute a command with decrypted files",
-	Long:  `Decrypt files before run, run, cleanup`,
-	Args:  cobra.MinimumNArgs(1),
-	RunE:  EntrypointCommand,
+	Aliases: []string{"e", "enter"},
+	Use:     "entrypoint",
+	Short:   "execute a command with decrypted files",
+	Long:    `Decrypt files before run, run, cleanup`,
+	Args:    cobra.MinimumNArgs(1),
+	RunE:    EntrypointCommand,
 }
 
 var execCommand bool

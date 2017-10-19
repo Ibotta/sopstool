@@ -10,11 +10,12 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "list files under management",
-	Long:  `Print a list of files under management`,
-	Args:  cobra.NoArgs,
-	Run:   ListCommand,
+	Aliases: []string{"l", "ls"},
+	Use:     "list",
+	Short:   "list files under management",
+	Long:    `Print a list of files under management`,
+	Args:    cobra.NoArgs,
+	Run:     ListCommand,
 }
 
 func init() {

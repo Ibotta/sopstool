@@ -13,11 +13,12 @@ import (
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Use:   "add [files ...]",
-	Short: "add file to the encryption list",
-	Long:  `Add files to the list of files managed by sopstool`,
-	Args:  cobra.MinimumNArgs(1),
-	RunE:  AddCommand,
+	Aliases: []string{"a"},
+	Use:     "add [files ...]",
+	Short:   "add file to the encryption list",
+	Long:    `Add files to the list of files managed by sopstool`,
+	Args:    cobra.MinimumNArgs(1),
+	RunE:    AddCommand,
 }
 
 var noEncrypt bool

@@ -10,10 +10,11 @@ import (
 
 // decryptCmd represents the decrypt command
 var decryptCmd = &cobra.Command{
-	Use:   "decrypt [files ...]",
-	Short: "decrypt files",
-	Long:  `Decrypt some or all files`,
-	RunE:  DecryptCommand,
+	Aliases: []string{"d"},
+	Use:     "decrypt [files ...]",
+	Short:   "decrypt files",
+	Long:    `Decrypt some or all files`,
+	RunE:    DecryptCommand,
 }
 
 func init() {
