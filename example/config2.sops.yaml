@@ -1,0 +1,17 @@
+oneKey:
+    moreKeys: ENC[AES256_GCM,data:ik5EkXzX,iv:CsQbZBL6Yqz+VeZs8OzFpw0YEkE+RSRTbNJMtt+O7Pg=,tag:+5thjlQPb/aryKUzWgQfxA==,type:str]
+    another:
+    - ENC[AES256_GCM,data:GRzMtqg=,iv:GnjUsS3HfZI22AGry8sCQ4bLIXo0O0F78rv16A04pHc=,tag:ByO5vQEx7A4dwlKk+GDUgQ==,type:str]
+    - ENC[AES256_GCM,data:MWqSy8ha,iv:kCWOksougmsq2SQsplm5nwRnSYya2TtPzvq/N++VEJo=,tag:dezF97zYR2XKqYfKi1u9+Q==,type:str]
+twoKey: ENC[AES256_GCM,data:p2Wy9A==,iv:I+AYrw0DvX24ASLT1sIqepZJnaeMArNeNtbkf3vUEo0=,tag:YV9/qDNYbBnCgsisF82NzQ==,type:str]
+sops:
+    kms:
+    -   arn: arn:aws:kms:regon:account:key/key-id
+        created_at: '2017-10-17T17:49:54Z'
+        enc: AQECAHjyZFUi6ejyL3Q7XkoZ8ogRNW+kQgEcGB4RxEba+1kRTAAAAH4wfAYJKoZIhvcNAQcGoG8wbQIBADBoBgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDE2wyIEK2O63MHUKZwIBEIA7XOp6C0RzCutwvgFrxYcRwy3sNBjnNVGmDsRgu1uvA1V2FF8BLWAh/r4IwCjjHQafNYY+612aLFl2/Ww=
+    gcp_kms: []
+    lastmodified: '2017-11-01T16:27:00Z'
+    mac: ENC[AES256_GCM,data:R6fhMK3T/Ig2XScjRkrvyOI+zAHj26NaxJMtflDfKTkv+LeZvhd1wtT1OhI7mlZtR8wN0y8sLcqdQPrAGuI2JoKUtgKiIJszlt6S4hZtOl+nO/e7fmX6EniRBGm/stAxBiINSjDbKQvOYpQVEpvcG+l58AwVHcYG4+8ERYj94+Y=,iv:CFnDx7gVMlUUL6wcPIyZmbR52h6h5SuGj+Xc82iVlkw=,tag:Da/KWaozB4hyIwqtxB/kyw==,type:str]
+    pgp: []
+    unencrypted_suffix: _unencrypted
+    version: 3.0.0

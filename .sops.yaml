@@ -1,0 +1,6 @@
+# TODO clean this
+creation_rules:
+- kms: arn:aws:kms:regon:account:key/key-id
+encrypted_files:
+- example/config.json
+- example/config2.yaml
