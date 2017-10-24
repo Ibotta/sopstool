@@ -95,9 +95,7 @@ func WriteConfigFile(confPath string, yamlMap *yaml.MapSlice) error {
 	if err != nil {
 		return fmt.Errorf("Error marshaling to yaml: %s", err)
 	}
-	fs.WriteFile(confPath, out, 0644)
-
-	return nil
+	return fs.WriteFile(confPath, out, 0644)
 }
 
 // ExtractConfigEncryptFiles pulls the files we want to manipulate out of the map

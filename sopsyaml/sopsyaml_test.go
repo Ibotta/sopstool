@@ -1,98 +1,310 @@
-package sopsyaml_test
+package sopsyaml
 
 import (
+	"bytes"
+	"fmt"
+	"os"
 	"reflect"
+	"regexp"
+	"strings"
 	"testing"
 
-	"github.com/Ibotta/go-commons/sopstool/sopsyaml"
 	"github.com/mozilla-services/yaml"
 )
 
+// finds
+// not found
+// finds a couple levels deep
+// hits git and stops
 func TestFindConfigFile(t *testing.T) {
-	type args struct {
-		start string
-	}
+	origFs := fs
+	t.Run("Finds File Immediate", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte{}, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		got, err := FindConfigFile(".")
+		if err != nil {
+			t.Errorf("FindConfigFile() got err %v", err)
+		}
+		if got != ".sops.yaml" {
+			t.Errorf("FindConfigFile() = %v, want \".sops.yaml\"", got)
+		}
 
-	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
-	}{
-	// TODO: Add test cases.
-	}
+		fs = origFs
+		return
+	})
+	t.Run("not found", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, fmt.Errorf("NF")
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte{}, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		_, err := FindConfigFile(".")
+		if err == nil {
+			t.Errorf("FindConfigFile() expected err")
+		}
 
-	//todo how to mock or setup the fs properly.
+		fs = origFs
+		return
+	})
+	t.Run("levels deep", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				if name == "../../.sops.yaml" {
+					return nil, nil
+				}
+				return nil, fmt.Errorf("NF")
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte{}, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		got, err := FindConfigFile(".")
+		if err != nil {
+			t.Errorf("FindConfigFile() got err %v", err)
+		}
+		if got != "../../.sops.yaml" {
+			t.Errorf("FindConfigFile() = %v, want \"../../.sops.yaml\"", got)
+		}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := sopsyaml.FindConfigFile(tt.args.start)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("FindConfigFile() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("FindConfigFile() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		fs = origFs
+		return
+	})
+	t.Run("different start", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				if name == "directory/.sops.yaml" {
+					return nil, nil
+				}
+				return nil, fmt.Errorf("NF")
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte{}, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		got, err := FindConfigFile("directory/here/goes/further/")
+		if err != nil {
+			t.Errorf("FindConfigFile() got err %v", err)
+		}
+		if got != "directory/.sops.yaml" {
+			t.Errorf("FindConfigFile() = %v, want \"directory/.sops.yaml\"", got)
+		}
+
+		fs = origFs
+		return
+	})
+	t.Run("stops at git repo", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				match, err := regexp.MatchString(".git$", name)
+				if err != nil {
+					return nil, err
+				}
+				if match {
+					return nil, nil
+				}
+				return nil, fmt.Errorf("NF")
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte{}, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		_, err := FindConfigFile(".")
+		if err == nil {
+			t.Errorf("FindConfigFile() expected err")
+		}
+
+		fs = origFs
+		return
+	})
+
 }
 
 func TestLoadConfigFile(t *testing.T) {
-	type args struct {
-		confPath string
-	}
+	origFs := fs
+	t.Run("file error", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return nil, fmt.Errorf("some error")
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
 
-	tests := []struct {
-		name    string
-		args    args
-		want    *yaml.MapSlice
-		wantErr bool
-	}{
-	// TODO:
-	//no file
-	//bad yaml
-	//good file
-	}
+		_, err := LoadConfigFile("filepath")
+		if err == nil {
+			t.Errorf("LoadConfigFile() expected err")
+		}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := sopsyaml.LoadConfigFile(tt.args.confPath)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("LoadConfigFile() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("LoadConfigFile() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		fs = origFs
+		return
+	})
+	t.Run("yaml error", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				if name != "filepath" {
+					return nil, fmt.Errorf("got %v not filepath", name)
+				}
+				yml := bytes.NewBufferString(`
+          ~~~not yaml
+          at all
+        `).Bytes()
+
+				return yml, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+
+		_, err := LoadConfigFile("filepath")
+		if err == nil {
+			t.Fatalf("LoadConfigFile() expected yaml err")
+		}
+		if !strings.Contains(err.Error(), "unmarshal") {
+			t.Fatalf("expected an unmarshal error")
+		}
+
+		fs = origFs
+		return
+	})
+	t.Run("successful parse", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(filepath string) ([]byte, error) {
+				yml := bytes.NewBufferString(`
+          yaml:
+            - in
+            - a string
+        `).Bytes()
+
+				return yml, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+
+		yml, err := LoadConfigFile("filepath")
+		if err != nil {
+			t.Errorf("LoadConfigFile() got err: %v", err)
+		}
+
+		stringRep := fmt.Sprintf("%v", yml)
+		if stringRep != "&[{yaml [in a string]}]" {
+			t.Errorf("LoadConfigFile() = %v, want \"&[{yaml [in a string]}]\"", stringRep)
+		}
+
+		fs = origFs
+		return
+	})
 }
 
 func TestWriteConfigFile(t *testing.T) {
-	type args struct {
-		confPath string
-		yamlMap  *yaml.MapSlice
-	}
+	origFs := fs
+	t.Run("cant unmarshal", func(t *testing.T) {
+		//TODO what are valid errors here
+		t.Skipf("Unsure what would error in yaml yet")
 
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-	// TODO:
-	//cant unmarshal
-	//cant write
-	//writes
-	}
+		fs = origFs
+		return
+	})
+	t.Run("cant write", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return nil, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				if name != "filepath" {
+					return fmt.Errorf("Expected filepath got %v", name)
+				}
+				return fmt.Errorf("Error")
+			},
+		}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := sopsyaml.WriteConfigFile(tt.args.confPath, tt.args.yamlMap); (err != nil) != tt.wantErr {
-				t.Errorf("WriteConfigFile() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+		yml := make(yaml.MapSlice, 0)
+		err := WriteConfigFile("filepath", &yml)
+
+		if err == nil {
+			t.Fatalf("WriteConfigFile() expected an error")
+		}
+		if err.Error() != "Error" {
+			t.Fatalf("WriteConfigFile() unexpected error %v", err)
+		}
+
+		fs = origFs
+		return
+	})
+	t.Run("write", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return nil, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				if name != "filepath" {
+					return fmt.Errorf("Expected filepath got %v", name)
+				}
+				if len(data) <= 0 {
+					return fmt.Errorf("Got no data")
+					//TODO more here?
+				}
+				if perms != 0644 {
+					return fmt.Errorf("Expected 0644 got %v", perms)
+				}
+				return nil
+			},
+		}
+
+		yml := yaml.MapSlice{
+			yaml.MapItem{Key: "yaml", Value: "one"},
+		}
+
+		err := WriteConfigFile("filepath", &yml)
+		if err != nil {
+			t.Errorf("WriteConfigFile() unexpected error %v", err)
+		}
+
+		fs = origFs
+		return
+	})
 }
 
 func TestExtractConfigEncryptFiles(t *testing.T) {
@@ -106,17 +318,55 @@ func TestExtractConfigEncryptFiles(t *testing.T) {
 		want    []string
 		wantErr bool
 	}{
-	// TODO:
-	//not an array
-	//not a string
-	//doesnt exist
-	//empty
-	//stuff
+		{
+			name: "encrypted_files not array",
+			args: args{data: &yaml.MapSlice{
+				yaml.MapItem{Key: "foo", Value: "bar"},
+				yaml.MapItem{Key: "encrypted_files", Value: "nope"},
+			}},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "encrypted_files not array of strings",
+			args: args{data: &yaml.MapSlice{
+				yaml.MapItem{Key: "foo", Value: "bar"},
+				yaml.MapItem{Key: "encrypted_files", Value: []int{1, 2, 3}},
+			}},
+			want:    nil,
+			wantErr: true,
+		},
+		{
+			name: "encrypted_files element doesnt exist",
+			args: args{data: &yaml.MapSlice{
+				yaml.MapItem{Key: "foo", Value: "bar"},
+			}},
+			want:    []string{},
+			wantErr: false,
+		},
+		{
+			name: "encrypted_files is empty array",
+			args: args{data: &yaml.MapSlice{
+				yaml.MapItem{Key: "foo", Value: "bar"},
+				yaml.MapItem{Key: "encrypted_files", Value: []string{}},
+			}},
+			want:    []string{},
+			wantErr: false,
+		},
+		{
+			name: "encrypted_files is array with values",
+			args: args{data: &yaml.MapSlice{
+				yaml.MapItem{Key: "foo", Value: "bar"},
+				yaml.MapItem{Key: "encrypted_files", Value: []string{"first", "second"}},
+			}},
+			want:    []string{"first", "second"},
+			wantErr: false,
+		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := sopsyaml.ExtractConfigEncryptFiles(tt.args.data)
+			got, err := ExtractConfigEncryptFiles(tt.args.data)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ExtractConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -146,7 +396,7 @@ func TestGetConfigEncryptFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := sopsyaml.GetConfigEncryptFiles(tt.args.basePath)
+			got, err := GetConfigEncryptFiles(tt.args.basePath)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("GetConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -179,7 +429,7 @@ func TestReplaceConfigEncryptFiles(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := sopsyaml.ReplaceConfigEncryptFiles(tt.args.data, tt.args.encFiles)
+			got, err := ReplaceConfigEncryptFiles(tt.args.data, tt.args.encFiles)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ReplaceConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -210,7 +460,7 @@ func TestWriteEncryptFilesToDisk(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := sopsyaml.WriteEncryptFilesToDisk(tt.args.confPath, tt.args.data, tt.args.encFiles); (err != nil) != tt.wantErr {
+			if err := WriteEncryptFilesToDisk(tt.args.confPath, tt.args.data, tt.args.encFiles); (err != nil) != tt.wantErr {
 				t.Errorf("WriteEncryptFilesToDisk() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
