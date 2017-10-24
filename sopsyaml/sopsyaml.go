@@ -14,16 +14,9 @@ import (
 const (
 	maxDepth          = 100
 	configFileName    = ".sops.yaml"
+	stopFileName      = ".git"
 	encryptedFilesKey = "encrypted_files"
 )
-
-type fileSystem interface {
-	Stat(name string) (os.FileInfo, error)
-}
-
-type osFS struct {
-	stat func(string) (os.FileInfo, error)
-}
 
 // SopsConfig holds info about an instance of the config file
 type SopsConfig struct {
@@ -32,19 +25,46 @@ type SopsConfig struct {
 	EncryptedFiles []string
 }
 
+// wrap OS filesystem commands for mocking
+type fileSystem interface {
+	Stat(name string) (os.FileInfo, error)
+	ReadFile(filename string) ([]byte, error)
+	WriteFile(filename string, data []byte, perm os.FileMode) error
+}
+type osFS struct {
+	stat      func(string) (os.FileInfo, error)
+	readfile  func(string) ([]byte, error)
+	writefile func(string, []byte, os.FileMode) error
+}
+
 func (fs osFS) Stat(name string) (os.FileInfo, error) {
 	return fs.stat(name)
 }
+func (fs osFS) ReadFile(filename string) ([]byte, error) {
+	return fs.readfile(filename)
+}
+func (fs osFS) WriteFile(filename string, data []byte, perm os.FileMode) error {
+	return fs.writefile(filename, data, perm)
+}
 
-var fs fileSystem = osFS{stat: os.Stat}
+var fs fileSystem = osFS{
+	stat:      os.Stat,
+	readfile:  ioutil.ReadFile,
+	writefile: ioutil.WriteFile,
+}
 
 // FindConfigFile looks for a sops config file in the current working directory and on parent directories, up to the limit defined by the maxDepth constant.
-// TODO only recurse to top of `git root`
 func FindConfigFile(start string) (string, error) {
-	filepath := path.Dir(start)
+	filepath := start
 	for i := 0; i < maxDepth; i++ {
 		_, err := fs.Stat(path.Join(filepath, configFileName))
 		if err != nil {
+			_, giterr := fs.Stat(path.Join(filepath, ".git"))
+			if giterr == nil {
+				//found top of git, stop here
+				break
+			}
+			//next iteration will be one higher
 			filepath = path.Join(filepath, "..")
 		} else {
 			return path.Join(filepath, configFileName), nil
@@ -56,7 +76,7 @@ func FindConfigFile(start string) (string, error) {
 
 // LoadConfigFile loads a yaml file path into a yaml map
 func LoadConfigFile(confPath string) (*yaml.MapSlice, error) {
-	confBytes, err := ioutil.ReadFile(confPath)
+	confBytes, err := fs.ReadFile(confPath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read config file: %s", err)
 	}
@@ -75,7 +95,7 @@ func WriteConfigFile(confPath string, yamlMap *yaml.MapSlice) error {
 	if err != nil {
 		return fmt.Errorf("Error marshaling to yaml: %s", err)
 	}
-	ioutil.WriteFile(confPath, out, 0644)
+	fs.WriteFile(confPath, out, 0644)
 
 	return nil
 }

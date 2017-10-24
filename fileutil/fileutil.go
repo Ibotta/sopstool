@@ -3,6 +3,7 @@ package fileutil
 import (
 	"fmt"
 	"path"
+	"regexp"
 	"strings"
 )
 
@@ -10,11 +11,13 @@ const (
 	sopsCryptedFileSegment = ".sops"
 )
 
+var sopsFileRegex = regexp.MustCompile(`(.*)\.sops(\.\w+)?$`)
+
 // NormalizeToPlaintextFile normalizes a filename string to not include the 'sops' tag to represent the plaintext version
 func NormalizeToPlaintextFile(fn string) string {
 	//todo this should normalize it to be relative to the configfile path
-	if strings.Contains(fn, sopsCryptedFileSegment) {
-		fn = strings.Replace(fn, sopsCryptedFileSegment, "", 1)
+	if sopsFileRegex.MatchString(fn) {
+		fn = sopsFileRegex.ReplaceAllString(fn, "$1$2")
 	}
 
 	return fn
@@ -23,7 +26,7 @@ func NormalizeToPlaintextFile(fn string) string {
 // NormalizeToSopsFile normalizes a filename string to include the 'sops' tag to represent the crypted version
 func NormalizeToSopsFile(fn string) string {
 	//todo this should normalize it to be relative to the configfile path
-	if strings.Contains(fn, sopsCryptedFileSegment) {
+	if sopsFileRegex.MatchString(fn) {
 		return fn
 	}
 

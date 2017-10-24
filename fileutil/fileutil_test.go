@@ -19,8 +19,8 @@ func TestNormalizeToPlaintextFile(t *testing.T) {
 	}{
 		{name: "With the segment", args: args{fn: "filename.sops.yaml"}, want: "filename.yaml"},
 		{name: "Without the segment", args: args{fn: "filename.yaml"}, want: "filename.yaml"},
-		//twice? we should actually be removing the last one instead
 		{name: "With the segment twice", args: args{fn: "filename.sops.something.sops.yaml"}, want: "filename.sops.something.yaml"},
+		{name: "With the segment last", args: args{fn: "something.bin.sops"}, want: "something.bin"},
 	}
 
 	for _, tt := range tests {
@@ -44,11 +44,8 @@ func TestNormalizeToSopsFile(t *testing.T) {
 	}{
 		{name: "With the segment", args: args{fn: "filename.sops.yaml"}, want: "filename.sops.yaml"},
 		{name: "Without the segment", args: args{fn: "filename.yaml"}, want: "filename.sops.yaml"},
-		//twice?
 		{name: "With the segment twice", args: args{fn: "filename.sops.something.sops.yaml"}, want: "filename.sops.something.sops.yaml"},
-		//this one should be different
 		{name: "With the segment in the wrong place", args: args{fn: "filename.sops.something.yaml"}, want: "filename.sops.something.sops.yaml"},
-		//todo this one i'm not sure what to do with - maybe it should error
 		{name: "Ends with segment", args: args{fn: "filename.yaml.sops"}, want: "filename.yaml.sops"},
 	}
 

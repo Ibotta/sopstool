@@ -8,6 +8,46 @@ import (
 	"github.com/Ibotta/go-commons/sopstool/fileutil"
 )
 
+// wrap OS filesystem commands for mocking
+type systemExec interface {
+	Command(name string, arg ...string) *exec.Cmd
+	Exec(argv0 string, argv []string, envv []string) (err error)
+	Create(name string) (*os.File, error)
+	LookPath(name string) (string, error)
+	Environ() []string
+}
+type osExec struct {
+	command  func(name string, arg ...string) *exec.Cmd
+	exec     func(argv0 string, argv []string, envv []string) (err error)
+	create   func(name string) (*os.File, error)
+	lookPath func(name string) (string, error)
+	environ  func() []string
+}
+
+func (e osExec) Command(name string, arg ...string) *exec.Cmd {
+	return e.command(name, arg...)
+}
+func (e osExec) Exec(argv0 string, argv []string, envv []string) (err error) {
+	return e.exec(argv0, argv, envv)
+}
+func (e osExec) Create(name string) (*os.File, error) {
+	return e.create(name)
+}
+func (e osExec) LookPath(name string) (string, error) {
+	return e.lookPath(name)
+}
+func (e osExec) Environ() []string {
+	return e.environ()
+}
+
+var e systemExec = osExec{
+	command:  exec.Command,
+	exec:     syscall.Exec,
+	create:   os.Create,
+	lookPath: exec.LookPath,
+	environ:  os.Environ,
+}
+
 // EncryptFile encrypts a file rewriting the sops encrypted file
 func EncryptFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
@@ -54,7 +94,7 @@ func EditFile(fn string) error {
 
 // RunCommandDirect runs a command, redirecting 0/1/2 to the caller
 func RunCommandDirect(command []string) error {
-	cmd := exec.Command(command[0], command[1:]...)
+	cmd := e.Command(command[0], command[1:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 	cmd.Stdout = os.Stdout
@@ -70,12 +110,12 @@ func RunCommandDirect(command []string) error {
 
 // RunCommandStdoutToFile runs a command, redirecting Stdout to a file, the rest to caller
 func RunCommandStdoutToFile(outfileName string, command []string) error {
-	cmd := exec.Command(command[0], command[1:]...)
+	cmd := e.Command(command[0], command[1:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
 
 	// open the out file for writing
-	outfile, err := os.Create(outfileName)
+	outfile, err := e.Create(outfileName)
 	if err != nil {
 		return err
 	}
@@ -93,10 +133,10 @@ func RunCommandStdoutToFile(outfileName string, command []string) error {
 
 // RunSyscallExec runs exec which fully takes over the process
 func RunSyscallExec(args []string) error {
-	path, err := exec.LookPath(args[0])
+	path, err := e.LookPath(args[0])
 	if err != nil {
 		return err
 	}
 
-	return syscall.Exec(path, args, os.Environ())
+	return e.Exec(path, args, e.Environ())
 }
