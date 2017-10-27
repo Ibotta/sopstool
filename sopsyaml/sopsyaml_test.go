@@ -1,7 +1,6 @@
 package sopsyaml
 
 import (
-	"bytes"
 	"fmt"
 	"os"
 	"reflect"
@@ -175,10 +174,10 @@ func TestLoadConfigFile(t *testing.T) {
 				if name != "filepath" {
 					return nil, fmt.Errorf("got %v not filepath", name)
 				}
-				yml := bytes.NewBufferString(`
+				yml := []byte(`
           ~~~not yaml
           at all
-        `).Bytes()
+        `)
 
 				return yml, nil
 			},
@@ -204,11 +203,11 @@ func TestLoadConfigFile(t *testing.T) {
 				return nil, nil
 			},
 			readfile: func(filepath string) ([]byte, error) {
-				yml := bytes.NewBufferString(`
+				yml := []byte(`
           yaml:
             - in
             - a string
-        `).Bytes()
+        `)
 
 				return yml, nil
 			},
@@ -307,6 +306,15 @@ func TestWriteConfigFile(t *testing.T) {
 	})
 }
 
+func unmarshalStringHelper(str string) *yaml.MapSlice {
+	var data yaml.MapSlice
+	err := (yaml.CommentUnmarshaler{}).Unmarshal([]byte(str), &data)
+	if err != nil {
+		panic(err)
+	}
+	return &data
+}
+
 func TestExtractConfigEncryptFiles(t *testing.T) {
 	type args struct {
 		data *yaml.MapSlice
@@ -319,46 +327,32 @@ func TestExtractConfigEncryptFiles(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "encrypted_files not array",
-			args: args{data: &yaml.MapSlice{
-				yaml.MapItem{Key: "foo", Value: "bar"},
-				yaml.MapItem{Key: "encrypted_files", Value: "nope"},
-			}},
+			name:    "encrypted_files not array",
+			args:    args{data: unmarshalStringHelper("foo: bar\nencrypted_files: nope")},
 			want:    nil,
 			wantErr: true,
 		},
 		{
-			name: "encrypted_files not array of strings",
-			args: args{data: &yaml.MapSlice{
-				yaml.MapItem{Key: "foo", Value: "bar"},
-				yaml.MapItem{Key: "encrypted_files", Value: []int{1, 2, 3}},
-			}},
+			name:    "encrypted_files not array of strings",
+			args:    args{data: unmarshalStringHelper("foo: bar\nencrypted_files: [1, 2, 3]")},
 			want:    nil,
 			wantErr: true,
 		},
 		{
-			name: "encrypted_files element doesnt exist",
-			args: args{data: &yaml.MapSlice{
-				yaml.MapItem{Key: "foo", Value: "bar"},
-			}},
+			name:    "encrypted_files element doesnt exist",
+			args:    args{data: unmarshalStringHelper("foo: bar")},
 			want:    []string{},
 			wantErr: false,
 		},
 		{
-			name: "encrypted_files is empty array",
-			args: args{data: &yaml.MapSlice{
-				yaml.MapItem{Key: "foo", Value: "bar"},
-				yaml.MapItem{Key: "encrypted_files", Value: []string{}},
-			}},
+			name:    "encrypted_files is empty array",
+			args:    args{data: unmarshalStringHelper("foo: bar\nencrypted_files: []")},
 			want:    []string{},
 			wantErr: false,
 		},
 		{
-			name: "encrypted_files is array with values",
-			args: args{data: &yaml.MapSlice{
-				yaml.MapItem{Key: "foo", Value: "bar"},
-				yaml.MapItem{Key: "encrypted_files", Value: []string{"first", "second"}},
-			}},
+			name:    "encrypted_files is array with values",
+			args:    args{data: unmarshalStringHelper("foo: bar\nencrypted_files:\n  - first\n  - second")},
 			want:    []string{"first", "second"},
 			wantErr: false,
 		},
@@ -414,17 +408,51 @@ func TestReplaceConfigEncryptFiles(t *testing.T) {
 		encFiles []string
 	}
 
+	//use string representation for ease
+
 	tests := []struct {
 		name    string
 		args    args
-		want    *yaml.MapSlice
+		want    string
 		wantErr bool
 	}{
-	// TODO:
-	// replaces existing
-	// replaces with empty
-	// replaces an empty
-	// adds new item
+		{
+			name: "Replace existing set",
+			args: args{
+				data:     unmarshalStringHelper("foo: bar\nencrypted_files:\n  - first\n  - second"),
+				encFiles: []string{"one", "two"},
+			},
+			want:    "&[{foo bar} {encrypted_files [one two]}]",
+			wantErr: false,
+		},
+		{
+			name: "Replace with an empty item",
+			args: args{
+				data:     unmarshalStringHelper("foo: bar\nencrypted_files:\n  - first\n  - second"),
+				encFiles: []string{},
+			},
+			want:    "&[{foo bar} {encrypted_files []}]",
+			wantErr: false,
+		},
+		{
+			name: "Replace empty with nonempty",
+			args: args{
+				data:     unmarshalStringHelper("foo: bar\nencrypted_files: []"),
+				encFiles: []string{"one", "two"},
+			},
+			want:    "&[{foo bar} {encrypted_files [one two]}]",
+			wantErr: false,
+		},
+		{
+			name: "adds new top level key",
+			args: args{
+				data:     unmarshalStringHelper("foo: bar"),
+				encFiles: []string{"one", "two"},
+			},
+			want:    "&[{foo bar} {encrypted_files [one two]}]",
+			wantErr: false,
+		},
+		//todo whats the error case here
 	}
 
 	for _, tt := range tests {
@@ -434,7 +462,7 @@ func TestReplaceConfigEncryptFiles(t *testing.T) {
 				t.Errorf("ReplaceConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if !reflect.DeepEqual(got, tt.want) {
+			if !reflect.DeepEqual(fmt.Sprintf("%v", got), tt.want) {
 				t.Errorf("ReplaceConfigEncryptFiles() = %v, want %v", got, tt.want)
 			}
 		})
