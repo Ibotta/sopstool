@@ -373,33 +373,96 @@ func TestExtractConfigEncryptFiles(t *testing.T) {
 }
 
 func TestGetConfigEncryptFiles(t *testing.T) {
-	type args struct {
-		basePath string
-	}
+	origFs := fs
+	t.Run("load a file", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte(`
+            foo: bar
+            encrypted_files:
+              - one
+              - two
+            `), nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		got, err := GetConfigEncryptFiles(".")
+		if err != nil {
+			t.Errorf("GetConfigEncryptFiles() got err %v", err)
+		}
+		expected := []string{"one", "two"}
+		if !reflect.DeepEqual(got, expected) {
+			t.Errorf("GetConfigEncryptFiles() = %v, want %v", got, expected)
+		}
 
-	tests := []struct {
-		name    string
-		args    args
-		want    []string
-		wantErr bool
-	}{
-	// TODO: Add test cases.
-	}
+		fs = origFs
+		return
+	})
+	t.Run("err on file find", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, fmt.Errorf("NF")
+			},
+			readfile: func(name string) ([]byte, error) {
+				return nil, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		_, err := GetConfigEncryptFiles(".")
+		if err == nil {
+			t.Errorf("GetConfigEncryptFiles() expected an error")
+		}
 
-	//todo mock the methods if possible
+		fs = origFs
+		return
+	})
+	t.Run("err on config load", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte("~~not good"), nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		_, err := GetConfigEncryptFiles(".")
+		if err == nil {
+			t.Errorf("GetConfigEncryptFiles() expected an error")
+		}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetConfigEncryptFiles(tt.args.basePath)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetConfigEncryptFiles() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("GetConfigEncryptFiles() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		fs = origFs
+		return
+	})
+	t.Run("err config extract", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return []byte("encrypted_files: [1,2,3]"), nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return nil
+			},
+		}
+		_, err := GetConfigEncryptFiles(".")
+		if err == nil {
+			t.Errorf("GetConfigEncryptFiles() expected an error")
+		}
+
+		fs = origFs
+		return
+	})
 }
 
 func TestReplaceConfigEncryptFiles(t *testing.T) {
@@ -470,27 +533,56 @@ func TestReplaceConfigEncryptFiles(t *testing.T) {
 }
 
 func TestWriteEncryptFilesToDisk(t *testing.T) {
-	type args struct {
-		confPath string
-		data     *yaml.MapSlice
-		encFiles []string
-	}
+	origFs := fs
+	t.Run("write a file", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return nil, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				if name != "filepath" {
+					return fmt.Errorf("expected filepath, got %v", name)
+				}
+				if string(data) != "foo: bar\nencrypted_files:\n- first\n- second\n" {
+					return fmt.Errorf("marshaled string not what expected %v", string(data))
+				}
+				if perms != 0644 {
+					return fmt.Errorf("bad perms %v", perms)
+				}
+				return nil
+			},
+		}
+		data := unmarshalStringHelper("foo: bar")
+		err := WriteEncryptFilesToDisk("filepath", data, []string{"first", "second"})
+		if err != nil {
+			t.Errorf("GetConfigEncryptFiles() got err %v", err)
+		}
 
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-	// TODO: Add test cases.
-	}
+		fs = origFs
+		return
+	})
+	t.Run("file write error", func(t *testing.T) {
+		fs = osFS{
+			stat: func(name string) (os.FileInfo, error) {
+				return nil, nil
+			},
+			readfile: func(name string) ([]byte, error) {
+				return nil, nil
+			},
+			writefile: func(name string, data []byte, perms os.FileMode) error {
+				return fmt.Errorf("some error")
+			},
+		}
+		data := unmarshalStringHelper("foo: bar")
+		err := WriteEncryptFilesToDisk("filepath", data, []string{"first", "second"})
+		if err == nil {
+			t.Fatalf("GetConfigEncryptFiles() expected an error")
+		}
 
-	//todo mock the methods
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := WriteEncryptFilesToDisk(tt.args.confPath, tt.args.data, tt.args.encFiles); (err != nil) != tt.wantErr {
-				t.Errorf("WriteEncryptFilesToDisk() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
+		fs = origFs
+		return
+	})
 }
