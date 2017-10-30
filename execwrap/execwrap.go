@@ -51,49 +51,67 @@ var e systemExec = osExec{
 // EncryptFile encrypts a file rewriting the sops encrypted file
 func EncryptFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
-	return RunCommandStdoutToFile(cryptfile, []string{"sops", "-e", fn})
+	return ew.RunCommandStdoutToFile(cryptfile, []string{"sops", "-e", fn})
 }
 
 // DecryptFile decrypts a file rewriting the plaintext file
 func DecryptFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
-	return RunCommandStdoutToFile(fn, []string{"sops", "-d", cryptfile})
+	return ew.RunCommandStdoutToFile(fn, []string{"sops", "-d", cryptfile})
 }
 
 // DecryptFilePrint decrypts a file printing the result
 func DecryptFilePrint(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
-	return RunCommandDirect([]string{"sops", "-d", cryptfile})
+	return ew.RunCommandDirect([]string{"sops", "-d", cryptfile})
 }
 
 // RemoveFile removes a plaintext file from the filesystem
 func RemoveFile(fn string) error {
-	return RunCommandDirect([]string{"rm", fn})
+	return ew.RunCommandDirect([]string{"rm", fn})
 }
 
 // RemoveSopsFile removes a sops file from the filesystem
 func RemoveSopsFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
 
-	return RunCommandDirect([]string{"rm", cryptfile})
+	return ew.RunCommandDirect([]string{"rm", cryptfile})
 }
 
 // RotateFile rotates keys on a file
 func RotateFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
 
-	return RunCommandDirect([]string{"sops", "-i", "-r", cryptfile})
+	return ew.RunCommandDirect([]string{"sops", "-i", "-r", cryptfile})
 }
 
 // EditFile should open the editor for a file
 func EditFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
 
-	return RunCommandDirect([]string{"sops", cryptfile})
+	return ew.RunCommandDirect([]string{"sops", cryptfile})
+}
+
+//wrap the more complex execution wrappers so they're simple to mock
+
+//ExecutionWrapper wraps exec calls
+type ExecutionWrapper interface {
+	RunCommandDirect(command []string) error
+	RunCommandStdoutToFile(outfileName string, command []string) error
+	RunSyscallExec(args []string) error
+}
+
+type execWrap struct{}
+
+var ew ExecutionWrapper = execWrap{}
+
+// ExecWrap gets the execution wrapper interface
+func ExecWrap() ExecutionWrapper {
+	return ew
 }
 
 // RunCommandDirect runs a command, redirecting 0/1/2 to the caller
-func RunCommandDirect(command []string) error {
+func (ew execWrap) RunCommandDirect(command []string) error {
 	cmd := e.Command(command[0], command[1:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -109,7 +127,7 @@ func RunCommandDirect(command []string) error {
 }
 
 // RunCommandStdoutToFile runs a command, redirecting Stdout to a file, the rest to caller
-func RunCommandStdoutToFile(outfileName string, command []string) error {
+func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) error {
 	cmd := e.Command(command[0], command[1:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stderr = os.Stderr
@@ -132,7 +150,7 @@ func RunCommandStdoutToFile(outfileName string, command []string) error {
 }
 
 // RunSyscallExec runs exec which fully takes over the process
-func RunSyscallExec(args []string) error {
+func (ew execWrap) RunSyscallExec(args []string) error {
 	path, err := e.LookPath(args[0])
 	if err != nil {
 		return err
