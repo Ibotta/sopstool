@@ -27,15 +27,56 @@ sopstool completion
 sopstool completion --sh zsh
 ```
 
-## Prereqs
+## Installation and prereqs
+
+1. use the platform installer script
+
+  ```sh
+  aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/install_$(uname | tr '[:upper:]' '[:lower:]') /tmp/go-common-install && /tmp/go-common-install
+  ```
+
+OR do it by hand
 
 1. install sops into your $PATH for your platform
 
     ```sh
+    # OSX
     brew install sops
     ```
 
+    ```sh
+    # Debian/Ubuntu sops 3.0
+    wget -O /tmp/sops_3.0.0_amd64.deb https://github.com/mozilla/sops/releases/download/3.0.0/sops_3.0.0_amd64.deb && \
+    dpkg -i /tmp/sops_3.0.0_amd64.deb && \
+    rm /tmp/sops_3.0.0_amd64.deb
+    ```
+
     or [from the github release](https://github.com/mozilla/sops/releases)
+
+1. install the sopstool binary into your $PATH for your platform
+
+    ```sh
+    # OSX
+    mkdir -p /tmp/go-commons && cd /tmp/go-commons && \
+    aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/darwin/amd64/ . && sudo install -t /usr/local/bin -v * && \
+    cd / && rm -r /tmp/go-commons
+    ```
+
+    ```sh
+    # Debian/Ubuntu
+    mkdir -p /tmp/go-commons && cd /tmp/go-commons && \
+    aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/linux/amd64/ . && sudo install -t /usr/local/bin -v * && \
+    cd / && rm -r /tmp/go-commons
+    ```
+
+1. use a .sops.yaml
+    * this will be at the root of your project
+    * it needs to specify at least one KMS key accessible by your environment
+
+        ```yaml
+        creation_rules:
+          - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
+        ```
 
 ## Contributing
 
