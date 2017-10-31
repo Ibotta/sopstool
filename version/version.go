@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	Number        = "0.0.0"
+	Number        = "0.1.0"
 	CommitHash    = "<undefined>"
 	CommitStamp   = "<undefined>"
 	BuildStamp    = "<undefined>"
