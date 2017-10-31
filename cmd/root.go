@@ -41,8 +41,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&cfgPath, "configpath", ".", "config file path")
 }
 
-// initConfig reads in config file and ENV variables if set.
-// TODO could this work for the sops.yaml?
+// initConfig reads in config file
 func initConfig() {
 	cfgFile, err := sopsyaml.FindConfigFile(cfgPath)
 	if err != nil {
