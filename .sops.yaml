@@ -1,0 +1,5 @@
+creation_rules:
+- kms: arn:aws:kms:us-east-1:264606497040:key/63d19dca-df4a-4f7b-8d60-5c70d080bbc6
+encrypted_files:
+- example/config.json
+- example/config2.yaml
