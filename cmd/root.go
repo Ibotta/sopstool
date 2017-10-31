@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/Ibotta/go-commons/sopstool/sopsyaml"
+	"github.com/Ibotta/go-commons/sopstool/version"
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +18,9 @@ var sopsConfig sopsyaml.SopsConfig
 var RootCmd = &cobra.Command{
 	Use:   "sopstool",
 	Short: "Wrapper around sops for multiple files",
-	Long:  `sops and multiple files. a bunch of stuff here`,
+	Long: fmt.Sprintf(`sopstool %s
+
+sops wrapper supporting multiple files and helper commands.`, version.Number),
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
