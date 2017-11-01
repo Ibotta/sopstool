@@ -42,13 +42,9 @@ sopstool completion --sh zsh
 
 ## Installation and prereqs
 
-1. use the platform installer script
+See the root README on `Installing all binaries`.  This is probably what you want to do.
 
-  ```sh
-  aws s3 cp s3://ibotta-source/binaries/go-commons/install_$(uname | tr '[:upper:]' '[:lower:]') /tmp/go-common-install && bash /tmp/go-common-install
-  ```
-
-OR do it by hand
+OR do it by hand and just install the one binary
 
 1. install sops into your $PATH for your platform
 
@@ -70,18 +66,16 @@ OR do it by hand
 
     ```sh
     # OSX (darwin)
-    mkdir -p /tmp/go-commons && cd /tmp/go-commons && \
-    aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/darwin/amd64/ . && \
-    sudo install -t /usr/local/bin -v * && \
-    cd / && rm -r /tmp/go-commons
+    aws s3 cp s3://ibotta-source/binaries/go-commons/darwin/amd64/sopstool /tmp/sopstool && \
+    sudo install -Sv /tmp/sopstool /usr/local/bin && \
+    rm -r /tmp/sopstool
     ```
 
     ```sh
     # Debian/Ubuntu (linux)
-    mkdir -p /tmp/go-commons && cd /tmp/go-commons && \
-    aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/linux/amd64/ . && \
-    sudo install -t /usr/local/bin -v * && \
-    cd / && rm -r /tmp/go-commons
+    aws s3 cp  s3://ibotta-source/binaries/go-commons/linux/amd64/sopstool /tmp/sopstool && \
+    sudo install -v /tmp/sopstool /usr/local/bin && \
+    rm -r /tmp/sopstool
     ```
 
 ## Contributing
