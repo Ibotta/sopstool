@@ -1,45 +1,5 @@
 # sopstool
 
-## Installation
-
-1. See from "Using these modules in other projects" section [here](https://github.com/Ibotta/go-commons#using-these-modules-in-other-projects)
-1. Download from S3 and mark as executable
-
-## Usage
-
-This is a package that builds a single binary (per architecture) for wrapping [sops](https://github.com/mozilla/sops) with multi-file capabilities.
-
-for more details, use the built-in documentation on commands:
-
-```sh
-sopstool -h
-```
-
-to get the shell completion helpers:
-
-```sh
-#!/usr/bin/env bash
-sopstool completion
-```
-
-```sh
-#!/usr/bin/env zsh
-sopstool completion --sh zsh
-```
-
-## Configuration
-
-1. use a [`.sops.yaml`](https://github.com/mozilla/sops#using-sops-yaml-conf-to-select-kms-pgp-for-new-files) file
-    * this will be at the root of your project. this file is used to both configure keys as well as hold the list of files managed.
-    * it needs to specify at least one KMS key accessible by your environment
-
-        ```yaml
-        creation_rules:
-          - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
-        ```
-
-    * it can specify more complex cases of patterns vs keys too (see link)
-
 ## Installation and prereqs
 
 See the root README on `Installing all binaries`.  This is probably what you want to do.
@@ -77,6 +37,41 @@ OR do it by hand and just install the one binary
     sudo install -v /tmp/sopstool /usr/local/bin && \
     rm -r /tmp/sopstool
     ```
+
+## Usage
+
+This is a package that builds a single binary (per architecture) for wrapping [sops](https://github.com/mozilla/sops) with multi-file capabilities.
+
+for more details, use the built-in documentation on commands:
+
+```sh
+sopstool -h
+```
+
+to get the shell completion helpers:
+
+```sh
+#!/usr/bin/env bash
+sopstool completion
+```
+
+```sh
+#!/usr/bin/env zsh
+sopstool completion --sh zsh
+```
+
+## Configuration
+
+1. use a [`.sops.yaml`](https://github.com/mozilla/sops#using-sops-yaml-conf-to-select-kms-pgp-for-new-files) file
+    * this will be at the root of your project. this file is used to both configure keys as well as hold the list of files managed.
+    * it needs to specify at least one KMS key accessible by your environment
+
+        ```yaml
+        creation_rules:
+          - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
+        ```
+
+    * it can specify more complex cases of patterns vs keys too (see link)
 
 ## Contributing
 
