@@ -2,7 +2,7 @@
 
 ## Installation and prereqs
 
-See the root README on `Installing all binaries`.  This is probably what you want to do.
+See the [root README](../README.md) on `Installing all binaries`.  This is probably what you want to do.
 
 OR do it by hand and just install the one binary
 
