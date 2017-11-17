@@ -73,6 +73,72 @@ sopstool completion --sh zsh
 
     * it can specify more complex cases of patterns vs keys too (see link)
 
+## How-To
+
+1. [Create a KMS key](https://github.com/Ibotta/infrastructure/pull/265/files#diff-3c4152d505a5e581de30df76f03f3b3a). Some are in Terraform and others are not, but it's pretty easy to create them via Terraform.
+1. Follow along the [Configuration Steps](https://github.com/Ibotta/go-commons/tree/develop/sopstool#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
+    * This is important because sops uses the same file name that is in it's list, that you specify. So `../myfile.txt` != `myfile.txt`, and the sopstool/sops may not recognize the file as being under it's control.
+1. Create a file to encrypt(any extension other than `.yaml`), or create a yaml file with `key: value` pairs(and make sure it's extension is .yaml). Sops will encrypt the keys, but not it's values.
+1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
+    * Remember to keep the `*.sops.* file, and delete your **original** file as we do _NOT_ want to check it into the repository!
+1. Now, you can interact via the command line in various ways.
+    * **Editing an encrypted file** - `sopstool edit filename.sops.extension`. You can also use your original filename too! `sopstool edit filename.extension`
+    * **Listing all encrypted files** - `sopstool list`
+    * **Removing encrypted file** - `sopstool remove filename.extension`
+    * **Display the contents of encrypted file**` - `sopstool cat filename.extension`
+
+### Example script
+
+Here is an example script that you can use once you have your files encrypted. In this case, we are just setting some env variables to be used only by our script. Once the script exists, the env variables are no longer available to other shells.
+
+** Configure your `.sops.yaml` **
+```yaml
+# .sops.yaml
+creation_rules:
+   - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
+```
+
+** Create a secrets file**
+```sh
+#secrets.sh
+export username=sopstoolrocksmysocksoff
+export password=yutRy2Hakm3
+```
+
+** Encrypt the newly created file **
+```sh
+$ sopstool add secrets.sh
+```
+
+** Create a secure workspace **
+```sh
+# secure.workspace.sh
+#!/usr/bin/env bash
+
+source <(sopstool cat secrets.sh)
+eval "$@"
+```
+
+Here is what your folder structure would look like to this point:
+
+```
+my-project/
+├── secrets.sh
+├── secrets.sops.sh
+└── secure.workspace.sh
+```
+
+To use your protected env variables:
+
+```sh
+# pass whatever command you'd like to ./secure.workspace.sh
+$ ./secure.workspace.sh python my.python.script.py
+$ ./secure.workspace.sh ruby my.ruby.script.rb
+$ ./secure.workspace.sh ./my.shell.script.sh
+```
+
+***
+
 ## Contributing
 
 Bug reports and pull requests are welcome at <https://github.com/Ibotta/go-commons>
