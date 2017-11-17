@@ -80,7 +80,7 @@ sopstool completion --sh zsh
     * This is important because sops uses the same file name that is in it's list, that you specify. So `../myfile.txt` != `myfile.txt`, and the sopstool/sops may not recognize the file as being under it's control.
 1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the keys, but not it's values.
 1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
-    * Remember to keep the `*.sops.* file, and delete your **original** file as we do _NOT_ want to check it into the repository!
+    * Remember to keep the `*.sops.*` file, and delete your **original** file as we do _NOT_ want to check it into the repository!
 1. Now, you can interact via the command line in various ways.
     * **Editing an encrypted file** - `sopstool edit filename.sops.extension`. You can also use your original filename too! `sopstool edit filename.extension`
     * **Listing all encrypted files** - `sopstool list`
