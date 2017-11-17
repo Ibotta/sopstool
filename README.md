@@ -78,7 +78,7 @@ sopstool completion --sh zsh
 1. [Create a KMS key](https://github.com/Ibotta/infrastructure/pull/265/files#diff-3c4152d505a5e581de30df76f03f3b3a). Some are in Terraform and others are not, but it's pretty easy to create them via Terraform.
 1. Follow along the [Configuration Steps](https://github.com/Ibotta/go-commons/tree/develop/sopstool#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
     * This is important because sops uses the same file name that is in it's list, that you specify. So `../myfile.txt` != `myfile.txt`, and the sopstool/sops may not recognize the file as being under it's control.
-1. Create a file to encrypt(any extension other than `.yaml`), or create a yaml file with `key: value` pairs(and make sure it's extension is .yaml). Sops will encrypt the keys, but not it's values.
+1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is .yaml). Sops will encrypt the keys, but not it's values.
 1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
     * Remember to keep the `*.sops.* file, and delete your **original** file as we do _NOT_ want to check it into the repository!
 1. Now, you can interact via the command line in various ways.
