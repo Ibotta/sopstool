@@ -85,7 +85,7 @@ sopstool completion --sh zsh
     * **Editing an encrypted file** - `sopstool edit filename.sops.extension`. You can also use your original filename too! `sopstool edit filename.extension`
     * **Listing all encrypted files** - `sopstool list`
     * **Removing encrypted file** - `sopstool remove filename.extension`
-    * **Display the contents of encrypted file**` - `sopstool cat filename.extension`
+    * **Display the contents of encrypted file** - `sopstool cat filename.extension`
 
 ### Example script
 
