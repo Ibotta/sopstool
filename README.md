@@ -87,9 +87,9 @@ sopstool completion --sh zsh
     * **Removing encrypted file** - `sopstool remove filename.extension`
     * **Display the contents of encrypted file** - `sopstool cat filename.extension`
 
-### Example script
+### Walkthrough
 
-Here is an example script that you can use once you have your files encrypted. In this case, we are just setting some env variables to be used only by our script. Once the script exists, the env variables are no longer available to other shells.
+In this walkthrough, we will go through the steps required to get a secure script running. In this case, we are just setting some env variables to be used only by our script. Once the script exists, the env variables are no longer available to other shells.
 
 ** Configure your `.sops.yaml` **
 ```yaml
