@@ -75,12 +75,13 @@ sopstool completion --sh zsh
 
 ## How-To
 
-1. [Create a KMS key](https://github.com/Ibotta/infrastructure/pull/265/files#diff-3c4152d505a5e581de30df76f03f3b3a). Some are in Terraform and others are not, but it's pretty easy to create them via Terraform.
+1. Create a KMS key.
 1. Follow along the [Configuration Steps](https://github.com/Ibotta/go-commons/tree/develop/sopstool#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
-    * This is important because sops uses the same file name that is in it's list, that you specify. So `../myfile.txt` != `myfile.txt`, and the sopstool/sops may not recognize the file as being under it's control.
+    * All files added to SOPS are relative, or in child directories to the `.sops.yaml` configuration file.
 1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the keys, but not it's values.
+    * You can read more about [SOPS Here](https://github.com/mozilla/sops).
 1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
-    * Remember to keep the `*.sops.*` file, and delete your **original** file as we do _NOT_ want to check it into the repository!
+    * When your files are properly encyrepted, you can run `sopstool clean` to remove the original plain text secret files.
 1. Now, you can interact via the command line in various ways.
     * **Editing an encrypted file** - `sopstool edit filename.sops.extension`. You can also use your original filename too! `sopstool edit filename.extension`
     * **Listing all encrypted files** - `sopstool list`
@@ -89,7 +90,7 @@ sopstool completion --sh zsh
 
 ### Walkthrough
 
-In this walkthrough, we will go through the steps required to get a secure script running. In this case, we are just setting some env variables to be used only by our script. Once the script exists, the env variables are no longer available to other shells.
+In this walkthrough, we will go through the steps required to get a secure yaml configuration file running.
 
 ** Configure your `.sops.yaml` **
 ```yaml
@@ -98,46 +99,53 @@ creation_rules:
    - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
 ```
 
-** Create a secrets file**
-```sh
-#secrets.sh
-export username=sopstoolrocksmysocksoff
-export password=yutRy2Hakm3
+** Create a secrets yaml configuration file **
+```yaml
+#credentials.yaml
+database.password: supersecretdb
+database.user: supersecretpassword
+redshift:
+    user: my.user.name
+    password: my.password
 ```
 
 ** Encrypt the newly created file **
 ```sh
-$ sopstool add secrets.sh
+$ sopstool add credentials.yaml
 ```
 
-** Create a secure workspace **
-```sh
-# secure.workspace.sh
-#!/usr/bin/env bash
+** Create a sample script **
 
-source <(sopstool cat secrets.sh)
-eval "$@"
+```python
+# myscript.py
+import yaml
+with open('credentials.yaml', 'r') as f:
+    credentials = yaml.load(f)
+
+print credentials["database.user"]
+print credentials["database.password"]
+print credentials["redshift"]["user"]
+print credentials["redshift"]["password"]
 ```
 
-Here is what your folder structure would look like to this point:
+Here is what your folder structure would look like to this point(after deleting the unencrypted credentials.yaml file)
 
 ```
 my-project/
-├── secrets.sh
-├── secrets.sops.sh
-└── secure.workspace.sh
+├── .sops.yaml
+├── credentials.sops.yaml
+└── myscript.py
 ```
 
-To use your protected env variables:
+** Accessing credentials **
+
+The flow should be as follows: unencrypt credentials -> run script -> destroy credentials
 
 ```sh
-# pass whatever command you'd like to ./secure.workspace.sh
-$ ./secure.workspace.sh python my.python.script.py
-$ ./secure.workspace.sh ruby my.ruby.script.rb
-$ ./secure.workspace.sh ./my.shell.script.sh
+$ sopstool decrypt
+$ python myscript.py
+$ sopstool clean
 ```
-
-***
 
 ## Contributing
 
