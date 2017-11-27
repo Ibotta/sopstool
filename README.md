@@ -101,7 +101,7 @@ creation_rules:
 
 ** Create a secrets yaml configuration file **
 ```yaml
-#credentials.yaml
+# credentials.yaml
 database.password: supersecretdb
 database.user: supersecretpassword
 redshift:
