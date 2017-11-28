@@ -75,7 +75,7 @@ sopstool completion --sh zsh
 
 ## How-To
 
-1. Create a KMS key.
+1. Create a KMS key. [KMS Keys](https://aws.amazon.com/kms/) are managed via [Terraform](https://www.terraform.io/docs/providers/aws/r/kms_key.html). You can find an [example here](https://github.com/Ibotta/infrastructure/pull/265).
 1. Follow along the [Configuration Steps](https://github.com/Ibotta/go-commons/tree/develop/sopstool#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
     * All files added to SOPS are relative, or in child directories to the `.sops.yaml` configuration file.
 1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the keys, but not it's values.
@@ -139,12 +139,10 @@ my-project/
 
 ** Accessing credentials **
 
-The flow should be as follows: unencrypt credentials -> run script -> destroy credentials
+The flow should be as follows: unencrypt credentials -> run script -> destroy credentials. You can use the `sopstool entrypoint` to achieve this.
 
 ```sh
-$ sopstool decrypt
-$ python myscript.py
-$ sopstool clean
+$ sopstool entrypoint python myscript.py
 ```
 
 ## Contributing
