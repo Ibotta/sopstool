@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+if which sops 2>/dev/null >/dev/null; then
+  echo "SOPS already installed"
+else
+  brew install sops
+fi
+
+#TODO rewrite this for github binary deploy
+# mkdir -p /tmp/sopstool && cd /tmp/sopstool && \
+# aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/darwin/amd64/ . && \
+# sudo install -Sv * /usr/local/bin && \
+# cd / && rm -r /tmp/go-commons

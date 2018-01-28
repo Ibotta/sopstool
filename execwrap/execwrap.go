@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/Ibotta/go-commons/sopstool/fileutil"
+	"github.com/Ibotta/sopstool/fileutil"
 )
 
 // wrap OS filesystem commands for mocking

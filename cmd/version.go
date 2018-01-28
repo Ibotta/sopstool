@@ -5,7 +5,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/go-commons/sopstool/version"
+	"github.com/Ibotta/sopstool/version"
 	"github.com/spf13/cobra"
 )
 

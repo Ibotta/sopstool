@@ -5,8 +5,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/go-commons/sopstool/execwrap"
-	"github.com/Ibotta/go-commons/sopstool/fileutil"
+	"github.com/Ibotta/sopstool/execwrap"
+	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
 )
 

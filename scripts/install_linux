@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if dpkg -s sops 2>/dev/null >/dev/null; then
+  echo "SOPS already installed"
+else
+  wget -O /tmp/sops_3.0.0_amd64.deb https://github.com/mozilla/sops/releases/download/3.0.0/sops_3.0.0_amd64.deb && \
+  dpkg -i /tmp/sops_3.0.0_amd64.deb && \
+  rm /tmp/sops_3.0.0_amd64.deb
+fi
+
+#TODO rewrite for gihub binary deploy
+# mkdir -p /tmp/go-commons && cd /tmp/go-commons && \
+# aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/linux/amd64/ . && \
+# sudo install -t /usr/local/bin -v * && \
+# cd / && rm -r /tmp/go-commons

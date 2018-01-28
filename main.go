@@ -2,7 +2,7 @@
 
 package main
 
-import "github.com/Ibotta/go-commons/sopstool/cmd"
+import "github.com/Ibotta/sopstool/cmd"
 
 func main() {
 	cmd.Execute()
