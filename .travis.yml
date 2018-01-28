@@ -10,15 +10,13 @@ before_install:
 after_success:
   - scripts/build
 
-# deploy:
-#   provider: s3
-#   access_key_id:
-#     secure: "YKriipJPxWvsZ0WLK/6I8dzC6HPBmPiWfpI24SepTurHyc0OuhK/hOLkBB0XcwT2pISIPBVR5kleJ5JMHUIWrwry+a21TYHLYoe9yeSl0EpBd8aJ5eyDcYWebh9z2R2jbHqECz+eJ2kwq8H6pNVi7S8HadXkS0t+0KoBhLS0afKAnc1Di+HUTXV0giHxgYGWWQqfjVPX6NFNiV6b+aNU5dZ+y6iwss+c8DLhuNM0qm0kjx6LAtZOPI+01yH4zV4FF+cCzu7hLOMKs7r5tkuPtaxwZB/WI81RO7iFrXo+O6Yu/lXlDRwg/oK7k/76dgdOaGGO5AthUtgiIEtPhtkuwMy4Y2Wa/8N1OzovB3TFrB5fhvpzeF2093CFFuH302ENoelM0/2ITjPvDTKIOzhY/zq+cjmdjXGtte+4/qAFjYU2XT6iD+B88p1g0oZ835EjeNyNlxOFq+SxVtQLA/Qg57uP1T9KN17uZNNtEOm87aacgQj+X8Ay/eRcOPsLGUp0pkgETfAgL0XNYf9KGaJWTeclL8bxCuakEKdJ/encQfz3xkFBGK3pZmrpCA+XffK0FMvz6S3ESjy+LDG72a06dagu1mALvPAKUeiu0aW3u2FPzHZ/wpwwhupSwr+F33xlDkp4NY0nV8McZyorwd48mgcm6EcLeT71HIajcr8ux9Y="
-#   secret_access_key:
-#     secure: "uGGpRIc7PCML3whPQINhRULrCEnrC/0MTjenyIkPZXEon/LrFCQGv2ZDlvgO4vZniHbsXPCXC7yKEUd7DseQ9O59FUMQscsCad+YtaX3goFQ1JurUME/cPZAdKH5bKjBGBltBXmRVC0j0zIlYuzZysut0BYSIW8vdePotLTv/8IGBn9BV63KusskvKbii/BKuPmAbrZ7sPYeHmw7B7CG1zq1mug8YNj3De3g8xXWwCsJN1foKq/BSMJXSN1W589lSO4wj9U/tOMUwf8pYA+Ehm8AU/gZoWjfkkTqDNru+Npd+t/WMmALyX8OuFijfk3QDhoYiCHV45kv2spztqnzXlofrgsjfb1itqmjZsQuWXQJ7vtLBJ7t8f2jABGpAH8ra3CnR4t7oO3kd6Qv0/bYv0UUzBF8az3B/j38qBfTFq6FMJmROaCOwkr/h2NfxTN/sdK1mnB0n+32TdlR0mW7zkMHD5eOlJFDpDGnUmfG+qqe3kB9fSm6TR0HP2If/ZnhPdQHBCEIAtVvsgpVBfuHsVba1gaXd78BvcNiMfWhACCMdWpxtrgcumMLzdWUkJQ3AGGMy62kavC+6S6MS64nw3S/4j35EeXsayFU9ku5wAV+JVOepDgF/lZQK4z90cavcdY7v5IpHSurJHGMMHnCbXSS4eCkecY2EYDI3BKSIr0="
-#   bucket: ibotta-source
-#   skip_cleanup: true
-#   local_dir: dist
-#   upload-dir: binaries/go-commons
-#   on:
-#     branch: master
+deploy:
+  provider: releases
+  #todo this is tied to the "onyxraven" user in github currently. change this.
+  api_key:
+    secure: NH8VCke3ZIOyxA6t3mqsZIPw5PA1yV8hKWvf86v45pfsSPuaKb6DFZBlA40UtBPRUFcFvhG3JXEc/UQ7kOqu6Q7nYlasBALZ0TR+xemnD8llB4ieKbWqvoz0QPiminehV+45Nsh4JC0+OEH8VTfV2AJtv3e5RPuBl4pUwF1YQ+H6l6UiEjEfGresmRG0Oto9i4pjdeDW02yo7BvVxk3QQyVVvgzl7RXurz+BnkGqfLDNMBJbRrIOy+oURHQ5USLMOTrCeridkpQKgR3i4p3oaw/cQgEAZTCUF91UASBz6qYsLO/raPxKmS0dv13MNg60yJPCYyKh616IfguXYaRXW0/3mpIcM6BBe88Xx/ULOnkm5oUkO71J56/N8f/3ggH0Bp/Fo+oc8TLSpjLwDbR2LJ0IgvdcUj7hzj9zstCe5SDYQwTjCj4gjDS7XjGZPIgoguQzq3EgPc9qvn3VEmG7S0cx7IDRwV3q6vEQeUwgIBxk8g6HU4hHL6IZ3EslbrBkcjtS8yw08eBofMeNhVkprWWELh+xS/OmbqhnWaGpvBwMaBWBN5wAxfVfejh7lEitI6IpQREM0mAj9MsVMXC3OV3ywCvyZSo3FIIBBcy0aQv6jxzTzStDMJEyE3O5jAbuV8rU1OEkvFLFkEtotg3bBWECzY7e3tkm/KJW/TBsWck=
+  file_glob: true
+  file: dist/*
+  on:
+    repo: Ibotta/sopstool
+    tags: true
