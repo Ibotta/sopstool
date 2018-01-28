@@ -7,9 +7,17 @@ import (
 	"os"
 
 	"github.com/Ibotta/sopstool/sopsyaml"
-	"github.com/Ibotta/sopstool/version"
 	"github.com/spf13/cobra"
 )
+
+//BuildVersion (updated by main)
+var BuildVersion string
+
+//BuildCommit (updated by main)
+var BuildCommit string
+
+//BuildDate (updated by main)
+var BuildDate string
 
 var cfgPath string
 var sopsConfig sopsyaml.SopsConfig
@@ -18,9 +26,9 @@ var sopsConfig sopsyaml.SopsConfig
 var RootCmd = &cobra.Command{
 	Use:   "sopstool",
 	Short: "Wrapper around sops for multiple files",
-	Long: fmt.Sprintf(`sopstool %s
+	Long: fmt.Sprintf(`sopstool
 
-sops wrapper supporting multiple files and helper commands.`, version.Number),
+sops wrapper supporting multiple files and helper commands.`),
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

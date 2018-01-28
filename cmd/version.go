@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/sopstool/version"
 	"github.com/spf13/cobra"
 )
 
@@ -28,8 +27,8 @@ func init() {
 // VersionCommand prints the version
 func VersionCommand(cmd *cobra.Command, args []string) {
 	if shortString {
-		fmt.Println(version.Number)
+		fmt.Println(BuildVersion)
 	} else {
-		fmt.Printf("%s v%s\n", RootCmd.Use, version.Long)
+		fmt.Printf("%s v%s (%s) @ %s\n", RootCmd.Use, BuildVersion, BuildCommit, BuildDate)
 	}
 }

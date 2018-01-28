@@ -78,24 +78,16 @@ This is a single top-level namespace filled with packages.  Each directory is po
     git checkout develop && git pull
     ```
 
-    > TODO this step is somewhat manual.  Travis's build process makes this difficult to automate currently so eventually a new method will be built
-
-    Update the version file in package/version/version.go
-
-    ```go
-    Number = "$VERSION"
-    ```
-
     Commit and tag
 
     ```sh
-    git commit -am "Tagging release $VERSION" && git tag $SHORT_PKG@$VERSION
+    git commit -am "Tagging release $VERSION" && git tag v$VERSION
     ```
 
     example:
 
     ```sh
-    git commit -am "Tagging release 0.1.1" && git tag deploy@0.1.1
+    git commit -am "Tagging release 0.1.1" && git tag v0.1.1
     ```
 
     Then push to github
@@ -122,13 +114,13 @@ This is a single top-level namespace filled with packages.  Each directory is po
 
     If ff-only fails, you must resolve the merge so that it is linear, which could involve rebuilding the release tag(s).
 
-1. Watch for the release to pass CI and publish to S3
+1. Watch for the release to pass CI
 
 > TODO the tag+branch is a little tricky and one misstep can break the process. Look into a more foolproof or just simpler way to detect and release tags
 
 ### Release Gotchas
 
-> TODO this is a bit of a manual process, as we use more here this will get better
+> TODO This process is just a little under review
 
 ## Versioning
 
