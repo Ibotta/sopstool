@@ -3,7 +3,7 @@ package execwrap
 import (
 	"testing"
 
-	mock_execwrap "github.com/Ibotta/go-commons/sopstool/execwrap/mock"
+	mock_execwrap "github.com/Ibotta/sopstool/execwrap/mock"
 	"github.com/golang/mock/gomock"
 )
 

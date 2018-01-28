@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/Ibotta/go-commons/sopstool/fileutil"
+	"github.com/Ibotta/sopstool/fileutil"
 )
 
 func TestNormalizeToPlaintextFile(t *testing.T) {

@@ -19,13 +19,13 @@
 1. Clone the repo
 
     ```sh
-    git clone git clone git@github.com:Ibotta/go-commons.git $GOPATH/src/github.com/Ibotta/go-commons
+    git clone git clone git@github.com:Ibotta/sopstool.git $GOPATH/src/github.com/Ibotta/sopstool
     ```
 
     you may want to symlink this to somewhere nicer
 
     ```sh
-    ln -s $GOPATH/go/src/github.com/Ibotta/go-commons go-commons
+    ln -s $GOPATH/go/src/github.com/Ibotta/sopstool sopstool
     ```
 
 1. Install other go prerequisites (many [recommended by VSCode](https://github.com/Microsoft/vscode-go/wiki/Go-tools-that-the-Go-extension-depends-on) and used during development)

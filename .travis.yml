@@ -11,6 +11,7 @@ after_success:
   - scripts/build
 
 deploy:
+  skip_cleanup: true
   provider: releases
   #todo this is tied to the "onyxraven" user in github currently. change this.
   api_key:
