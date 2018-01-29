@@ -7,7 +7,3 @@ else
 fi
 
 #TODO rewrite this for github binary deploy
-# mkdir -p /tmp/sopstool && cd /tmp/sopstool && \
-# aws s3 cp --recursive s3://ibotta-source/binaries/go-commons/darwin/amd64/ . && \
-# sudo install -Sv * /usr/local/bin && \
-# cd / && rm -r /tmp/go-commons

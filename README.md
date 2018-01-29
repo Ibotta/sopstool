@@ -2,9 +2,7 @@
 
 ## Installation and prereqs
 
-See the [root README](../README.md) on `Installing all binaries`.  This is probably what you want to do.
-
-OR do it by hand and just install the one binary
+> TODO if fpm or brew work, use those first
 
 1. install sops into your $PATH for your platform
 
@@ -24,16 +22,18 @@ OR do it by hand and just install the one binary
 
 1. install the sopstool binary into your $PATH for your platform
 
+    > TODO adjust these to download from the github release url
+
     ```sh
     # OSX (darwin)
-    aws s3 cp s3://ibotta-source/binaries/go-commons/darwin/amd64/sopstool /tmp/sopstool && \
+    wget $URL sopstool.tar.gz && \
     sudo install -Sv /tmp/sopstool /usr/local/bin && \
     rm -r /tmp/sopstool
     ```
 
     ```sh
     # Debian/Ubuntu (linux)
-    aws s3 cp  s3://ibotta-source/binaries/go-commons/linux/amd64/sopstool /tmp/sopstool && \
+    wget $URL sopstool.tar.gz && \
     sudo install -v /tmp/sopstool /usr/local/bin && \
     rm -r /tmp/sopstool
     ```
@@ -93,6 +93,7 @@ sopstool completion --sh zsh
 In this walkthrough, we will go through the steps required to get a secure yaml configuration file running.
 
 ** Configure your `.sops.yaml` **
+
 ```yaml
 # .sops.yaml
 creation_rules:
@@ -100,6 +101,7 @@ creation_rules:
 ```
 
 ** Create a secrets yaml configuration file **
+
 ```yaml
 # credentials.yaml
 database.password: supersecretdb
@@ -110,8 +112,9 @@ redshift:
 ```
 
 ** Encrypt the newly created file **
+
 ```sh
-$ sopstool add credentials.yaml
+sopstool add credentials.yaml
 ```
 
 ** Create a sample script **
@@ -130,7 +133,7 @@ print credentials["redshift"]["password"]
 
 Here is what your folder structure would look like to this point(after deleting the unencrypted credentials.yaml file)
 
-```
+```text
 my-project/
 ├── .sops.yaml
 ├── credentials.sops.yaml
@@ -142,7 +145,7 @@ my-project/
 The flow should be as follows: unencrypt credentials -> run script -> destroy credentials. You can use the `sopstool entrypoint` to achieve this.
 
 ```sh
-$ sopstool entrypoint python myscript.py
+sopstool entrypoint python myscript.py
 ```
 
 ## Contributing
