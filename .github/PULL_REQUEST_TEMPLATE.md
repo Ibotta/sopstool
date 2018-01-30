@@ -1,4 +1,4 @@
-Story
+Story/Issue Link
 -----
 
 [#]()
@@ -31,7 +31,6 @@ Tasks
 
 * [ ] Specs written
 * [ ] Manual testing
-* [ ] Notified external stakeholders
 
 /cc
 -----
