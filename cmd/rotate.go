@@ -12,7 +12,7 @@ import (
 var rotateCmd = &cobra.Command{
 	Use:   "rotate [files ...]",
 	Short: "rotate keys on files",
-	Long:  `Reencrypt and rotate the keys on some or all files`,
+	Long:  `Reencrypt and rotate the data keys on some or all files`,
 	RunE:  RotateCommand,
 }
 

@@ -47,9 +47,13 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgPath, "configpath", ".", "config file path")
+
+	// RootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose mode")
+	// RootCmd.PersistentFlags().BoolP("quiet", "q", false, "quiet mode")
 }
 
 // initConfig reads in config file
+// TODO lazy load this - move it to sopstool instance
 func initConfig() {
 	cfgFile, err := sopsyaml.FindConfigFile(cfgPath)
 	if err != nil {

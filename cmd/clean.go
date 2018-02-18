@@ -18,6 +18,8 @@ var cleanCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(cleanCmd)
+
+	// TODO flag to not fail on clean 'miss' of file?
 }
 
 // CleanCommand cleans up files
@@ -29,6 +31,7 @@ func CleanCommand(cmd *cobra.Command, args []string) error {
 
 	//clean all the files
 	for _, f := range filesToClean {
+		// TODO if file not exist, skip
 		err := execwrap.RemoveFile(f)
 		if err != nil {
 			return err

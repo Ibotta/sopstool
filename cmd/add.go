@@ -27,6 +27,8 @@ func init() {
 	RootCmd.AddCommand(addCmd)
 
 	addCmd.Flags().BoolVarP(&noEncrypt, "no-encrypt", "n", false, "Do not encrypt the file after adding")
+	// addCmd.Flags().Bool("no-clean", false, "Do not cleanup plaintext after add")
+	// addCmd.Flags().String("kms", "", "KMS key(s) to use for encryption")
 }
 
 // AddCommand the command for the add command

@@ -24,6 +24,9 @@ func init() {
 	RootCmd.AddCommand(entrypointCmd)
 	entrypointCmd.Flags().BoolVarP(&execCommand, "exec", "e", false, "Delegate to the command directly with exec(3), no cleanup")
 	entrypointCmd.Flags().StringSliceVarP(&filesToDecrypt, "files", "f", []string{}, "files to decrypt (default all)")
+
+	// addCmd.Flags().Bool("nofail", false, "Don't error unless all decrypts fail")
+	// addCmd.Flags().StringSlice("env", []string{}, "Load the following files (JSON or YAML) as environment vars")
 }
 
 // EntrypointCommand the command for the add command

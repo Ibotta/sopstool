@@ -13,10 +13,10 @@ import (
 
 // catCmd represents the cat command
 var catCmd = &cobra.Command{
-	Use:   "cat [file]",
-	Short: "print a file to stdout",
-	Long:  `Decrypt a file and print it to stdout`,
-	Args:  cobra.ExactArgs(1),
+	Use:   "cat [files ...]",
+	Short: "print files to stdout",
+	Long:  `Decrypt files and print to stdout`,
+	Args:  cobra.MinimumNArgs(1),
 	RunE:  CatCommand,
 }
 
@@ -26,14 +26,16 @@ func init() {
 
 // CatCommand prints a file to stdout
 func CatCommand(cmd *cobra.Command, args []string) error {
-	fn := fileutil.NormalizeToPlaintextFile(args[0])
-	if fileutil.ListIndexOf(sopsConfig.EncryptedFiles, fn) < 0 {
-		return fmt.Errorf("File not found: %s", fn)
-	}
+	for _, fileArg := range args {
+		fn := fileutil.NormalizeToPlaintextFile(fileArg)
+		if fileutil.ListIndexOf(sopsConfig.EncryptedFiles, fn) < 0 {
+			return fmt.Errorf("File not found: %s", fn)
+		}
 
-	err := execwrap.DecryptFilePrint(fn)
-	if err != nil {
-		return err
+		err := execwrap.DecryptFilePrint(fn)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

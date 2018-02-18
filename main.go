@@ -4,7 +4,7 @@ package main
 
 import "github.com/Ibotta/sopstool/cmd"
 
-//Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}`.
+// Goreleaser default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}`.
 var (
 	version = "master"
 	commit  = "dirty"

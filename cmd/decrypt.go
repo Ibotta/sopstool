@@ -19,6 +19,8 @@ var decryptCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(decryptCmd)
+
+	// addCmd.Flags().Bool("nofail", false, "Don't error unless all decrypts fail")
 }
 
 // DecryptCommand decrypts files
