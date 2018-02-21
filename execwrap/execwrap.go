@@ -121,9 +121,7 @@ func (ew execWrap) RunCommandDirect(command []string) error {
 	if err != nil {
 		return err
 	}
-	cmd.Wait()
-
-	return nil
+	return cmd.Wait()
 }
 
 // RunCommandStdoutToFile runs a command, redirecting Stdout to a file, the rest to caller
@@ -144,9 +142,7 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 	if err != nil {
 		return err
 	}
-	cmd.Wait()
-
-	return nil
+	return cmd.Wait()
 }
 
 // RunSyscallExec runs exec which fully takes over the process

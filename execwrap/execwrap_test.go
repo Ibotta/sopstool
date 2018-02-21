@@ -1,10 +1,14 @@
 package execwrap
 
 import (
+	"errors"
+	"os"
+	"os/exec"
 	"testing"
 
 	mock_execwrap "github.com/Ibotta/sopstool/execwrap/mock"
 	"github.com/golang/mock/gomock"
+	// "github.com/spf13/afero"
 )
 
 type mockExecWrap struct{}
@@ -44,6 +48,23 @@ func TestDecryptFile(t *testing.T) {
 		err := DecryptFile("myfile.yaml")
 		if err != nil {
 			t.Errorf("TestEncryptFile() unexpected error %v", err)
+		}
+
+		ew = origEw
+		return
+	})
+	t.Run("run dec returns error", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+
+		mock.EXPECT().RunCommandStdoutToFile("myfile.yaml", gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(errors.New("did someting bad"))
+
+		ew = mock
+
+		err := DecryptFile("myfile.yaml")
+		if err == nil {
+			t.Errorf("TestEncryptFile() expected an error, got %v", err)
 		}
 
 		ew = origEw
@@ -164,11 +185,60 @@ func TestRunCommandDirect(t *testing.T) {
 }
 
 func TestRunCommandStdoutToFile(t *testing.T) {
+	origE := e
 	t.Run("run given command", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		mock := mock_execwrap.NewMocksystemExec(ctrl)
+
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+			return exec.Command("true")
+		})
+
+		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
+			//TODO replace all file stuff with afero
+			return os.Create("/tmp/TestRunCommandStdoutToFile")
+		})
+		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
+
+		e = mock
+
+		err := ew.RunCommandStdoutToFile("filename", []string{"sops", "myfile.sops.yaml"})
+
+		if err != nil {
+			t.Errorf("TestEncryptFile() unexpected error %v", err)
+		}
+
+		e = origE
+		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 	})
 	t.Run("run err", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		mock := mock_execwrap.NewMocksystemExec(ctrl)
+
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+			return exec.Command("false")
+		})
+
+		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
+			//TODO replace all file stuff with afero
+			return os.Create("/tmp/TestRunCommandStdoutToFile")
+		})
+		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
+
+		e = mock
+
+		err := ew.RunCommandStdoutToFile("filename", []string{"sops", "myfile.sops.yaml"})
+
+		if err == nil {
+			t.Errorf("TestEncryptFile() expected error, got %v", err)
+		}
+
+		e = origE
+		return
 	})
 	t.Run("file err", func(t *testing.T) {
 	})
