@@ -1,8 +1,12 @@
-# sudo: required
-# dist: trusty
 language: go
 go:
   - "1.9"
+
+addons:
+  apt:
+    packages:
+    # needed for the nfpm pipe:
+    - rpm
 
 env:
   global:
@@ -20,6 +24,27 @@ install:
   # default is `go get -t ./...` - we override that with dep
   - dep ensure
 
-#todo as deploy script provider instead?
-after_success:
-  - test -n "$TRAVIS_TAG" && curl -sL https://git.io/goreleaser | bash
+deploy:
+- provider: script
+  # calls goreleaser
+  # TODO is this ok or does this need to be before_deploy or after_success
+  skip_cleanup: true
+  script: curl -sL http://git.io/goreleaser | bash
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
+- provider: s3
+  skip_cleanup: true
+  access_key_id:
+    secure:
+  secret_access_key:
+    secure:
+  bucket: ibotta-oss
+  local_dir: dist
+  upload-dir: binaries/sopstool/
+  on:
+    tags: true
+    condition: $TRAVIS_OS_NAME = linux
+
+# after_deploy:
+#   - update_latest_links
