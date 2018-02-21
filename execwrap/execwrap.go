@@ -145,7 +145,8 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 	return cmd.Wait()
 }
 
-// RunSyscallExec runs exec which fully takes over the process
+// RunSyscallExec runs exec which fully takes over the process.
+// the return here never really fires unless the exec fails
 func (ew execWrap) RunSyscallExec(args []string) error {
 	path, err := e.LookPath(args[0])
 	if err != nil {
