@@ -5,7 +5,9 @@ go:
   - "1.9"
 
 env:
-  - DEP_VERSION="0.4.1"
+  global:
+    - DEP_VERSION="0.4.1"
+    - secure: "QjsvZRZRfaM/KTSlvUkaN0RE66vGxRE/8WABgIrDk7Idr8b0EEAarHeC9XFio3i75SKIyUZPjp/xT0MmZ9Re6Y63L2loIv0tsslPbRwa1oogWp8jDrSfVdlGAEElWSskNxFOtBm9sqaKR4shmUUoIvGkCNfLbuBhJFo5DwJ3708NqLZlqQ1veSYoUmjfnXIdcG/lF3Dg/GccNrXDLK6wGnprVhuEcpnPmEzuDKjSOI+wZRnRu2xx1nlQ2IEtB569j14/AekXLyQTBNGSXed5RXT6jiBcV0O80SfXv0KO+X5NluT1Dx0IjHNVGbisGNKUEzd6A7SLxrY+TG+I4JeGqt9skBeQpff8PCDrgCNcLTKLpHsPrTCBNpJLbgBVpHWp1cCVw/AiGHG/CBAIU4oar83Uwi6wBvGCtVVzR7LFkovZo3/BXet/VDXn423kHnri1PwRNFucPnabmuaG0QxyTPoIVm6/HKtcKbIMkF3CieDUsJLE4rY5ZAenF+7KUIZOtapdVZz5+/ryj+VwT+8UaprIjyUiKBAO76wcuPKlg5kAHv11lu5/LWT+N1f1jIzhnhW8jsSBgq/9EJXLDHLzBZWuiCaAqx4YVD+K+xlFFcFCR4VKPIOKrmGn7hgMoQlZ8PT+7OcsjKVLv7AA7wF7hMygHf6CWh0/TzaQ2//nl+A="
 
 before_install:
   # https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-use-dep-in-ci
@@ -17,10 +19,6 @@ before_install:
 install:
   # default is `go get -t ./...` - we override that with dep
   - dep ensure
-
-env:
-  global:
-    - secure: "QjsvZRZRfaM/KTSlvUkaN0RE66vGxRE/8WABgIrDk7Idr8b0EEAarHeC9XFio3i75SKIyUZPjp/xT0MmZ9Re6Y63L2loIv0tsslPbRwa1oogWp8jDrSfVdlGAEElWSskNxFOtBm9sqaKR4shmUUoIvGkCNfLbuBhJFo5DwJ3708NqLZlqQ1veSYoUmjfnXIdcG/lF3Dg/GccNrXDLK6wGnprVhuEcpnPmEzuDKjSOI+wZRnRu2xx1nlQ2IEtB569j14/AekXLyQTBNGSXed5RXT6jiBcV0O80SfXv0KO+X5NluT1Dx0IjHNVGbisGNKUEzd6A7SLxrY+TG+I4JeGqt9skBeQpff8PCDrgCNcLTKLpHsPrTCBNpJLbgBVpHWp1cCVw/AiGHG/CBAIU4oar83Uwi6wBvGCtVVzR7LFkovZo3/BXet/VDXn423kHnri1PwRNFucPnabmuaG0QxyTPoIVm6/HKtcKbIMkF3CieDUsJLE4rY5ZAenF+7KUIZOtapdVZz5+/ryj+VwT+8UaprIjyUiKBAO76wcuPKlg5kAHv11lu5/LWT+N1f1jIzhnhW8jsSBgq/9EJXLDHLzBZWuiCaAqx4YVD+K+xlFFcFCR4VKPIOKrmGn7hgMoQlZ8PT+7OcsjKVLv7AA7wF7hMygHf6CWh0/TzaQ2//nl+A="
 
 #todo as deploy script provider instead?
 after_success:
