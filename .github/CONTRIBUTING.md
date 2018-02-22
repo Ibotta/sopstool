@@ -16,19 +16,17 @@
     export GOPATH="$HOME/go"
     ```
 
+    This is the default path above, but it is always nice to specify it.
+
 1. Clone the repo
 
     ```sh
     git clone git clone git@github.com:Ibotta/sopstool.git $GOPATH/src/github.com/Ibotta/sopstool
     ```
 
-    you may want to symlink this to somewhere nicer
+    The path here is required by go tools and how packages are resolved.  [Read up on how to write go code](https://golang.org/doc/code.html#GOPATH). You can get away, sometimes, with symlinking the path, but YMMV.
 
-    ```sh
-    ln -s $GOPATH/go/src/github.com/Ibotta/sopstool sopstool
-    ```
-
-1. Install other go prerequisites (many [recommended by VSCode](https://github.com/Microsoft/vscode-go/wiki/Go-tools-that-the-Go-extension-depends-on) and used during development)
+1. [optional] Install other go prerequisites (many [recommended by VSCode](https://github.com/Microsoft/vscode-go/wiki/Go-tools-that-the-Go-extension-depends-on) and used during development)
 
     ```sh
     go get -u -v \
@@ -64,6 +62,16 @@
 ## Layout
 
 This is a single top-level namespace filled with packages.  Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
+
+## Building Locally
+
+To get a binary locally, you can run `scripts/build` from the repo root. This will produce a `dist/sopstool` binary for you.
+
+You can also use `go run` to instantly compile and run the main binary.
+
+```sh
+go run main.go version
+```
 
 ## Releasing
 
@@ -121,7 +129,7 @@ This is a single top-level namespace filled with packages.  Each directory is po
 
 ### Release Gotchas
 
-> TODO This process is just a little under review
+> TODO This process under review
 
 ## Versioning
 
@@ -141,18 +149,6 @@ Summary: Given a version number **MAJOR**.**MINOR**.**PATCH**, increment the:
 > TODO
 
 ### Module Configuration
-
-> TODO
-
-### Logging
-
-> TODO
-
-### Metrics
-
-> TODO
-
-### APM
 
 > TODO
 

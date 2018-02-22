@@ -5,7 +5,6 @@ go:
 addons:
   apt:
     packages:
-    # needed for the nfpm pipe:
     - rpm
 
 env:
@@ -33,18 +32,20 @@ deploy:
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = linux
-- provider: s3
-  skip_cleanup: true
-  access_key_id:
-    secure:
-  secret_access_key:
-    secure:
-  bucket: ibotta-oss
-  local_dir: dist
-  upload-dir: binaries/sopstool/
-  on:
-    tags: true
-    condition: $TRAVIS_OS_NAME = linux
+
+# - provider: s3
+#   skip_cleanup: true
+#   detect_encoding: true
+#   access_key_id:
+#     secure:
+#   secret_access_key:
+#     secure:
+#   bucket: ibotta-oss
+#   local_dir: dist
+#   upload-dir: binaries/sopstool/$TRAVIS_TAG
+#   on:
+#     tags: true
+#     condition: $TRAVIS_OS_NAME = linux
 
 # after_deploy:
 #   - update_latest_links
