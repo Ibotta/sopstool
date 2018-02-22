@@ -17,12 +17,15 @@
 #
 # [[override]]
 #  name = "github.com/x/y"
-#  version = "2.4.0"
+#  version = ""
 
 
 [[constraint]]
   name = "github.com/golang/mock"
-  version = "1.0.0"
+  # golang/mock is not currently releasing often and we rely on API not yet released
+  # so 'unpinning' since it is a dev dependency
+  branch = "master"
+  source = "github.com/golang/mock"
 
 [[constraint]]
   branch = "v2"
