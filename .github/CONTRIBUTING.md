@@ -35,6 +35,7 @@
     github.com/acroca/go-symbols \
     github.com/cweill/gotests/... \
     github.com/fatih/gomodifytags \
+    github.com/golang/dep/cmd/dep \
     github.com/golang/lint/golint \
     github.com/golang/mock/gomock \
     github.com/golang/mock/mockgen \
@@ -57,7 +58,7 @@
 1. Install packages required by packages in the repo
 
     ```sh
-    go get -t ./...
+    dep ensure
     ```
 
 ## Layout
