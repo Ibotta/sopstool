@@ -92,61 +92,61 @@ sopstool completion --sh zsh
 
 In this walkthrough, we will go through the steps required to get a secure yaml configuration file running.
 
-** Configure your `.sops.yaml` **
+1. Configure your `.sops.yaml`
 
-```yaml
-# .sops.yaml
-creation_rules:
-   - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
-```
+    ```yaml
+    # .sops.yaml
+    creation_rules:
+      - kms: arn:aws:kms:REGION:ACCOUNT:key/KEY_ID
+    ```
 
-** Create a secrets yaml configuration file **
+1. Create a secrets yaml configuration file
 
-```yaml
-# credentials.yaml
-database.password: supersecretdb
-database.user: supersecretpassword
-redshift:
-    user: my.user.name
-    password: my.password
-```
+    ```yaml
+    # credentials.yaml
+    database.password: supersecretdb
+    database.user: supersecretpassword
+    redshift:
+      user: my.user.name
+      password: my.password
+    ```
 
-** Encrypt the newly created file **
+1. Encrypt the newly created file
 
-```sh
-sopstool add credentials.yaml
-```
+    ```sh
+    sopstool add credentials.yaml
+    ```
 
-** Create a sample script **
+1. Create a sample script
 
-```python
-# myscript.py
-import yaml
-with open('credentials.yaml', 'r') as f:
-    credentials = yaml.load(f)
+    ```python
+    # myscript.py
+    import yaml
+    with open('credentials.yaml', 'r') as f:
+        credentials = yaml.load(f)
 
-print credentials["database.user"]
-print credentials["database.password"]
-print credentials["redshift"]["user"]
-print credentials["redshift"]["password"]
-```
+    print credentials["database.user"]
+    print credentials["database.password"]
+    print credentials["redshift"]["user"]
+    print credentials["redshift"]["password"]
+    ```
 
-Here is what your folder structure would look like to this point(after deleting the unencrypted credentials.yaml file)
+1. Here is what your folder structure would look like to this point(after deleting the unencrypted credentials.yaml file)
 
-```text
-my-project/
-├── .sops.yaml
-├── credentials.sops.yaml
-└── myscript.py
-```
+    ```text
+    my-project/
+    ├── .sops.yaml
+    ├── credentials.sops.yaml
+    └── myscript.py
+    ```
 
-** Accessing credentials **
+1. Accessing credentials
 
-The flow should be as follows: unencrypt credentials -> run script -> destroy credentials. You can use the `sopstool entrypoint` to achieve this.
+    The flow should be as follows: unencrypt credentials -> run script -> destroy credentials. You can use the `sopstool entrypoint` to achieve this.
 
-```sh
-sopstool entrypoint python myscript.py
-```
+    ```sh
+    sopstool entrypoint python myscript.py
+    ```
 
 ## Contributing
 
