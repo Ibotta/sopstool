@@ -2,15 +2,23 @@ language: go
 go:
   - "1.9"
 
+services:
+  - docker
+
 addons:
   apt:
     packages:
+    # needed for the nfpm pipe:
     - rpm
 
 env:
   global:
     - DEP_VERSION="0.4.1"
-    - secure: "QjsvZRZRfaM/KTSlvUkaN0RE66vGxRE/8WABgIrDk7Idr8b0EEAarHeC9XFio3i75SKIyUZPjp/xT0MmZ9Re6Y63L2loIv0tsslPbRwa1oogWp8jDrSfVdlGAEElWSskNxFOtBm9sqaKR4shmUUoIvGkCNfLbuBhJFo5DwJ3708NqLZlqQ1veSYoUmjfnXIdcG/lF3Dg/GccNrXDLK6wGnprVhuEcpnPmEzuDKjSOI+wZRnRu2xx1nlQ2IEtB569j14/AekXLyQTBNGSXed5RXT6jiBcV0O80SfXv0KO+X5NluT1Dx0IjHNVGbisGNKUEzd6A7SLxrY+TG+I4JeGqt9skBeQpff8PCDrgCNcLTKLpHsPrTCBNpJLbgBVpHWp1cCVw/AiGHG/CBAIU4oar83Uwi6wBvGCtVVzR7LFkovZo3/BXet/VDXn423kHnri1PwRNFucPnabmuaG0QxyTPoIVm6/HKtcKbIMkF3CieDUsJLE4rY5ZAenF+7KUIZOtapdVZz5+/ryj+VwT+8UaprIjyUiKBAO76wcuPKlg5kAHv11lu5/LWT+N1f1jIzhnhW8jsSBgq/9EJXLDHLzBZWuiCaAqx4YVD+K+xlFFcFCR4VKPIOKrmGn7hgMoQlZ8PT+7OcsjKVLv7AA7wF7hMygHf6CWh0/TzaQ2//nl+A="
+    - AWS_REGION=us-east-1
+    - AWS_DEFAULT_REGION=us-east-1
+    - secure: "QjsvZRZRfaM/KTSlvUkaN0RE66vGxRE/8WABgIrDk7Idr8b0EEAarHeC9XFio3i75SKIyUZPjp/xT0MmZ9Re6Y63L2loIv0tsslPbRwa1oogWp8jDrSfVdlGAEElWSskNxFOtBm9sqaKR4shmUUoIvGkCNfLbuBhJFo5DwJ3708NqLZlqQ1veSYoUmjfnXIdcG/lF3Dg/GccNrXDLK6wGnprVhuEcpnPmEzuDKjSOI+wZRnRu2xx1nlQ2IEtB569j14/AekXLyQTBNGSXed5RXT6jiBcV0O80SfXv0KO+X5NluT1Dx0IjHNVGbisGNKUEzd6A7SLxrY+TG+I4JeGqt9skBeQpff8PCDrgCNcLTKLpHsPrTCBNpJLbgBVpHWp1cCVw/AiGHG/CBAIU4oar83Uwi6wBvGCtVVzR7LFkovZo3/BXet/VDXn423kHnri1PwRNFucPnabmuaG0QxyTPoIVm6/HKtcKbIMkF3CieDUsJLE4rY5ZAenF+7KUIZOtapdVZz5+/ryj+VwT+8UaprIjyUiKBAO76wcuPKlg5kAHv11lu5/LWT+N1f1jIzhnhW8jsSBgq/9EJXLDHLzBZWuiCaAqx4YVD+K+xlFFcFCR4VKPIOKrmGn7hgMoQlZ8PT+7OcsjKVLv7AA7wF7hMygHf6CWh0/TzaQ2//nl+A=" #GH
+    - secure: "lQVxa6dfdfyKgH+g6wv00fCilussRBM5OKdUNzeCqefD+TPySqO2dMp03et6JRHC83t2/6I2xkMN+wDQqCDN2nir3sWaBgrvsMuMByC00xMN8ZsaGvI6qu6Q/ge3POJoZRN/GAP50udCSd472Epcdd5LTt4oBCMSfnGnvBZLcyE6WE9s7WprfXy1MpI6mvDzHmLTCHZgEp0A51mVHLijuvFInWA9lodWxr7iYj6J+bLOc2aMPRqsejR2xs4aRmPhUr/iqAesLcTLN14aMUFECKNLoZMloTwuXcwgS/tubyNJjFvgJkXLLqYgkmYlQ+pN01zpzFdBwt1yx1O0dD+EAHY4bdYGzZXueG9aF0cOxqWegGEkfrgV16+SMpe5sxK/2y8sTMDSEECtW6lGKif3GfvigPFlHtRp6I2Ag47AHmXhTbzPepObdU9edZRDk8H547KMj8PrgSHpZVJ30ocAgyC4iJHbIT+sK/YlbtwwBSPjY73lOq7zbZ5wBDHk3JSrxOEzKEQD2kBc0hT3KmYdSHxsx1+tl7B1WLB4lm7Ba5JpXHxAJB5bGoHBTqJB+4xDsgPhV92+B7R7SeZrOo+usyeu5keo5lrMWeznfmUXz7/4szFOVe0aWjrBQmS+QHw+kVfKQzGoptm9aFqQo9uTRMYzA0sBchvIoFhtknCGLw8=" #AWS_ID
+    - secure: "mIe+lXurY3aOwdWBtIIx+/2pYxY85X/q4ZvxrX9U+Z/qT+LZWLbjOnheQvaK5Am7UH6UGK2qcPxzHEVlG9z3VguUqJDq3A0C4+SsBFv9z3JHLol+ve17xWuNWQq5S7coFP807nkpgW8YBjbS4JqR6V3Ux/wOXxjqWfrkJgPc0kgH6gzF4sY3V+gtHyxIr0CoiE5rrCoE63Zjh16O2xnvrf0XxupXq70f0+JobKsfkXuzcNT/H8vaX08TEV2KUWOA8caSpZPtO5psP7kwuJSHxi+rUi0ls21cIyFtBQD3y+uXL7ZaZOtNJrSh+caJzqqLIcQ3/+IudOFJfvL9yS4+Rt6IvUTs58Bda+oI06nHm+lgQK4jON249cPJ4ivmHXGlTmpvUYAsyPVHpeuNLAV1NkMQsbD8UgpwtYAO4Wl+oAccQP5afrLynDqHpQv0fyuA9XAAagjjesOcV919PSpomXyX5yhpxhjNCclB0OI5/e93Jp0zRFkaVuxj01StB60iy6Dw2MijZgPthptRlKgEc38y2slb8Ec4TC5wRbfEt33x6N8qZOCxWm3Jwg1e+Rnxxxrh6Qa+cxCT/roD5rjHEJmS0D0bKDS1Wm9/Fl2pN1DnimZ0nwLyJBIgzypxNOsEtz1nwFU4tzADLQB68hWyvShbYpNal4VrwMQfL20oTOY=" #AWS_SEC
 
 before_install:
   # https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-use-dep-in-ci
@@ -26,26 +34,8 @@ install:
 deploy:
 - provider: script
   # calls goreleaser
-  # TODO is this ok or does this need to be before_deploy or after_success
   skip_cleanup: true
-  script: curl -sL http://git.io/goreleaser | bash
+  script: scripts/deploy
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = linux
-
-# - provider: s3
-#   skip_cleanup: true
-#   detect_encoding: true
-#   access_key_id:
-#     secure:
-#   secret_access_key:
-#     secure:
-#   bucket: ibotta-oss
-#   local_dir: dist
-#   upload-dir: binaries/sopstool/$TRAVIS_TAG
-#   on:
-#     tags: true
-#     condition: $TRAVIS_OS_NAME = linux
-
-# after_deploy:
-#   - update_latest_links

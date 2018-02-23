@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# enable interruption signal handling
+trap - INT TERM
+
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+curl -sL http://git.io/goreleaser | bash
+
+if [ -e dist/sopstool_checksums.txt ]; then
+  for f in $(cat dist/sopstool_checksums.txt | awk '{ print "dist/" $2 }'); do
+    $DIR/aws s3 cp $f s3://oss-pkg.ibotta.com/sopstool/
+  done
+  $DIR/aws s3 cp dist/sopstool_checksums.txt s3://oss-pkg.ibotta.com/sopstool/
+else
+  echo "Did not build checksums" && exit 1
+fi
