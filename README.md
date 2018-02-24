@@ -1,68 +1,78 @@
 # sopstool
 
-## Installation and prereqs
+sopstool is a multi-file wrapper around [sops](https://github.com/mozilla/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
 
-Download the latest version for your platform from our [RELEASES](https://github.com/Ibotta/sopstool/releases) or follow one of the below to install the latest
+sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images.  Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).
 
-Following the lead of [sops](https://github.com/mozilla/sops) we only build 64bit binaries.
+## Installation
 
-### sopstool with Homebrew
+The quickest install uses a shell script hosted in this repo. This script will install the latest sops (if the command does not exist) and sopstool to `./bin` by default.
+
+```sh
+curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | bash
+```
+
+* Override the sops version with the environment variable `SOPS_VERSION`
+* Override the sopstool version with the environment variable `SOPSTOOL_VERSION`
+* Override the binary install location with the first shell argument
+  * remember, you may need `sudo` or root access if you are installing to `/usr/*`
+
+Example with overrides:
+
+```sh
+curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | SOPS_VERSION=3.0.0 SOPSTOOL_VERSION=0.0.1 bash /usr/local/bin
+```
+
+### Homebrew
+
+Ibotta maintains a tap for their opensource projects, which includes sopstool. This will install sops as a requirement
 
 ```sh
 brew install Ibotta/public/sopstool
 ```
 
-### sopstool with Deb
+### Installing sops individually
+
+Since sopstool requires sops, install it first. You can install it by hand [from a github release](https://github.com/mozilla/sops/releases), or
+
+#### sops with our script installer
+
+The install script above uses a separate script to download sops
 
 ```sh
-wget -O /tmp/sopstool.deb https://oss-pkg.ibotta.com/sopstool/sopstool_linux.deb && \
-sudo dpkg -i /tmp/sopstool.deb
+curl https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh | bash
 ```
 
-### sopstool with RPM
-
-```sh
-wget -O /tmp/sopstool.rpm https://oss-pkg.ibotta.com/sopstool/sopstool_linux.rpm && \
-sudo rpm -i /tmp/sopstool.rpm
-```
-
-### sopstool Binary
-
-```sh
-wget -O /tmp/sopstool.tar.gz https://oss-pkg.ibotta.com/sopstool/sopstool_$(uname | tr '[:upper:]' '[:lower:]').tar.gz && \
-cd /tmp && \
-tar -xzf sopstool.tar.gz && \
-sudo install -Sv /tmp/sopstool /usr/local/bin
-```
-
-### sopstool using Go (master branch)
-
-```sh
-go get Ibotta/sopstool
-```
-
-### Installing sops
-
-Install [from a github release](https://github.com/mozilla/sops/releases), or
-
-#### sops with Homebrew
-
-```sh
-brew install sops
-```
-
-#### sops with Deb
-
-```sh
-wget -O /tmp/sops_3.0.0_amd64.deb https://github.com/mozilla/sops/releases/download/3.0.0/sops_3.0.0_amd64.deb && \
-dpkg -i /tmp/sops_3.0.0_amd64.deb && \
-rm /tmp/sops_3.0.0_amd64.deb
-```
+* Override the tag with the first shell argument (defaults to latest)
+* Override the binary install location with the -b flag (defaults to `/.bin`)
 
 #### sops using go
 
 ```sh
 go get -u go.mozilla.org/sops/cmd/sops
+```
+
+### installing sopstool individually
+
+Download the latest version for your platform from our [RELEASES](https://github.com/Ibotta/sopstool/releases) or follow one of the below to install the latest
+
+Following the lead of [sops](https://github.com/mozilla/sops), we only build 64bit binaries.
+
+### sopstool binary
+
+The install script above uses a separate script to download sopstool
+
+```sh
+curl https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh | bash
+```
+
+* Override the tag with the first shell argument (defaults to latest)
+* Override the binary install location with the -b flag (defaults to `/.bin`)
+
+### sopstool using Go (master branch)
+
+```sh
+go get Ibotta/sopstool
 ```
 
 ## Usage
