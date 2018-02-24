@@ -6,13 +6,9 @@ builds:
       - linux
     goarch:
       - amd64
-      - 386
 
 archive:
-  name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-  replacements:
-    amd64: x86_64
-    386: i386
+  name_template: "{{ .ProjectName }}_{{ .Os }}"
 
 checksum:
   # You can change the name of the checksums file.
@@ -26,15 +22,7 @@ checksum:
   name_template: "{{ .ProjectName }}_checksums.txt"
 
 nfpm:
-  name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-
-  # Replacements for GOOS and GOARCH in the package name.
-  # Keys should be valid GOOSs or GOARCHs.
-  # Values are the respective replacements.
-  # Default is empty.
-  replacements:
-    amd64: x86_64
-    386: i386
+  name_template: "{{ .ProjectName }}_{{ .Os }}"
 
   # Your app's vendor.
   # Default is empty.
@@ -69,7 +57,7 @@ brew:
   # # Reporitory to push the tap to.
   github:
     owner: Ibotta
-    name: homebrew-ibotta
+    name: homebrew-public
 
   # Git author used to commit to the repository.
   # Defaults are shown.

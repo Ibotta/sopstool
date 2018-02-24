@@ -2,41 +2,68 @@
 
 ## Installation and prereqs
 
-> TODO if fpm or brew work, use those first
+Download the latest version for your platform from our [RELEASES](https://github.com/Ibotta/sopstool/releases) or follow one of the below to install the latest
 
-1. install sops into your $PATH for your platform
+Following the lead of [sops](https://github.com/mozilla/sops) we only build 64bit binaries.
 
-    ```sh
-    # OSX (darwin)
-    brew install sops
-    ```
+### sopstool with Homebrew
 
-    ```sh
-    # Debian/Ubuntu (linux) sops 3.0
-    wget -O /tmp/sops_3.0.0_amd64.deb https://github.com/mozilla/sops/releases/download/3.0.0/sops_3.0.0_amd64.deb && \
-    dpkg -i /tmp/sops_3.0.0_amd64.deb && \
-    rm /tmp/sops_3.0.0_amd64.deb
-    ```
+```sh
+brew install Ibotta/public/sopstool
+```
 
-    or [from the github release](https://github.com/mozilla/sops/releases)
+### sopstool with Deb
 
-1. install the sopstool binary into your $PATH for your platform
+```sh
+wget -O /tmp/sopstool.deb https://oss-pkg.ibotta.com/sopstool/sopstool_linux.deb && \
+sudo dpkg -i /tmp/sopstool.deb
+```
 
-    > TODO adjust these to download from the github release url
+### sopstool with RPM
 
-    ```sh
-    # OSX (darwin)
-    wget $URL sopstool.tar.gz && \
-    sudo install -Sv /tmp/sopstool /usr/local/bin && \
-    rm -r /tmp/sopstool
-    ```
+```sh
+wget -O /tmp/sopstool.rpm https://oss-pkg.ibotta.com/sopstool/sopstool_linux.rpm && \
+sudo rpm -i /tmp/sopstool.rpm
+```
 
-    ```sh
-    # Debian/Ubuntu (linux)
-    wget $URL sopstool.tar.gz && \
-    sudo install -v /tmp/sopstool /usr/local/bin && \
-    rm -r /tmp/sopstool
-    ```
+### sopstool Binary
+
+```sh
+wget -O /tmp/sopstool.tar.gz https://oss-pkg.ibotta.com/sopstool/sopstool_$(uname | tr '[:upper:]' '[:lower:]').tar.gz && \
+cd /tmp && \
+tar -xzf sopstool.tar.gz && \
+sudo install -Sv /tmp/sopstool /usr/local/bin
+```
+
+### sopstool using Go (master branch)
+
+```sh
+go get Ibotta/sopstool
+```
+
+### Installing sops
+
+Install [from a github release](https://github.com/mozilla/sops/releases), or
+
+#### sops with Homebrew
+
+```sh
+brew install sops
+```
+
+#### sops with Deb
+
+```sh
+wget -O /tmp/sops_3.0.0_amd64.deb https://github.com/mozilla/sops/releases/download/3.0.0/sops_3.0.0_amd64.deb && \
+dpkg -i /tmp/sops_3.0.0_amd64.deb && \
+rm /tmp/sops_3.0.0_amd64.deb
+```
+
+#### sops using go
+
+```sh
+go get -u go.mozilla.org/sops/cmd/sops
+```
 
 ## Usage
 
