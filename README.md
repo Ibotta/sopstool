@@ -1,5 +1,7 @@
 # sopstool
 
+[![Build Status](https://travis-ci.org/Ibotta/sopstool.svg?branch=master)](https://travis-ci.org/Ibotta/sopstool) [![Maintainability](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/maintainability)](https://codeclimate.com/github/Ibotta/sopstool/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/test_coverage)](https://codeclimate.com/github/Ibotta/sopstool/test_coverage)
+
 sopstool is a multi-file wrapper around [sops](https://github.com/mozilla/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
 
 sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images.  Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).

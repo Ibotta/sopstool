@@ -19,6 +19,7 @@ env:
     - secure: "X6JDqwVHpwHMdqVAv64+lvNtGUWjb4/6hKGFV0LZClmREgfHNoLYlei/fNlAHpoQ3ssyiNn+8IJSyLihqhABXzJIQVbVP9LKXvG6WolaZFa7em3inBX84Eaf7TFexGxLrgsgrhOpTF/h2L+wIhDpNjv+cLU1jsqztHGUWq4MK8p/NpL762//zdrucpgPAlEs2kIjHDy8WuOYL92Z5DUjyfl6eZbl9D12JussKYCO59fv88ax4Gw16EL/pJSLXFzFLPXoklyz7WytoiLFeDEVHjjEgiCud+Fe3YKnyE58LSLqHjEjhu1Hl9JCmgMsLsBMeCN46hxDA/HJajTBgqaRMPQi9x/caG1FJsTiXC0gFHLkvnY3NA8aBcgk3b72D6WW8syc9UNvSensKDkV/WFXan0A2tIPW3TJDViOVoSy5l/sbzkKKaXEJZ9zmoKHXznJsptBP7MP2sidVGeh54BO8izkdgd1j64JIvIZafJP/4tyb37HsHBV2Rw5+7TRMM1g4Ww5964d4TEaSRiNvwVLparGR7POE3vh8SeHTo75AGfTRvanXoJz+jURQRe7oX4FluiUVVauvE84ldgdgs9EIcfWZq/r4PktpAQUvurOqvHFvmtDH3pj5IpN7rSpBrLJUqDZpjhrWFze5K1BiOBrEDhC3U14nN6Qr1m953+d++o=" #GH
     - secure: "gqr3U+nQubbot+I44iJaunIJCuV6DNcf+V1WINP5aIHzBGzGsuRyrwfi2nMzHoBdXIGPaOccB8zfTcZPQzshpQpzF6g9j0gsXsh0MIU3lOKyA1fxy6FKbe0lQm+8pg70XYYpM+aK5pajzAMXKaDB0uYRdUu5F+PpP6vYgHBe7W/qUEtGCOeftD82nYn8BlTLNBorLiTJ3EdGu5Ao70gBH+7pVhHrgAlaQDGZKSZcUYTuM5qwg83sldYTHPWYFxHRBvu/5PpcxaAJLYzPUp0DsDV4Eh4x4b/P/ThYSR8V2zDedz0nBKH/LjiGq1U1ta5uIjWNYC/0ENkTl3ykiPbh2/fdlgQhBT2iaDJEdBGEFWV7hErzGQAmDRAaM5OcT61n7zcj7v3supGdyWqGmhVMWhVbT8RMgjDGtWo8fWMrzu0RF4GRhevjQrf1McHzLaYLxVCG3FFRi/b71N/6bxnP4cDhYpGUBoNah01J5ynUoaaZ5KaF+POr9+8j8aVDcTfiibyVDKmH//S6qViPdLMP408Zyc8M2chmyODBYgSkaWHCnZIi4rtyZ1/J6NE3DIXekbNpGGhmLWLAUceNlxe+rupE2eNTlLCoK+knYyloeL3W8JIHZBzvuV3DymQAxm+0tVbVoi6Opuivm6GUL6epWi4UirEu9XgmNczgS8DPt8k=" #AWS_ID
     - secure: "MKopJn8iodm7wl+mYgOIiS5w+ZXH5tD4sgcW1fxeYMQk07spLZSFXG848hcproA+E4e9ItuwmbNNXRv8lIL4huV5KWxYrhghZFShNTCRTUaEn24zt6H9xyB6WSBGOugZu8ocbVmoCijuUCYPxIWIFwACwCHf/bGlOtqh9XBfQWIakXCNWKsa0PEI8UCPu+2NM4avxytu8HnuhnmkeRqe1DT9TNG/4D4ToGDGnG9gqKifUu5cZMkSU/8fwFlJT/32dI7IzHNQeclE/JQifHbtxs7lT45sYZ2mESeWBh3lCkylkTqwrUnIvBoRfOHz4rKU2xsfkRVZ4ASRBch+xO1cHsBxaF0/rc5K7QKfJO/0Enx7CdZzm3yxi9a/uokcOaw5Gkaq8a8GnmmBg3j7VB83buS9/RlXfMkxDYkCsmQq/l3J3czyutOS+ElshDZbVZqt0Ri7fXA5CKYdwFEwUOf1kitsTdjf2UBKp19C/svE3SDL7LY15qx9/lSv2xJlG0pbNmodAo1dPieYuZoRUHLHOowk4ybP7JWIXZdOyGZKbZzcDpaonAXEriG7mqrnVHxQJH/psXF2wB+mwJCcRJ9GD+Oen6vRKHlxszmqPpw3MJ/LKT8jjReqc3IT1qZP0HCF+uyN7pzXQRqfNLAYll0hP2f7cRtQZu5dQZFuzTFOmzw=" #AWS_SEC
+    - secure: "fxQGy/it5W1NxCrpalz5K3UOZxAfvU9A0n7SoMUCHaK59dBmSWl1PyoyBkEFq3+bZqKqJjkyosn74RT5jQkOqm/nX38+EY/8GjG0Ds+okekrVP5ap6t313NeYALgApgxERZlK14/W6HWLYm8sAQNc7KHnnBroLt/KhIBJ7c0IKay4cPLunMegi+XOs4PjL+BOJ3hGoIWS2kShwIGqb0a0JkRh3gLXZUTyqlJ2AuzO859pAlMzfNqs6C/1R/U7dD2kBbKBhL0mbQ20OuKjPulis5ktcf5S7QRmUNWQE/MO62A2jVf/1+xjURuWiBHa/hKzh4dDXmJjaZgiJlOpZI4e9G24znoBgeiaEYvk5lQcSx88Y2w4FiJdXcLfssTT8pTJr/JCSozH34gNjW+tWScBJ5ERWnUdsPxU3q0MmhZe/XmRMa2N/Zw1APmUnfKvePNc2F4gL7KA7i1Nnje5EOaZSsPpSpC2Ev52mHKHiYqoq5Id4jQCSkxiImvCgepX/ccuzPq7wytaoOZ/nvhCGAh/mdJHUafaTVVFYeXXIe3jxEFRoKqiDY35F7cTqQ1y46YoQqWDxj9kRgBFJAp/Hd78dVMd0P0b2lSIaBrCyCeEGRbY8iuwACCxnBo+zWR+MkZUyMJRhResD8ZseZvqBpwWQHtcRUL5IvDMQkv95S+s3k=" #CC
 
 before_install:
   # https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-use-dep-in-ci
@@ -26,10 +27,21 @@ before_install:
   - curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
   # Make the binary executable
   - chmod +x $GOPATH/bin/dep
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
 
 install:
   # default is `go get -t ./...` - we override that with dep
   - dep ensure
+
+before_script:
+  - ./cc-test-reporter before-build
+
+script:
+  - go test -coverprofile c.out ./...
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 deploy:
 - provider: script
