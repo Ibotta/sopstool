@@ -34,14 +34,8 @@ install:
   # default is `go get -t ./...` - we override that with dep
   - dep ensure
 
-before_script:
-  - ./cc-test-reporter before-build
-
 script:
-  - go test -coverprofile c.out ./...
-
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - scripts/coverage_test
 
 deploy:
 - provider: script
