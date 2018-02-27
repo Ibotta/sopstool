@@ -13,7 +13,7 @@ import (
 
 // addCmd represents the add command
 var addCmd = &cobra.Command{
-	Aliases: []string{"a"},
+	Aliases: []string{"a", "encrypt"},
 	Use:     "add [files ...]",
 	Short:   "add file to the encryption list",
 	Long:    `Add files to the list of files managed by sopstool`,
