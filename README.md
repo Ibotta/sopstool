@@ -121,7 +121,7 @@ sopstool completion --sh zsh
 1. Create a [KMS Key](https://aws.amazon.com/kms/).
 1. Follow along the [Configuration Steps](https://github.com/Ibotta/sopstool/tree/master/#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
     * All files added to SOPS are relative, or in child directories to the `.sops.yaml` configuration file.
-1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the keys, but not it's values.
+1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the values, but not it's keys.
     * You can read more about [SOPS Here](https://github.com/mozilla/sops).
 1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
     * When your files are properly encyrepted, you can run `sopstool clean` to remove the original plain text secret files.
