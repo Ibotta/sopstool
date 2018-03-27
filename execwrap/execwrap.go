@@ -15,6 +15,7 @@ type systemExec interface {
 	Create(name string) (*os.File, error)
 	LookPath(name string) (string, error)
 	Environ() []string
+	Remove(name string) error
 }
 type osExec struct {
 	command  func(name string, arg ...string) *exec.Cmd
@@ -22,8 +23,10 @@ type osExec struct {
 	create   func(name string) (*os.File, error)
 	lookPath func(name string) (string, error)
 	environ  func() []string
+	remove   func(name string) error
 }
 
+// TODO simplify this now that we use gomock
 func (e osExec) Command(name string, arg ...string) *exec.Cmd {
 	return e.command(name, arg...)
 }
@@ -39,6 +42,9 @@ func (e osExec) LookPath(name string) (string, error) {
 func (e osExec) Environ() []string {
 	return e.environ()
 }
+func (e osExec) Remove(name string) error {
+	return e.remove(name)
+}
 
 var e systemExec = osExec{
 	command:  exec.Command,
@@ -46,6 +52,7 @@ var e systemExec = osExec{
 	create:   os.Create,
 	lookPath: exec.LookPath,
 	environ:  os.Environ,
+	remove:   os.Remove,
 }
 
 // EncryptFile encrypts a file rewriting the sops encrypted file
@@ -68,15 +75,14 @@ func DecryptFilePrint(fn string) error {
 
 // RemoveFile removes a plaintext file from the filesystem
 func RemoveFile(fn string) error {
-	// TODO replace with os.Remove
-	return ew.RunCommandDirect([]string{"rm", fn})
+	return e.Remove(fn)
 }
 
 // RemoveSopsFile removes a sops file from the filesystem
 func RemoveSopsFile(fn string) error {
 	cryptfile := fileutil.NormalizeToSopsFile(fn)
 
-	return ew.RunCommandDirect([]string{"rm", cryptfile})
+	return e.Remove(cryptfile)
 }
 
 // RotateFile rotates keys on a file
@@ -136,14 +142,25 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 	if err != nil {
 		return err
 	}
-	defer outfile.Close()
 	cmd.Stdout = outfile
 
 	err = cmd.Start()
 	if err != nil {
+		outfile.Close()
+		e.Remove(outfileName)
 		return err
 	}
-	return cmd.Wait()
+
+	ret := cmd.Wait()
+	err = outfile.Close()
+	if err != nil {
+		return err
+	}
+	if ret != nil {
+		e.Remove(outfileName)
+	}
+
+	return ret
 }
 
 // RunSyscallExec runs exec which fully takes over the process.

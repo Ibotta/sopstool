@@ -18,7 +18,7 @@ func TestEncryptFile(t *testing.T) {
 	t.Run("run enc", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
 
 		mock.EXPECT().RunCommandStdoutToFile("myfile.sops.yaml", gomock.Eq([]string{"sops", "-e", "myfile.yaml"})).Return(nil)
 
@@ -39,7 +39,7 @@ func TestDecryptFile(t *testing.T) {
 	t.Run("run dec", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
 
 		mock.EXPECT().RunCommandStdoutToFile("myfile.yaml", gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(nil)
 
@@ -56,7 +56,7 @@ func TestDecryptFile(t *testing.T) {
 	t.Run("run dec returns error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
 
 		mock.EXPECT().RunCommandStdoutToFile("myfile.yaml", gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(errors.New("did someting bad"))
 
@@ -77,7 +77,7 @@ func TestDecryptFilePrint(t *testing.T) {
 	t.Run("run dec print", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
 
 		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(nil)
 
@@ -94,43 +94,43 @@ func TestDecryptFilePrint(t *testing.T) {
 }
 
 func TestRemoveFile(t *testing.T) {
-	origEw := ew
-	t.Run("run rm", func(t *testing.T) {
+	origE := e
+	t.Run("removes", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMocksystemExec(ctrl)
 
-		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"rm", "myfile.yaml"})).Return(nil)
+		mock.EXPECT().Remove(gomock.Eq("myfile.yaml")).Return(nil)
 
-		ew = mock
+		e = mock
 
 		err := RemoveFile("myfile.yaml")
 		if err != nil {
 			t.Errorf("TestEncryptFile() unexpected error %v", err)
 		}
 
-		ew = origEw
+		e = origE
 		return
 	})
 }
 
 func TestRemoveSopsFile(t *testing.T) {
-	origEw := ew
+	origE := e
 	t.Run("run rm", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMocksystemExec(ctrl)
 
-		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"rm", "myfile.sops.yaml"})).Return(nil)
+		mock.EXPECT().Remove(gomock.Eq("myfile.sops.yaml")).Return(nil)
 
-		ew = mock
+		e = mock
 
 		err := RemoveSopsFile("myfile.yaml")
 		if err != nil {
 			t.Errorf("TestEncryptFile() unexpected error %v", err)
 		}
 
-		ew = origEw
+		e = origE
 		return
 	})
 }
@@ -140,7 +140,7 @@ func TestRotateFile(t *testing.T) {
 	t.Run("run rotate", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
 
 		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "-i", "-r", "myfile.sops.yaml"})).Return(nil)
 		ew = mock
@@ -160,7 +160,7 @@ func TestEditFile(t *testing.T) {
 	t.Run("run edit", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockexecutionWrapper(ctrl)
+		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
 
 		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "myfile.sops.yaml"})).Return(nil)
 		ew = mock
@@ -308,6 +308,8 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		})
 		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
+		mock.EXPECT().Remove(gomock.Eq("filename")).Return(nil)
+
 		e = mock
 
 		err := ew.RunCommandStdoutToFile("filename", []string{"sops", "myfile.sops.yaml"})
@@ -341,6 +343,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		e = origE
 		return
 	})
+	// TODO test when Close err, but requires mocking of file
 }
 
 func TestRunSyscallExec(t *testing.T) {
