@@ -31,6 +31,8 @@ func init() {
 
 // RemoveCommand the command for the add command
 func RemoveCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	for _, fileArg := range args {
 		fn := fileutil.NormalizeToPlaintextFile(fileArg)
 

@@ -26,6 +26,8 @@ func init() {
 
 // CatCommand prints a file to stdout
 func CatCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	for _, fileArg := range args {
 		fn := fileutil.NormalizeToPlaintextFile(fileArg)
 		if fileutil.ListIndexOf(sopsConfig.EncryptedFiles, fn) < 0 {

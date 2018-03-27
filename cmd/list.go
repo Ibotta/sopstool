@@ -26,6 +26,8 @@ func init() {
 
 // ListCommand the command for the list command
 func ListCommand(cmd *cobra.Command, args []string) {
+	initConfig()
+
 	for _, fn := range sopsConfig.EncryptedFiles {
 		fmt.Println(fn)
 	}

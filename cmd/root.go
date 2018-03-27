@@ -41,8 +41,6 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
-
 	// Here you will define your flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
@@ -51,6 +49,11 @@ func init() {
 
 // initConfig reads in config file
 func initConfig() {
+	// skip if already loaded
+	if sopsConfig.Path != "" {
+		return
+	}
+
 	cfgFile, err := sopsyaml.FindConfigFile(cfgPath)
 	if err != nil {
 		panic(err)

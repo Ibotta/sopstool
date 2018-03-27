@@ -23,11 +23,13 @@ var allowFail bool
 
 func init() {
 	RootCmd.AddCommand(decryptCmd)
-	addCmd.Flags().BoolVarP(&allowFail, "allow-fail", "a", false, "Do not fail if not all files can be decrypted")
+	decryptCmd.Flags().BoolVarP(&allowFail, "allow-fail", "a", false, "Do not fail if not all files can be decrypted")
 }
 
 // DecryptCommand decrypts files
 func DecryptCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	filesToDecrypt, err := fileutil.SomeOrAllFiles(args, sopsConfig.EncryptedFiles)
 	if err != nil {
 		return err

@@ -23,6 +23,8 @@ func init() {
 
 // CleanCommand cleans up files
 func CleanCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	filesToClean, err := fileutil.SomeOrAllFiles(args, sopsConfig.EncryptedFiles)
 	if err != nil {
 		return err

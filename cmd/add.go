@@ -33,6 +33,8 @@ func init() {
 
 // AddCommand the command for the add command
 func AddCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	for _, fileArg := range args {
 		fn := fileutil.NormalizeToPlaintextFile(fileArg)
 
