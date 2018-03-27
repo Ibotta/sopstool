@@ -3,7 +3,8 @@
 package cmd
 
 import (
-	"github.com/Ibotta/sopstool/execwrap"
+	"os"
+
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
 )
@@ -29,9 +30,12 @@ func CleanCommand(cmd *cobra.Command, args []string) error {
 
 	//clean all the files
 	for _, f := range filesToClean {
-		err := execwrap.RemoveFile(f)
+		_, err := os.Stat(f)
 		if err != nil {
-			return err
+			err = os.Remove(f)
+			if err != nil {
+				return err
+			}
 		}
 	}
 

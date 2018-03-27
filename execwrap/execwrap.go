@@ -68,6 +68,7 @@ func DecryptFilePrint(fn string) error {
 
 // RemoveFile removes a plaintext file from the filesystem
 func RemoveFile(fn string) error {
+	// TODO replace with os.Remove
 	return ew.RunCommandDirect([]string{"rm", fn})
 }
 

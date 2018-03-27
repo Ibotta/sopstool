@@ -22,11 +22,13 @@ var addCmd = &cobra.Command{
 }
 
 var noEncrypt bool
+var noClean bool
 
 func init() {
 	RootCmd.AddCommand(addCmd)
 
 	addCmd.Flags().BoolVarP(&noEncrypt, "no-encrypt", "n", false, "Do not encrypt the file after adding")
+	addCmd.Flags().BoolVar(&noClean, "no-clean", false, "Do not clean up plaintext after encrypting")
 }
 
 // AddCommand the command for the add command
@@ -46,6 +48,13 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 		//if the file exists, encrypt it
 		if !noEncrypt {
 			err := execwrap.EncryptFile(fn)
+			if err != nil {
+				return err
+			}
+		}
+
+		if !noClean {
+			err := execwrap.RemoveFile(fn)
 			if err != nil {
 				return err
 			}
