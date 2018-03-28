@@ -3,8 +3,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
@@ -23,7 +21,7 @@ var allowFail bool
 
 func init() {
 	RootCmd.AddCommand(decryptCmd)
-	decryptCmd.Flags().BoolVar(&allowFail, "allow-fail", false, "Do not fail if not all files can be decrypted")
+	decryptCmd.Flags().BoolVar(&allowFail, "allow-fail", false, "Do not fail if files can not be decrypted")
 }
 
 // DecryptCommand decrypts files
@@ -36,20 +34,11 @@ func DecryptCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	//decrypt all the files
-	errCount := 0
 	for _, f := range filesToDecrypt {
 		err := execwrap.DecryptFile(f)
-		if err != nil {
-			if allowFail {
-				errCount++
-			} else {
-				return err
-			}
+		if err != nil && !allowFail {
+			return err
 		}
-	}
-
-	if errCount == len(filesToDecrypt) {
-		return fmt.Errorf("all files failed to decrypt")
 	}
 
 	return nil
