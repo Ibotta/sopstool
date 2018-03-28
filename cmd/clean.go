@@ -33,12 +33,13 @@ func CleanCommand(cmd *cobra.Command, args []string) error {
 	//clean all the files
 	for _, f := range filesToClean {
 		_, err := os.Stat(f)
-		if err != nil {
+		if err == nil {
 			err = os.Remove(f)
 			if err != nil {
 				return err
 			}
 		}
+
 	}
 
 	return nil
