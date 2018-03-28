@@ -43,7 +43,6 @@ func RemoveCommand(cmd *cobra.Command, args []string) error {
 
 		//splice file out of list
 		sopsConfig.EncryptedFiles = append(sopsConfig.EncryptedFiles[:i], sopsConfig.EncryptedFiles[i+1:]...)
-		fmt.Println("removed file from list:", fn)
 
 		if deleteFiles {
 			err := execwrap.RemoveFile(fn)
@@ -55,6 +54,8 @@ func RemoveCommand(cmd *cobra.Command, args []string) error {
 				return err
 			}
 		}
+
+		fmt.Println("removed file from list:", fn)
 	}
 
 	err := sopsyaml.WriteEncryptFilesToDisk(sopsConfig.Path, sopsConfig.Tree, sopsConfig.EncryptedFiles)

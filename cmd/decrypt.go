@@ -23,7 +23,7 @@ var allowFail bool
 
 func init() {
 	RootCmd.AddCommand(decryptCmd)
-	decryptCmd.Flags().BoolVarP(&allowFail, "allow-fail", "a", false, "Do not fail if not all files can be decrypted")
+	decryptCmd.Flags().BoolVar(&allowFail, "allow-fail", false, "Do not fail if not all files can be decrypted")
 }
 
 // DecryptCommand decrypts files

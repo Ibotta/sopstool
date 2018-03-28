@@ -24,7 +24,9 @@ func init() {
 	RootCmd.AddCommand(entrypointCmd)
 	entrypointCmd.Flags().BoolVarP(&execCommand, "exec", "e", false, "Delegate to the command directly with exec(3), no cleanup")
 	entrypointCmd.Flags().StringSliceVarP(&filesToDecrypt, "files", "f", []string{}, "files to decrypt (default all)")
-	entrypointCmd.Flags().BoolVarP(&allowFail, "allow-fail", "a", false, "Do not fail if not all files can be decrypted")
+
+	// allowFail is getting inherited from decrypt.go since it is in the same package
+	entrypointCmd.Flags().BoolVar(&allowFail, "allow-fail", false, "Do not fail if not all files can be decrypted")
 }
 
 // EntrypointCommand the command for the add command

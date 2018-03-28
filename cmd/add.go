@@ -45,7 +45,6 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 
 		// add file to list
 		sopsConfig.EncryptedFiles = append(sopsConfig.EncryptedFiles, fn)
-		fmt.Println("added file to list:", fn)
 
 		//if the file exists, encrypt it
 		if !noEncrypt {
@@ -61,12 +60,16 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 				return err
 			}
 		}
+
+		fmt.Println("added file to list:", fn)
 	}
 
 	err := sopsyaml.WriteEncryptFilesToDisk(sopsConfig.Path, sopsConfig.Tree, sopsConfig.EncryptedFiles)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Files added")
 
 	return nil
 }
