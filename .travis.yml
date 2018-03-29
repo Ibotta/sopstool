@@ -27,8 +27,12 @@ before_install:
   - curl -L -s https://github.com/golang/dep/releases/download/v${DEP_VERSION}/dep-linux-amd64 -o $GOPATH/bin/dep
   # Make the binary executable
   - chmod +x $GOPATH/bin/dep
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
+  # https://github.com/codeclimate/test-reporter#installation--usage
+  # Download the binary to bin folder in $GOPATH
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > $GOPATH/bin/cc-test-reporter
+  # Make the binary executable
+  - chmod +x $GOPATH/bin/cc-test-reporter
+  - mkdir tmp || true
 
 install:
   # default is `go get -t ./...` - we override that with dep
