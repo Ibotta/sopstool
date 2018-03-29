@@ -22,15 +22,19 @@ var addCmd = &cobra.Command{
 }
 
 var noEncrypt bool
+var noClean bool
 
 func init() {
 	RootCmd.AddCommand(addCmd)
 
 	addCmd.Flags().BoolVarP(&noEncrypt, "no-encrypt", "n", false, "Do not encrypt the file after adding")
+	addCmd.Flags().BoolVar(&noClean, "no-clean", false, "Do not clean up plaintext after encrypting")
 }
 
 // AddCommand the command for the add command
 func AddCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	for _, fileArg := range args {
 		fn := fileutil.NormalizeToPlaintextFile(fileArg)
 
@@ -41,7 +45,6 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 
 		// add file to list
 		sopsConfig.EncryptedFiles = append(sopsConfig.EncryptedFiles, fn)
-		fmt.Println("added file to list:", fn)
 
 		//if the file exists, encrypt it
 		if !noEncrypt {
@@ -50,12 +53,23 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 				return err
 			}
 		}
+
+		if !noClean {
+			err := execwrap.RemoveFile(fn)
+			if err != nil {
+				return err
+			}
+		}
+
+		fmt.Println("added file to list:", fn)
 	}
 
 	err := sopsyaml.WriteEncryptFilesToDisk(sopsConfig.Path, sopsConfig.Tree, sopsConfig.EncryptedFiles)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Files added")
 
 	return nil
 }

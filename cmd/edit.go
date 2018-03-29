@@ -24,6 +24,8 @@ func init() {
 
 // EditCommand edit a file
 func EditCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	fn := fileutil.NormalizeToPlaintextFile(args[0])
 	if fileutil.ListIndexOf(sopsConfig.EncryptedFiles, fn) < 0 {
 		return fmt.Errorf("File not found: %s", fn)

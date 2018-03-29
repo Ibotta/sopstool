@@ -12,7 +12,7 @@ import (
 var rotateCmd = &cobra.Command{
 	Use:   "rotate [files ...]",
 	Short: "rotate keys on files",
-	Long:  `Reencrypt and rotate the keys on some or all files`,
+	Long:  `Reencrypt and rotate data the keys on some or all files`,
 	RunE:  RotateCommand,
 }
 
@@ -22,6 +22,8 @@ func init() {
 
 // RotateCommand Rotates up files
 func RotateCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	filesToRotate, err := fileutil.SomeOrAllFiles(args, sopsConfig.EncryptedFiles)
 	if err != nil {
 		return err

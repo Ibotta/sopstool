@@ -17,12 +17,17 @@ var decryptCmd = &cobra.Command{
 	RunE:    DecryptCommand,
 }
 
+var allowFail bool
+
 func init() {
 	RootCmd.AddCommand(decryptCmd)
+	decryptCmd.Flags().BoolVar(&allowFail, "allow-fail", false, "Do not fail if files can not be decrypted")
 }
 
 // DecryptCommand decrypts files
 func DecryptCommand(cmd *cobra.Command, args []string) error {
+	initConfig()
+
 	filesToDecrypt, err := fileutil.SomeOrAllFiles(args, sopsConfig.EncryptedFiles)
 	if err != nil {
 		return err
@@ -31,7 +36,7 @@ func DecryptCommand(cmd *cobra.Command, args []string) error {
 	//decrypt all the files
 	for _, f := range filesToDecrypt {
 		err := execwrap.DecryptFile(f)
-		if err != nil {
+		if err != nil && !allowFail {
 			return err
 		}
 	}

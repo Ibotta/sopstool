@@ -101,61 +101,73 @@ func (mr *MocksystemExecMockRecorder) Environ() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Environ", reflect.TypeOf((*MocksystemExec)(nil).Environ))
 }
 
-// MockexecutionWrapper is a mock of executionWrapper interface
-type MockexecutionWrapper struct {
+// Remove mocks base method
+func (m *MocksystemExec) Remove(name string) error {
+	ret := m.ctrl.Call(m, "Remove", name)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Remove indicates an expected call of Remove
+func (mr *MocksystemExecMockRecorder) Remove(name interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MocksystemExec)(nil).Remove), name)
+}
+
+// MockExecutionWrapper is a mock of ExecutionWrapper interface
+type MockExecutionWrapper struct {
 	ctrl     *gomock.Controller
-	recorder *MockexecutionWrapperMockRecorder
+	recorder *MockExecutionWrapperMockRecorder
 }
 
-// MockexecutionWrapperMockRecorder is the mock recorder for MockexecutionWrapper
-type MockexecutionWrapperMockRecorder struct {
-	mock *MockexecutionWrapper
+// MockExecutionWrapperMockRecorder is the mock recorder for MockExecutionWrapper
+type MockExecutionWrapperMockRecorder struct {
+	mock *MockExecutionWrapper
 }
 
-// NewMockexecutionWrapper creates a new mock instance
-func NewMockexecutionWrapper(ctrl *gomock.Controller) *MockexecutionWrapper {
-	mock := &MockexecutionWrapper{ctrl: ctrl}
-	mock.recorder = &MockexecutionWrapperMockRecorder{mock}
+// NewMockExecutionWrapper creates a new mock instance
+func NewMockExecutionWrapper(ctrl *gomock.Controller) *MockExecutionWrapper {
+	mock := &MockExecutionWrapper{ctrl: ctrl}
+	mock.recorder = &MockExecutionWrapperMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use
-func (m *MockexecutionWrapper) EXPECT() *MockexecutionWrapperMockRecorder {
+func (m *MockExecutionWrapper) EXPECT() *MockExecutionWrapperMockRecorder {
 	return m.recorder
 }
 
 // RunCommandDirect mocks base method
-func (m *MockexecutionWrapper) RunCommandDirect(command []string) error {
+func (m *MockExecutionWrapper) RunCommandDirect(command []string) error {
 	ret := m.ctrl.Call(m, "RunCommandDirect", command)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RunCommandDirect indicates an expected call of RunCommandDirect
-func (mr *MockexecutionWrapperMockRecorder) RunCommandDirect(command interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunCommandDirect", reflect.TypeOf((*MockexecutionWrapper)(nil).RunCommandDirect), command)
+func (mr *MockExecutionWrapperMockRecorder) RunCommandDirect(command interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunCommandDirect", reflect.TypeOf((*MockExecutionWrapper)(nil).RunCommandDirect), command)
 }
 
 // RunCommandStdoutToFile mocks base method
-func (m *MockexecutionWrapper) RunCommandStdoutToFile(outfileName string, command []string) error {
+func (m *MockExecutionWrapper) RunCommandStdoutToFile(outfileName string, command []string) error {
 	ret := m.ctrl.Call(m, "RunCommandStdoutToFile", outfileName, command)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RunCommandStdoutToFile indicates an expected call of RunCommandStdoutToFile
-func (mr *MockexecutionWrapperMockRecorder) RunCommandStdoutToFile(outfileName, command interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunCommandStdoutToFile", reflect.TypeOf((*MockexecutionWrapper)(nil).RunCommandStdoutToFile), outfileName, command)
+func (mr *MockExecutionWrapperMockRecorder) RunCommandStdoutToFile(outfileName, command interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunCommandStdoutToFile", reflect.TypeOf((*MockExecutionWrapper)(nil).RunCommandStdoutToFile), outfileName, command)
 }
 
 // RunSyscallExec mocks base method
-func (m *MockexecutionWrapper) RunSyscallExec(args []string) error {
+func (m *MockExecutionWrapper) RunSyscallExec(args []string) error {
 	ret := m.ctrl.Call(m, "RunSyscallExec", args)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // RunSyscallExec indicates an expected call of RunSyscallExec
-func (mr *MockexecutionWrapperMockRecorder) RunSyscallExec(args interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunSyscallExec", reflect.TypeOf((*MockexecutionWrapper)(nil).RunSyscallExec), args)
+func (mr *MockExecutionWrapperMockRecorder) RunSyscallExec(args interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RunSyscallExec", reflect.TypeOf((*MockExecutionWrapper)(nil).RunSyscallExec), args)
 }
