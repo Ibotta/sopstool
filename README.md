@@ -78,7 +78,7 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh
 ### installing sopstool using go (master branch)
 
 ```sh
-go get -u Ibotta/sopstool
+go get -u github.com/Ibotta/sopstool
 ```
 
 ## Usage
