@@ -75,8 +75,6 @@ go run main.go version
 
 ## Releasing
 
-> Still WIP
-
 1. Preview the release (optional)
 
     You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
@@ -144,13 +142,27 @@ Summary: Given a version number **MAJOR**.**MINOR**.**PATCH**, increment the:
 
 ## Patterns
 
+### Godownloader
+
+We use [godownloader](https://github.com/goreleaser/godownloader) to generate the installer scripts.
+
+* for sops, it uses the 'raw repo' method
+
+		```sh
+		godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
+		```
+
+* for sopstool, we can use the goreleaser file
+
+		```sh
+		godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
+		```
+
 ### Common thirdparty modules to use
 
-> TODO
-
-### Module Configuration
-
-> TODO
+* cobra
+* yaml
+* mock
 
 ### Errors
 
