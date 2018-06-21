@@ -95,3 +95,40 @@ brew:
   # Default is empty.
   test: |
     system "#{bin}/sopstool version"
+
+s3:
+  # You can have multiple s3 configs
+  -
+    # Bucket name (without the s3:// prefix)
+    # Default is empty.
+    bucket: oss-pkg.ibotta.com
+
+    # AWS Region to use.
+    # Defaults is us-east-1
+    region: us-east-1
+
+    # path inside the bucket.
+    # This is parsed with the Go template engine and the following variables
+    # are available:
+    # - ProjectName
+    # - Tag
+    # - Version (Git tag without `v` prefix)
+    # There is also a template function "time" that takes a Go time format
+    # string to insert a formated timestamp into the release name.
+    # Default is `{{ .ProjectName }}/{{ .Tag }}`
+    # folder:
+
+    # Set a custom profile to use for this s3 config. If you have multiple
+    # profiles setup in you ~/.aws config, this shall help defining which
+    # profile to use in which s3 bucket.
+    # Default is empty.
+    # profile: my-profile
+
+    # Endpoint allows you to set a custom endpoint, which is useful if you
+    # want to push your artifacts to a minio server for example.
+    # Default is AWS S3 URL.
+    # endpoint: "http://minio.foo.com"
+  -
+    bucket: oss-pkg.ibotta.com
+    region: us-east-1
+    folder: "{{ .ProjectName }}"

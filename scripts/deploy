@@ -12,10 +12,10 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 curl -sL http://git.io/goreleaser | bash
 
 if [ -e dist/sopstool_checksums.txt ]; then
-  for f in $(cat dist/sopstool_checksums.txt | awk '{ print "dist/" $2 }'); do
-    $DIR/aws s3 cp $f s3://oss-pkg.ibotta.com/sopstool/
-  done
-  $DIR/aws s3 cp dist/sopstool_checksums.txt s3://oss-pkg.ibotta.com/sopstool/
+  #also copy up installers
+  $DIR/aws s3 cp sopsinstall.sh s3://oss-pkg.ibotta.com/sopstool/
+  $DIR/aws s3 cp sopstoolinstall.sh s3://oss-pkg.ibotta.com/sopstool/
+  $DIR/aws s3 cp install.sh s3://oss-pkg.ibotta.com/sopstool/
 else
   echo "Did not build checksums" && exit 1
 fi
