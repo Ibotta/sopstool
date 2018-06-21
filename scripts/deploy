@@ -7,6 +7,7 @@ set -o pipefail
 # enable interruption signal handling
 trap - INT TERM
 
+S3URL="s3://oss-pkg.ibotta.com"
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 DIST="$DIR/../dist"
 
@@ -17,9 +18,9 @@ if [ ! -e dist/sopstool_checksums.txt ]; then
 fi
 
 # also copy up installers
-$DIR/aws s3 cp sopsinstall.sh s3://oss-pkg.ibotta.com/sopstool/
-$DIR/aws s3 cp sopstoolinstall.sh s3://oss-pkg.ibotta.com/sopstool/
-$DIR/aws s3 cp install.sh s3://oss-pkg.ibotta.com/sopstool/
+$DIR/aws s3 cp sopsinstall.sh "$S3URL/sopstool/"
+$DIR/aws s3 cp sopstoolinstall.sh "$S3URL/sopstool/"
+$DIR/aws s3 cp install.sh "$S3URL/sopstool/"
 
 # download sops for reupload to s3
 SOPSDIST="$DIST/sops"
@@ -32,4 +33,4 @@ $DIR/sopsdownload.sh -o linux "$SOPSDIST"
 $DIR/sopsdownload.sh -o darwin "$SOPSDIST"
 
 # put those on s3
-$DIR/aws s3 cp --recursive "$SOPSDIST" s3://oss-pkg.ibotta.com/sops/
+$DIR/aws s3 cp --recursive "$SOPSDIST" "$S3URL/sops/"
