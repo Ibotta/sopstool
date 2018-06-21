@@ -8,14 +8,28 @@ set -o pipefail
 trap - INT TERM
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIST="$DIR/../dist"
 
 curl -sL http://git.io/goreleaser | bash
 
-if [ -e dist/sopstool_checksums.txt ]; then
-  #also copy up installers
-  $DIR/aws s3 cp sopsinstall.sh s3://oss-pkg.ibotta.com/sopstool/
-  $DIR/aws s3 cp sopstoolinstall.sh s3://oss-pkg.ibotta.com/sopstool/
-  $DIR/aws s3 cp install.sh s3://oss-pkg.ibotta.com/sopstool/
-else
+if [ ! -e dist/sopstool_checksums.txt ]; then
   echo "Did not build checksums" && exit 1
 fi
+
+# also copy up installers
+$DIR/aws s3 cp sopsinstall.sh s3://oss-pkg.ibotta.com/sopstool/
+$DIR/aws s3 cp sopstoolinstall.sh s3://oss-pkg.ibotta.com/sopstool/
+$DIR/aws s3 cp install.sh s3://oss-pkg.ibotta.com/sopstool/
+
+# download sops for reupload to s3
+SOPSDIST="$DIST/sops"
+if [ -d "$SOPSDIST" ]; then
+  rm -rf "$SOPSDIST"
+fi
+
+mkdir -p "$SOPSDIST"
+$DIR/sopsdownload.sh -o linux "$SOPSDIST"
+$DIR/sopsdownload.sh -o darwin "$SOPSDIST"
+
+# put those on s3
+$DIR/aws s3 cp --recursive "$SOPSDIST" s3://oss-pkg.ibotta.com/sops/
