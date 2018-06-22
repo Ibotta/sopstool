@@ -7,15 +7,30 @@ set -o pipefail
 # enable interruption signal handling
 trap - INT TERM
 
+S3URL="s3://oss-pkg.ibotta.com"
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+DIST="$DIR/../dist"
 
 curl -sL http://git.io/goreleaser | bash
 
-if [ -e dist/sopstool_checksums.txt ]; then
-  for f in $(cat dist/sopstool_checksums.txt | awk '{ print "dist/" $2 }'); do
-    $DIR/aws s3 cp $f s3://oss-pkg.ibotta.com/sopstool/
-  done
-  $DIR/aws s3 cp dist/sopstool_checksums.txt s3://oss-pkg.ibotta.com/sopstool/
-else
+if [ ! -e dist/sopstool_checksums.txt ]; then
   echo "Did not build checksums" && exit 1
 fi
+
+# also copy up installers
+$DIR/aws s3 cp sopsinstall.sh "$S3URL/sopstool/"
+$DIR/aws s3 cp sopstoolinstall.sh "$S3URL/sopstool/"
+$DIR/aws s3 cp install.sh "$S3URL/sopstool/"
+
+# download sops for reupload to s3
+SOPSDIST="$DIST/sops"
+if [ -d "$SOPSDIST" ]; then
+  rm -rf "$SOPSDIST"
+fi
+
+mkdir -p "$SOPSDIST"
+$DIR/sopsdownload.sh -o linux "$SOPSDIST"
+$DIR/sopsdownload.sh -o darwin "$SOPSDIST"
+
+# put those on s3
+$DIR/aws s3 cp --recursive "$SOPSDIST" "$S3URL/sops/"
