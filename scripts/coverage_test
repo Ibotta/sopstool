@@ -4,7 +4,7 @@ set -e
 cc-test-reporter before-build
 
 for pkg in $(go list ./...); do
-  go test -coverprofile=./tmp/$(echo $pkg | tr / -).cover $pkg
+	go test -coverprofile=./tmp/$(echo $pkg | tr / -).cover $pkg
 done
 
 echo "mode: set" > c.out
@@ -14,3 +14,4 @@ rm -f ./tmp/*.cover
 cc-test-reporter after-build
 
 rm c.out
+

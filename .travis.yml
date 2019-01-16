@@ -8,8 +8,8 @@ services:
 addons:
   apt:
     packages:
-    # needed for the nfpm pipe:
-    - rpm
+      # needed for the nfpm pipe:
+      - rpm
 
 env:
   global:
@@ -39,13 +39,15 @@ install:
   - dep ensure
 
 script:
-  - scripts/coverage_test
+  # See https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash ./scripts/test; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./scripts/coverage_test; fi'
 
 deploy:
-- provider: script
-  # calls goreleaser
-  skip_cleanup: true
-  script: scripts/deploy
-  on:
-    tags: true
-    condition: $TRAVIS_OS_NAME = linux
+  - provider: script
+    # calls goreleaser
+    skip_cleanup: true
+    script: scripts/deploy
+    on:
+      tags: true
+      condition: $TRAVIS_OS_NAME = linux
