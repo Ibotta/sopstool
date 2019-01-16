@@ -3,6 +3,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/spf13/cobra"
 )
@@ -30,23 +32,24 @@ func init() {
 }
 
 // EntrypointCommand the command for the add command
-func EntrypointCommand(cmd *cobra.Command, args []string) error {
+func EntrypointCommand(cmd *cobra.Command, args []string) (rerr error) {
 	initConfig()
 
 	err := DecryptCommand(cmd, filesToDecrypt)
 	if err != nil {
 		return err
 	}
+	defer func() {
+		err := CleanCommand(cmd, filesToDecrypt)
+		if err != nil {
+			rerr = fmt.Errorf("Encrypted file cleanup error:\n%s\n%s", err, rerr)
+		}
+	}()
 
 	if execCommand {
 		execwrap.ExecWrap().RunSyscallExec(args)
 	} else {
 		err := execwrap.ExecWrap().RunCommandDirect(args)
-		if err != nil {
-			return err
-		}
-
-		err = CleanCommand(cmd, filesToDecrypt)
 		if err != nil {
 			return err
 		}
