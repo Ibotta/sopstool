@@ -1,16 +1,25 @@
 #!/bin/sh
 set -e
 
-cc-test-reporter before-build
+# See the documentation for why we need this if statement
+# https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions
+if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+	cc-test-reporter before-build
 
-for pkg in $(go list ./...); do
-  go test -coverprofile=./tmp/$(echo $pkg | tr / -).cover $pkg
-done
+	for pkg in $(go list ./...); do
+		go test -coverprofile=./tmp/$(echo $pkg | tr / -).cover $pkg
+	done
 
-echo "mode: set" > c.out
-grep -h -v "^mode:" ./tmp/*.cover >> c.out
-rm -f ./tmp/*.cover
+	echo "mode: set" > c.out
+	grep -h -v "^mode:" ./tmp/*.cover >> c.out
+	rm -f ./tmp/*.cover
 
-cc-test-reporter after-build
+	cc-test-reporter after-build
 
-rm c.out
+	rm c.out
+else
+	for pkg in $(go list ./...); do
+		go test $pkg
+	done
+fi
+
