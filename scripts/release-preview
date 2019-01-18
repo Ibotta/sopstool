@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -e
 
-git diff --stat $(git describe --tags --abbrev=0 HEAD) HEAD
+git diff --stat "$(git describe --tags --abbrev=0 HEAD)" HEAD

@@ -31,10 +31,10 @@ parse_args() {
 
 execute() {
   if ! is_command sops; then
-    http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh -b $BINDIR $SOPS_VERSION
+    http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh -b "$BINDIR" "$SOPS_VERSION"
   fi
 
-  http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh -b $BINDIR $SOPSTOOL_VERSION
+  http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh -b "$BINDIR" "$SOPSTOOL_VERSION"
 
   echo "Both sops and sopstool installed"
 }
@@ -50,7 +50,7 @@ http_exec() {
     echo "http_exec: unable to find wget or curl"
     return 1
   fi
-  $cmd $url | $SHELL -s -- "$@"
+  $cmd "$url" | $SHELL -s -- "$@"
 }
 
 cat /dev/null <<EOF
