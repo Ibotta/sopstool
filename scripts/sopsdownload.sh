@@ -20,7 +20,7 @@ EOF
   exit 2
 }
 parse_args() {
-  while getopts "o:a:dh?" arg; do
+  while getopts "o:dh?" arg; do
     case "$arg" in
       o) OS="$OPTARG" ;;
       d) log_set_priority 10 ;;
@@ -29,7 +29,7 @@ parse_args() {
     esac
   done
   shift $((OPTIND - 1))
-  OUTDIR=$( cd "$1" && pwd )
+  OUTDIR=$(cd "$1" && pwd)
   TAG="$2"
 }
 
@@ -51,15 +51,15 @@ tag_to_version() {
 }
 
 dist_copy() {
-	chmod a+x "$1"
+  chmod a+x "$1"
   TAGDIR="${OUTDIR}/${TAG}"
   mkdir -p "${TAGDIR}"
   ARCHIVE="sops_${OS}.tar.gz"
-  ( cd "$(dirname "$1")" && tar -czf "${TAGDIR}/${ARCHIVE}" "$(basename "$1")" )
+  (cd "$(dirname "$1")" && tar -czf "${TAGDIR}/${ARCHIVE}" "$(basename "$1")")
   log_info "copied to ${TAGDIR}/${ARCHIVE}"
 
   if [ -n "$LATEST" ]; then
-    ln -s "${TAGDIR}/${ARCHIVE}" "${OUTDIR}/${ARCHIVE}"
+    cp "${TAGDIR}/${ARCHIVE}" "${OUTDIR}/${ARCHIVE}"
     log_info "marked as latest"
   fi
 }
@@ -68,7 +68,7 @@ dist_copy() {
 # to prevent curl|bash network truncation and disaster
 execute() {
   TMPDIR=$(mktmpdir)
-	DEST="${TMPDIR}/${BINARY}"
+  DEST="${TMPDIR}/${BINARY}"
   log_info "downloading from ${TARBALL_URL}"
   http_download "$DEST" "$TARBALL_URL"
   log_info "downloaded $DEST"

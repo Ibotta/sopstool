@@ -8,9 +8,12 @@ set -o pipefail
 trap - INT TERM
 
 S3URL="s3://oss-pkg.ibotta.com"
-DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-DIST="$DIR/../dist"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# ensure we are in the project root for all the work
+cd "$DIR/.."
+
+# run goreleaser
 curl -sL http://git.io/goreleaser | bash
 
 if [ ! -e dist/sopstool_checksums.txt ]; then
@@ -23,7 +26,7 @@ $DIR/aws s3 cp sopstoolinstall.sh "$S3URL/sopstool/"
 $DIR/aws s3 cp install.sh "$S3URL/sopstool/"
 
 # download sops for reupload to s3
-SOPSDIST="$DIST/sops"
+SOPSDIST="dist/sops"
 if [ -d "$SOPSDIST" ]; then
   rm -rf "$SOPSDIST"
 fi
@@ -33,4 +36,4 @@ $DIR/sopsdownload.sh -o linux "$SOPSDIST"
 $DIR/sopsdownload.sh -o darwin "$SOPSDIST"
 
 # put those on s3
-$DIR/aws s3 cp --recursive "$SOPSDIST" "$S3URL/sops/"
+$DIR/aws s3 cp --recursive "$SOPSDIST/" "$S3URL/sops/"
