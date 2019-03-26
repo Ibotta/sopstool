@@ -68,6 +68,7 @@ execute() {
   test ! -d "${BINDIR}" && install -d "${BINDIR}"
   install "${TMPDIR}/${NAME}" "${BINDIR}/${BINARY}"
   log_info "installed ${BINDIR}/${BINARY}"
+  rm -rf "${TMPDIR}" #cleanup
 }
 
 cat /dev/null <<EOF
