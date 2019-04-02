@@ -10,6 +10,9 @@ trap - INT TERM
 S3URL="s3://oss-pkg.ibotta.com"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# docker login
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 # ensure we are in the project root for all the work
 cd "$DIR/.."
 
