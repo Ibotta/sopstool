@@ -1,10 +1,20 @@
-FROM busybox
+FROM alpine:latest as build
+RUN apk --update add ca-certificates
 
-# install sops, which is required. Do it in the image because it needs to match the platform.
-# happily, busybox has everything we need!
 COPY sopsinstall.sh /tmp/sopsinstall.sh
-RUN /tmp/sopsinstall.sh -b /usr/local/bin && rm /tmp/sopsinstall.sh
+RUN /tmp/sopsinstall.sh -b /usr/local/bin
 
+##########
+
+FROM scratch
+
+# get the root certs
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+# get sops
+COPY --from=build usr/local/bin/sops /usr/local/bin/sops
+# get sopstool
 COPY sopstool /usr/local/bin/sopstool
+
+WORKDIR /work
 
 ENTRYPOINT ["/usr/local/bin/sopstool"]
