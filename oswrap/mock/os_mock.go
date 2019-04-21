@@ -124,3 +124,47 @@ func (mr *MockOsWrapMockRecorder) Remove(name interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockOsWrap)(nil).Remove), name)
 }
+
+// Stat mocks base method
+func (m *MockOsWrap) Stat(name string) (os.FileInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Stat", name)
+	ret0, _ := ret[0].(os.FileInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Stat indicates an expected call of Stat
+func (mr *MockOsWrapMockRecorder) Stat(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Stat", reflect.TypeOf((*MockOsWrap)(nil).Stat), name)
+}
+
+// ReadFile mocks base method
+func (m *MockOsWrap) ReadFile(filename string) ([]byte, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadFile", filename)
+	ret0, _ := ret[0].([]byte)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadFile indicates an expected call of ReadFile
+func (mr *MockOsWrapMockRecorder) ReadFile(filename interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFile", reflect.TypeOf((*MockOsWrap)(nil).ReadFile), filename)
+}
+
+// WriteFile mocks base method
+func (m *MockOsWrap) WriteFile(filename string, data []byte, perm os.FileMode) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "WriteFile", filename, data, perm)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// WriteFile indicates an expected call of WriteFile
+func (mr *MockOsWrapMockRecorder) WriteFile(filename, data, perm interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteFile", reflect.TypeOf((*MockOsWrap)(nil).WriteFile), filename, data, perm)
+}

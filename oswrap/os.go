@@ -22,7 +22,7 @@ type OsWrap interface {
 
 type osWrap struct{}
 
-var ow = osWrap{}
+var ow OsWrap = osWrap{}
 
 // OsWrapInstance gets an instance of the os wrapper
 func OsWrapInstance() OsWrap {
