@@ -2,8 +2,6 @@ package sopsyaml
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
 	"path"
 
 	"github.com/mozilla-services/yaml" //this branch has the unmarshaler that keeps comments
@@ -23,34 +21,6 @@ type SopsConfig struct {
 	Path           string
 	Tree           *yaml.MapSlice
 	EncryptedFiles []string
-}
-
-// wrap OS filesystem commands for mocking
-type fileSystem interface {
-	Stat(name string) (os.FileInfo, error)
-	ReadFile(filename string) ([]byte, error)
-	WriteFile(filename string, data []byte, perm os.FileMode) error
-}
-type osFS struct {
-	stat      func(string) (os.FileInfo, error)
-	readfile  func(string) ([]byte, error)
-	writefile func(string, []byte, os.FileMode) error
-}
-
-func (fs osFS) Stat(name string) (os.FileInfo, error) {
-	return fs.stat(name)
-}
-func (fs osFS) ReadFile(filename string) ([]byte, error) {
-	return fs.readfile(filename)
-}
-func (fs osFS) WriteFile(filename string, data []byte, perm os.FileMode) error {
-	return fs.writefile(filename, data, perm)
-}
-
-var fs fileSystem = osFS{
-	stat:      os.Stat,
-	readfile:  ioutil.ReadFile,
-	writefile: ioutil.WriteFile,
 }
 
 // FindConfigFile looks for a sops config file in the current working directory and on parent directories, up to the limit defined by the maxDepth constant.

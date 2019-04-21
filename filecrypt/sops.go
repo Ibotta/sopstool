@@ -1,19 +1,22 @@
 package filecrypt
 
-import "github.com/Ibotta/sopstool/fileutil"
-import "github.com/Ibotta/sopstool/oswrap"
+import (
+	"github.com/Ibotta/sopstool/fileutil"
+	"github.com/Ibotta/sopstool/oswrap"
+)
 
 type sopsCrypt struct {
 	execWrap oswrap.ExecWrap
 	osWrap   oswrap.OsWrap
 }
 
-var sops FileCrypt = sopsCrypt{
+var sops = sopsCrypt{
 	execWrap: oswrap.ExecWrapInstance(),
 	osWrap:   oswrap.OsWrapInstance(),
 }
 
-func SopsCrypt() FileCrypt {
+// SopsCryptInstance gets an instance of the sops wrapper
+func SopsCryptInstance() FileCrypt {
 	return sops
 }
 

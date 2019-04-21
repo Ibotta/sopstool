@@ -79,7 +79,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 	t.Run("run given command", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("true")
@@ -105,7 +105,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("true")
@@ -131,7 +131,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 	t.Run("run err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("false")
@@ -159,7 +159,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 	t.Run("file err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("false")
@@ -182,11 +182,11 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 }
 
 func TestRunSyscallExec(t *testing.T) {
-	origE := e
+	origOW := ow
 	t.Run("run given command", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("sopspath", nil)
 		mock.EXPECT().Environ().Return([]string{"one"})
@@ -206,7 +206,7 @@ func TestRunSyscallExec(t *testing.T) {
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("sopspath", nil)
 		mock.EXPECT().Environ().Return([]string{"one"})
@@ -226,7 +226,7 @@ func TestRunSyscallExec(t *testing.T) {
 	t.Run("exec error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("sopspath", nil)
 		mock.EXPECT().Environ().Return([]string{"one"})
@@ -246,7 +246,7 @@ func TestRunSyscallExec(t *testing.T) {
 	t.Run("lookpath error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_oswrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("", errors.New("an error"))
 		ow = mock

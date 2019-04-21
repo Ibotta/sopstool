@@ -1,6 +1,7 @@
 package oswrap
 
 import (
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"syscall"
@@ -14,11 +15,14 @@ type OsWrap interface {
 	LookPath(name string) (string, error)
 	Environ() []string
 	Remove(name string) error
+	Stat(name string) (os.FileInfo, error)
+	ReadFile(filename string) ([]byte, error)
+	WriteFile(filename string, data []byte, perm os.FileMode) error
 }
 
 type osWrap struct{}
 
-var ow OsWrap = osWrap{}
+var ow = osWrap{}
 
 // OsWrapInstance gets an instance of the os wrapper
 func OsWrapInstance() OsWrap {
@@ -42,4 +46,13 @@ func (ow osWrap) Environ() []string {
 }
 func (ow osWrap) Remove(name string) error {
 	return os.Remove(name)
+}
+func (ow osWrap) Stat(name string) (os.FileInfo, error) {
+	return os.Stat(name)
+}
+func (ow osWrap) ReadFile(filename string) ([]byte, error) {
+	return ioutil.ReadFile(filename)
+}
+func (ow osWrap) WriteFile(filename string, data []byte, perm os.FileMode) error {
+	return ioutil.WriteFile(filename, data, perm)
 }
