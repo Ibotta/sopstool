@@ -49,7 +49,7 @@ func RemoveCommand(cmd *cobra.Command, args []string) error {
 			if err != nil {
 				return err
 			}
-			err = execwrap.RemoveSopsFile(fn)
+			err = execwrap.RemoveCryptFile(fn)
 			if err != nil {
 				return err
 			}

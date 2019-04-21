@@ -1,4 +1,4 @@
-package execwrap
+package oswrap
 
 import (
 	"errors"
@@ -6,187 +6,23 @@ import (
 	"os/exec"
 	"testing"
 
-	mock_execwrap "github.com/Ibotta/sopstool/execwrap/mock"
+	mock_oswrap "github.com/Ibotta/sopstool/oswrap/mock"
+
 	"github.com/golang/mock/gomock"
-	// "github.com/spf13/afero"
 )
 
-type mockExecWrap struct{}
-
-func TestEncryptFile(t *testing.T) {
-	origEw := ew
-	t.Run("run enc", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
-
-		mock.EXPECT().RunCommandStdoutToFile("myfile.sops.yaml", gomock.Eq([]string{"sops", "-e", "myfile.yaml"})).Return(nil)
-
-		ew = mock
-
-		err := EncryptFile("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		ew = origEw
-		return
-	})
-}
-
-func TestDecryptFile(t *testing.T) {
-	origEw := ew
-	t.Run("run dec", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
-
-		mock.EXPECT().RunCommandStdoutToFile("myfile.yaml", gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(nil)
-
-		ew = mock
-
-		err := DecryptFile("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		ew = origEw
-		return
-	})
-	t.Run("run dec returns error", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
-
-		mock.EXPECT().RunCommandStdoutToFile("myfile.yaml", gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(errors.New("did someting bad"))
-
-		ew = mock
-
-		err := DecryptFile("myfile.yaml")
-		if err == nil {
-			t.Errorf("TestEncryptFile() expected an error, got %v", err)
-		}
-
-		ew = origEw
-		return
-	})
-}
-
-func TestDecryptFilePrint(t *testing.T) {
-	origEw := ew
-	t.Run("run dec print", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
-
-		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "-d", "myfile.sops.yaml"})).Return(nil)
-
-		ew = mock
-
-		err := DecryptFilePrint("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		ew = origEw
-		return
-	})
-}
-
-func TestRemoveFile(t *testing.T) {
-	origE := e
-	t.Run("removes", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
-
-		mock.EXPECT().Remove(gomock.Eq("myfile.yaml")).Return(nil)
-
-		e = mock
-
-		err := RemoveFile("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		e = origE
-		return
-	})
-}
-
-func TestRemoveSopsFile(t *testing.T) {
-	origE := e
-	t.Run("run rm", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
-
-		mock.EXPECT().Remove(gomock.Eq("myfile.sops.yaml")).Return(nil)
-
-		e = mock
-
-		err := RemoveSopsFile("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		e = origE
-		return
-	})
-}
-
-func TestRotateFile(t *testing.T) {
-	origEw := ew
-	t.Run("run rotate", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
-
-		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "-i", "-r", "myfile.sops.yaml"})).Return(nil)
-		ew = mock
-
-		err := RotateFile("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		ew = origEw
-		return
-	})
-}
-
-func TestEditFile(t *testing.T) {
-	origEw := ew
-	t.Run("run edit", func(t *testing.T) {
-		ctrl := gomock.NewController(t)
-		defer ctrl.Finish()
-		mock := mock_execwrap.NewMockExecutionWrapper(ctrl)
-
-		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "myfile.sops.yaml"})).Return(nil)
-		ew = mock
-
-		err := EditFile("myfile.yaml")
-		if err != nil {
-			t.Errorf("TestEncryptFile() unexpected error %v", err)
-		}
-
-		ew = origEw
-		return
-	})
-}
-
 func TestRunCommandDirect(t *testing.T) {
-	origE := e
+	origOW := ow
 	t.Run("run given command", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("true")
 		})
 
-		e = mock
+		ow = mock
 
 		err := ew.RunCommandDirect([]string{"sops", "myfile.sops.yaml"})
 
@@ -194,19 +30,19 @@ func TestRunCommandDirect(t *testing.T) {
 			t.Errorf("TestRunCommandDirect() unexpected error %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("true")
 		})
 
-		e = mock
+		ow = mock
 
 		err := ew.RunCommandDirect([]string{"sops"})
 
@@ -214,37 +50,36 @@ func TestRunCommandDirect(t *testing.T) {
 			t.Errorf("TestRunCommandDirect() unexpected error %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("run err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("false")
 		})
 
-		e = mock
-
+		ow = mock
 		err := ew.RunCommandDirect([]string{"sops", "myfile.sops.yaml"})
 
 		if err == nil {
 			t.Errorf("TestRunCommandDirect() expected error, got %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 }
 
 func TestRunCommandStdoutToFile(t *testing.T) {
-	origE := e
+	origOW := ow
 	t.Run("run given command", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("true")
@@ -256,7 +91,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		})
 		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
-		e = mock
+		ow = mock
 
 		err := ew.RunCommandStdoutToFile("filename", []string{"sops", "myfile.sops.yaml"})
 
@@ -264,13 +99,13 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 			t.Errorf("TestRunCommandStdoutToFile() unexpected error %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("true")
@@ -282,7 +117,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		})
 		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
-		e = mock
+		ow = mock
 
 		err := ew.RunCommandStdoutToFile("filename", []string{"sops"})
 
@@ -290,13 +125,13 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 			t.Errorf("TestRunCommandStdoutToFile() unexpected error %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("run err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("false")
@@ -310,7 +145,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Remove(gomock.Eq("filename")).Return(nil)
 
-		e = mock
+		ow = mock
 
 		err := ew.RunCommandStdoutToFile("filename", []string{"sops", "myfile.sops.yaml"})
 
@@ -318,13 +153,13 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 			t.Errorf("TestRunCommandStdoutToFile() expected error, got %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("file err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
 			return exec.Command("false")
@@ -332,7 +167,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).Return(nil, errors.New("an error"))
 
-		e = mock
+		ow = mock
 
 		err := ew.RunCommandStdoutToFile("filename", []string{"sops", "myfile.sops.yaml"})
 
@@ -340,7 +175,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 			t.Errorf("TestRunCommandStdoutToFile() expected error, got %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	// TODO test when Close err, but requires mocking of file
@@ -351,13 +186,13 @@ func TestRunSyscallExec(t *testing.T) {
 	t.Run("run given command", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("sopspath", nil)
 		mock.EXPECT().Environ().Return([]string{"one"})
 		mock.EXPECT().Exec(gomock.Eq("sopspath"), gomock.Eq([]string{"sops", "myfile.sops.yaml"}), []string{"one"}).Return(nil)
 
-		e = mock
+		ow = mock
 
 		err := ew.RunSyscallExec([]string{"sops", "myfile.sops.yaml"})
 
@@ -365,19 +200,19 @@ func TestRunSyscallExec(t *testing.T) {
 			t.Errorf("TestRunSyscallExec() unexpected error %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("sopspath", nil)
 		mock.EXPECT().Environ().Return([]string{"one"})
 		mock.EXPECT().Exec(gomock.Eq("sopspath"), gomock.Eq([]string{"sops"}), []string{"one"}).Return(nil)
 
-		e = mock
+		ow = mock
 
 		err := ew.RunSyscallExec([]string{"sops"})
 
@@ -385,19 +220,19 @@ func TestRunSyscallExec(t *testing.T) {
 			t.Errorf("TestRunSyscallExec() unexpected error %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("exec error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("sopspath", nil)
 		mock.EXPECT().Environ().Return([]string{"one"})
 		mock.EXPECT().Exec(gomock.Eq("sopspath"), gomock.Eq([]string{"sops", "myfile.sops.yaml"}), []string{"one"}).Return(errors.New("an error"))
 
-		e = mock
+		ow = mock
 
 		err := ew.RunSyscallExec([]string{"sops", "myfile.sops.yaml"})
 
@@ -405,16 +240,16 @@ func TestRunSyscallExec(t *testing.T) {
 			t.Errorf("TestRunSyscallExec() expected error, got %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 	t.Run("lookpath error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
-		mock := mock_execwrap.NewMocksystemExec(ctrl)
+		mock := mock_oswrap.NewMocksystemExec(ctrl)
 
 		mock.EXPECT().LookPath(gomock.Eq("sops")).Return("", errors.New("an error"))
-		e = mock
+		ow = mock
 
 		err := ew.RunSyscallExec([]string{"sops", "myfile.sops.yaml"})
 
@@ -422,7 +257,7 @@ func TestRunSyscallExec(t *testing.T) {
 			t.Errorf("TestRunSyscallExec() expected error, got %v", err)
 		}
 
-		e = origE
+		ow = origOW
 		return
 	})
 }
