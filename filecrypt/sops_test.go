@@ -4,10 +4,8 @@ import (
 	"errors"
 	"testing"
 
-	//TODO need mock os
 	mock_oswrap "github.com/Ibotta/sopstool/oswrap/mock"
 	"github.com/golang/mock/gomock"
-	// "github.com/spf13/afero"
 )
 
 func TestEncryptFile(t *testing.T) {

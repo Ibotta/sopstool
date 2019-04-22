@@ -324,7 +324,7 @@ func TestExtractConfigEncryptFiles(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "encrypted_files element doesnt exist",
+			name:    "encrypted_files element doesn't exist",
 			args:    args{data: unmarshalStringHelper("foo: bar")},
 			want:    []string{},
 			wantErr: false,

@@ -3,7 +3,6 @@
 package cmd
 
 import (
-	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
 )
@@ -35,7 +34,7 @@ func DecryptCommand(cmd *cobra.Command, args []string) error {
 
 	//decrypt all the files
 	for _, f := range filesToDecrypt {
-		err := execwrap.DecryptFile(f)
+		err := encrypter.DecryptFile(f)
 		if err != nil && !allowFail {
 			return err
 		}

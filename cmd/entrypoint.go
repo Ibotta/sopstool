@@ -5,7 +5,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/sopstool/execwrap"
+	"github.com/Ibotta/sopstool/oswrap"
 	"github.com/spf13/cobra"
 )
 
@@ -37,6 +37,10 @@ func init() {
 func EntrypointCommand(cmd *cobra.Command, args []string) (rerr error) {
 	initConfig()
 
+	//TODO put this somewhere mockable
+	execWrap := oswrap.ExecWrapInstance()
+
+	//TODO don't use the actual commands here.
 	err := DecryptCommand(cmd, filesToDecrypt)
 	if err != nil {
 		return err
@@ -50,9 +54,9 @@ func EntrypointCommand(cmd *cobra.Command, args []string) (rerr error) {
 	}()
 
 	if execCommand {
-		execwrap.ExecWrap().RunSyscallExec(args)
+		execWrap.RunSyscallExec(args)
 	} else {
-		err := execwrap.ExecWrap().RunCommandDirect(args)
+		err := execWrap.RunCommandDirect(args)
 		if err != nil {
 			return err
 		}

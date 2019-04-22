@@ -126,7 +126,7 @@ func ReplaceConfigEncryptFiles(data *yaml.MapSlice, encFiles []string) (*yaml.Ma
 		out = append(out, item)
 	}
 	if !found {
-		//didnt find an existing encrypted_files element, add it
+		//didn't find an existing encrypted_files element, add it
 		out = append(out, yaml.MapItem{Key: encryptedFilesKey, Value: encFiles})
 	}
 	return &out, nil
