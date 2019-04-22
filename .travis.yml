@@ -25,7 +25,7 @@ env:
 before_install:
   # https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-use-dep-in-ci
   # Download the binary to bin folder in $GOPATH
-	- curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   # https://github.com/codeclimate/test-reporter#installation--usage
   # Download the binary to bin folder in $GOPATH
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > $GOPATH/bin/cc-test-reporter
