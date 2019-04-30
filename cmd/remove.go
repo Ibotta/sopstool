@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/Ibotta/sopstool/sopsyaml"
 	"github.com/spf13/cobra"
@@ -45,11 +44,11 @@ func RemoveCommand(cmd *cobra.Command, args []string) error {
 		sopsConfig.EncryptedFiles = append(sopsConfig.EncryptedFiles[:i], sopsConfig.EncryptedFiles[i+1:]...)
 
 		if deleteFiles {
-			err := execwrap.RemoveFile(fn)
+			err := encrypter.RemoveFile(fn)
 			if err != nil {
 				return err
 			}
-			err = execwrap.RemoveSopsFile(fn)
+			err = encrypter.RemoveCryptFile(fn)
 			if err != nil {
 				return err
 			}

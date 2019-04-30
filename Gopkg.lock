@@ -2,66 +2,82 @@
 
 
 [[projects]]
+  digest = "1:141635a36d65611d06a05ec1d17be950e386426b6540169fe7c9476df41f6493"
   name = "github.com/cpuguy83/go-md2man"
   packages = ["md2man"]
-  revision = "20f5889cbdc3c73dbd2862796665e7c465ade7d1"
-  version = "v1.0.8"
+  pruneopts = ""
+  revision = "7762f7e404f8416dfa1d9bb6a8c192aa9acb4d19"
+  version = "v1.0.10"
 
 [[projects]]
-  branch = "master"
+  digest = "1:530233672f656641b365f8efb38ed9fba80e420baff2ce87633813ab3755ed6d"
   name = "github.com/golang/mock"
   packages = ["gomock"]
-  revision = "58cd061d09382b6011f84c1291ebe50ef2e25bab"
+  pruneopts = ""
+  revision = "51421b967af1f557f93a59e0057aaf15ca02e29c"
   source = "github.com/golang/mock"
+  version = "v1.2.0"
 
 [[projects]]
+  digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
   name = "github.com/inconshreveable/mousetrap"
   packages = ["."]
+  pruneopts = ""
   revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
   version = "v1.0"
 
 [[projects]]
   branch = "v2"
+  digest = "1:d325fe5d73593960929d875cb3cad70505317b753a21528edad35daeed8744ed"
   name = "github.com/mozilla-services/yaml"
   packages = ["."]
-  revision = "d8ecb20829d1db648c36e8c558b1c06b2eb74e36"
+  pruneopts = ""
+  revision = "28ffe5d0cafbfbfa6d9cf53864018abfa4bd8f6e"
 
 [[projects]]
+  digest = "1:2761e287c811d0948d47d0252b82281eca3801eb3c9d5f9530956643d5b9f430"
   name = "github.com/russross/blackfriday"
   packages = ["."]
-  revision = "4048872b16cc0fc2c5fd9eacf0ed2c2fedaa0c8c"
-  version = "v1.5"
+  pruneopts = ""
+  revision = "05f3235734ad95d0016f6a23902f06461fcf567a"
+  version = "v1.5.2"
 
 [[projects]]
+  digest = "1:a1403cc8a94b8d7956ee5e9694badef0e7b051af289caad1cf668331e3ffa4f6"
   name = "github.com/spf13/cobra"
   packages = [
     ".",
-    "doc"
+    "doc",
   ]
-  revision = "7b2c5ac9fc04fc5efafb60700713d4fa609b777b"
-  version = "v0.0.1"
+  pruneopts = ""
+  revision = "ef82de70bb3f60c65fb8eebacbb2d122ef517385"
+  version = "v0.0.3"
 
 [[projects]]
+  digest = "1:cbaf13cdbfef0e4734ed8a7504f57fe893d471d62a35b982bf6fb3f036449a66"
   name = "github.com/spf13/pflag"
   packages = ["."]
-  revision = "e57e3eeb33f795204c1ca35f56c44f83227c6e66"
-  version = "v1.0.0"
+  pruneopts = ""
+  revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
+  version = "v1.0.3"
 
 [[projects]]
-  branch = "master"
-  name = "golang.org/x/net"
-  packages = ["context"]
-  revision = "cbe0f9307d0156177f9dd5dc85da1a31abc5f2fb"
-
-[[projects]]
-  branch = "v2"
+  digest = "1:cedccf16b71e86db87a24f8d4c70b0a855872eb967cb906a66b95de56aefbd0d"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "d670f9405373e636a5a2765eea47fac0c9bc91a4"
+  pruneopts = ""
+  revision = "51d6538a90f86fe93ac480b35f37b2be17fef232"
+  version = "v2.2.2"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "e528eb4162655829c9f12138b4312acb5dd34312ba61890747d7f09d2903af6d"
+  input-imports = [
+    "github.com/golang/mock/gomock",
+    "github.com/mozilla-services/yaml",
+    "github.com/russross/blackfriday",
+    "github.com/spf13/cobra",
+    "github.com/spf13/cobra/doc",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -9,3 +9,6 @@ engines:
 ratings:
   paths:
     - "**.go"
+exclude_patterns:
+- "**/*_mock.go"
+- "**/*_test.go"

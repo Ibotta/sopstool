@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/Ibotta/sopstool/sopsyaml"
 	"github.com/spf13/cobra"
@@ -48,14 +47,14 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 
 		//if the file exists, encrypt it
 		if !noEncrypt {
-			err := execwrap.EncryptFile(fn)
+			err := encrypter.EncryptFile(fn)
 			if err != nil {
 				return err
 			}
 		}
 
 		if !noClean {
-			err := execwrap.RemoveFile(fn)
+			err := encrypter.RemoveFile(fn)
 			if err != nil {
 				return err
 			}

@@ -10,7 +10,22 @@
     brew bundle
     ```
 
-1. Set your GOPATH in your startup scripts
+1. Install go (currently 1.9)
+
+    You may want to use a go version manager. [goenv](https://github.com/syndbg/goenv), [asdf](https://github.com/kennyp/asdf-golang), [gimme](https://github.com/travis-ci/gimme) are all options.
+
+    ```sh
+    go version
+    # go version go1.9 darwin/amd64
+    ```
+
+1. Instal dep (currently the version manager)
+
+    ```sh
+    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+    ```
+
+1. Set your GOPATH in your startup scripts. This will need to be specific to your go version.
 
     ```sh
     export GOPATH="$HOME/go"
@@ -112,7 +127,7 @@ go run main.go version
 
 1. Merge the release to master
 
-    This **MUST** be a fastforward merge, otherwise the release tag(s) will be lost.
+    This **MUST** be a fast-forward merge, otherwise the release tag(s) will be lost.
 
     ```sh
     git checkout master && git pull
@@ -148,17 +163,17 @@ We use [godownloader](https://github.com/goreleaser/godownloader) to generate th
 
 * for sops, it uses the 'raw repo' method
 
-		```sh
-		godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
-		```
+    ```sh
+    godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
+    ```
 
 * for sopstool, we can use the goreleaser file
 
-		```sh
-		godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
-		```
+    ```sh
+    godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
+    ```
 
-### Common thirdparty modules to use
+### Common third-party modules in use
 
 * cobra
 * yaml

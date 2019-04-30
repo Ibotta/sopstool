@@ -3,7 +3,6 @@
 package cmd
 
 import (
-	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
 )
@@ -12,7 +11,7 @@ import (
 var rotateCmd = &cobra.Command{
 	Use:   "rotate [files ...]",
 	Short: "rotate keys on files",
-	Long:  `Reencrypt and rotate data the keys on some or all files`,
+	Long:  `Re-encrypt and rotate data the keys on some or all files`,
 	RunE:  RotateCommand,
 }
 
@@ -31,7 +30,7 @@ func RotateCommand(cmd *cobra.Command, args []string) error {
 
 	//Rotate all the files
 	for _, f := range filesToRotate {
-		err := execwrap.RotateFile(f)
+		err := encrypter.RotateFile(f)
 		if err != nil {
 			return err
 		}

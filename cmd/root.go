@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Ibotta/sopstool/filecrypt"
 	"github.com/Ibotta/sopstool/sopsyaml"
 	"github.com/spf13/cobra"
 )
@@ -21,6 +22,9 @@ var BuildDate string
 
 var cfgPath string
 var sopsConfig sopsyaml.SopsConfig
+
+// global stuff. TODO, fix this
+var encrypter filecrypt.FileCrypt = filecrypt.SopsCryptInstance()
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{

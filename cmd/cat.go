@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 
 	"github.com/spf13/cobra"
@@ -34,7 +33,7 @@ func CatCommand(cmd *cobra.Command, args []string) error {
 			return fmt.Errorf("File not found: %s", fn)
 		}
 
-		err := execwrap.DecryptFilePrint(fn)
+		err := encrypter.DecryptFilePrint(fn)
 		if err != nil {
 			return err
 		}

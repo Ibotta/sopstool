@@ -5,7 +5,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/Ibotta/sopstool/execwrap"
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +13,7 @@ import (
 var editCmd = &cobra.Command{
 	Use:   "edit",
 	Short: "edit [file]",
-	Long:  `edit a file in $EDITOR, reencrypting after completed`,
+	Long:  `edit a file in $EDITOR, re-encrypting after completed`,
 	RunE:  EditCommand,
 }
 
@@ -31,7 +30,7 @@ func EditCommand(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("File not found: %s", fn)
 	}
 
-	err := execwrap.EditFile(fn)
+	err := encrypter.EditFile(fn)
 	if err != nil {
 		return err
 	}

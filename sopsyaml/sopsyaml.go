@@ -2,9 +2,9 @@ package sopsyaml
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
 	"path"
+
+	"github.com/Ibotta/sopstool/oswrap"
 
 	"github.com/mozilla-services/yaml" //this branch has the unmarshaler that keeps comments
 )
@@ -18,6 +18,8 @@ const (
 	encryptedFilesKey = "encrypted_files"
 )
 
+var osWrap = oswrap.OsWrapInstance()
+
 // SopsConfig holds info about an instance of the config file
 type SopsConfig struct {
 	Path           string
@@ -25,41 +27,13 @@ type SopsConfig struct {
 	EncryptedFiles []string
 }
 
-// wrap OS filesystem commands for mocking
-type fileSystem interface {
-	Stat(name string) (os.FileInfo, error)
-	ReadFile(filename string) ([]byte, error)
-	WriteFile(filename string, data []byte, perm os.FileMode) error
-}
-type osFS struct {
-	stat      func(string) (os.FileInfo, error)
-	readfile  func(string) ([]byte, error)
-	writefile func(string, []byte, os.FileMode) error
-}
-
-func (fs osFS) Stat(name string) (os.FileInfo, error) {
-	return fs.stat(name)
-}
-func (fs osFS) ReadFile(filename string) ([]byte, error) {
-	return fs.readfile(filename)
-}
-func (fs osFS) WriteFile(filename string, data []byte, perm os.FileMode) error {
-	return fs.writefile(filename, data, perm)
-}
-
-var fs fileSystem = osFS{
-	stat:      os.Stat,
-	readfile:  ioutil.ReadFile,
-	writefile: ioutil.WriteFile,
-}
-
 // FindConfigFile looks for a sops config file in the current working directory and on parent directories, up to the limit defined by the maxDepth constant.
 func FindConfigFile(start string) (string, error) {
 	filepath := start
 	for i := 0; i < maxDepth; i++ {
-		_, err := fs.Stat(path.Join(filepath, configFileName))
+		_, err := osWrap.Stat(path.Join(filepath, configFileName))
 		if err != nil {
-			_, giterr := fs.Stat(path.Join(filepath, ".git"))
+			_, giterr := osWrap.Stat(path.Join(filepath, ".git"))
 			if giterr == nil {
 				//found top of git, stop here
 				break
@@ -76,7 +50,7 @@ func FindConfigFile(start string) (string, error) {
 
 // LoadConfigFile loads a yaml file path into a yaml map
 func LoadConfigFile(confPath string) (*yaml.MapSlice, error) {
-	confBytes, err := fs.ReadFile(confPath)
+	confBytes, err := osWrap.ReadFile(confPath)
 	if err != nil {
 		return nil, fmt.Errorf("could not read config file: %s", err)
 	}
@@ -95,7 +69,7 @@ func WriteConfigFile(confPath string, yamlMap *yaml.MapSlice) error {
 	if err != nil {
 		return fmt.Errorf("Error marshaling to yaml: %s", err)
 	}
-	return fs.WriteFile(confPath, out, 0644)
+	return osWrap.WriteFile(confPath, out, 0644)
 }
 
 // ExtractConfigEncryptFiles pulls the files we want to manipulate out of the map
@@ -152,7 +126,7 @@ func ReplaceConfigEncryptFiles(data *yaml.MapSlice, encFiles []string) (*yaml.Ma
 		out = append(out, item)
 	}
 	if !found {
-		//didnt find an existing encrypted_files element, add it
+		//didn't find an existing encrypted_files element, add it
 		out = append(out, yaml.MapItem{Key: encryptedFilesKey, Value: encFiles})
 	}
 	return &out, nil
