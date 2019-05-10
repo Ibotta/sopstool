@@ -1,7 +1,12 @@
 package oswrap
 
 import (
+	"fmt"
+	"log"
 	"os"
+	"os/exec"
+	"os/signal"
+	"syscall"
 )
 
 // ExecWrap wraps exec calls
@@ -22,6 +27,7 @@ func ExecWrapInstance() ExecWrap {
 }
 
 // RunCommandDirect runs a command, redirecting 0/1/2 to the caller
+// signals are sent to child process to allow graceful shutdown
 func (ew execWrap) RunCommandDirect(command []string) error {
 	cmd := ow.Command(command[0], command[1:]...)
 	cmd.Stdin = os.Stdin
@@ -32,7 +38,42 @@ func (ew execWrap) RunCommandDirect(command []string) error {
 	if err != nil {
 		return err
 	}
-	return cmd.Wait()
+
+	// wait for the command to finish
+	waitCh := make(chan error, 1)
+	go func() {
+		waitCh <- cmd.Wait()
+		close(waitCh)
+	}()
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan)
+
+	// for loop to handle multiple signals
+	for {
+		select {
+		case sig := <-sigChan:
+			if err := cmd.Process.Signal(sig); err != nil {
+				// Error sending signal, log the signal and error message
+				log.Print("error sending signal", sig, err)
+			}
+		case err := <-waitCh:
+			// Sub-process exited.
+			if err != nil {
+				return err
+			}
+			// Get the return code, if we can
+			var waitStatus syscall.WaitStatus
+			if exitError, ok := err.(*exec.ExitError); ok {
+				waitStatus = exitError.Sys().(syscall.WaitStatus)
+				if waitStatus.ExitStatus() != 0 {
+					// return error to calling function to ensure standard processing with cleanup
+					return fmt.Errorf("child process exited with non-zero error code, %d", waitStatus.ExitStatus())
+				}
+			}
+			return nil
+		}
+	}
 }
 
 // RunCommandStdoutToFile runs a command, redirecting Stdout to a file, the rest to caller

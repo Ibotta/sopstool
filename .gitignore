@@ -4,3 +4,4 @@ tmp
 sopstool
 c.out
 *.cover
+.idea
