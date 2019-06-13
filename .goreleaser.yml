@@ -7,8 +7,9 @@ builds:
     goarch:
       - amd64
 
-archive:
-  name_template: "{{ .ProjectName }}_{{ .Os }}"
+archives:
+  - id: zips
+    name_template: "{{ .ProjectName }}_{{ .Os }}"
 
 checksum:
   # You can change the name of the checksums file.
