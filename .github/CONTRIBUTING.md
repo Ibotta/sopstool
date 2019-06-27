@@ -2,93 +2,30 @@
 
 ## Getting Started
 
-> TODO
-
-1. Run the Brewfile bundle
-
-    ```sh
-    brew bundle
-    ```
-
-1. Install go (currently 1.9)
-
-    You may want to use a go version manager. [goenv](https://github.com/syndbg/goenv), [asdf](https://github.com/kennyp/asdf-golang), [gimme](https://github.com/travis-ci/gimme) are all options.
-
-    ```sh
-    go version
-    # go version go1.9 darwin/amd64
-    ```
-
-1. Instal dep (currently the version manager)
-
-    ```sh
-    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-    ```
-
-1. Install gomock
-
-    ```sh
-    go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
-    ```
-
-1. Set your GOPATH in your startup scripts. This will need to be specific to your go version.
-
-    ```sh
-    export GOPATH="$HOME/go"
-    ```
-
-    This is the default path above, but it is always nice to specify it.
-
-1. Clone the repo
-
-    ```sh
-    git clone git clone git@github.com:Ibotta/sopstool.git $GOPATH/src/github.com/Ibotta/sopstool
-    ```
-
-    The path here is required by go tools and how packages are resolved.  [Read up on how to write go code](https://golang.org/doc/code.html#GOPATH). You can get away, sometimes, with symlinking the path, but YMMV.
-
-1. [optional] Install other go prerequisites (many [recommended by VSCode](https://github.com/Microsoft/vscode-go/wiki/Go-tools-that-the-Go-extension-depends-on) and used during development)
-
-    ```sh
-    go get -u -v github.com/ramya-rao-a/go-outline
-    go get -u -v github.com/acroca/go-symbols
-    go get -u -v github.com/mdempsky/gocode
-    go get -u -v github.com/rogpeppe/godef
-    go get -u -v golang.org/x/tools/cmd/godoc
-    go get -u -v github.com/zmb3/gogetdoc
-    go get -u -v golang.org/x/lint/golint
-    go get -u -v github.com/fatih/gomodifytags
-    go get -u -v golang.org/x/tools/cmd/gorename
-    go get -u -v sourcegraph.com/sqs/goreturns
-    go get -u -v golang.org/x/tools/cmd/goimports
-    go get -u -v github.com/cweill/gotests/...
-    go get -u -v golang.org/x/tools/cmd/guru
-    go get -u -v github.com/josharian/impl
-    go get -u -v github.com/haya14busa/goplay/cmd/goplay
-    go get -u -v github.com/uudashr/gopkgs/cmd/gopkgs
-    go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
-    go get -u -v github.com/alecthomas/gometalinter
-    gometalinter --install
-    ```
-
-1. Install packages required by packages in the repo
-
-    ```sh
-    dep ensure
-    ```
-
 ## Layout
 
 This is a single top-level namespace filled with packages.  Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
 
 ## Building Locally
 
-To get a binary locally, you can run `scripts/build` from the repo root. This will produce a `dist/sopstool` binary for you.
+### Go Version
 
-You can also use `go run` to instantly compile and run the main binary.
+Requires Go `>= 1.12.6`.
 
-```sh
-go run main.go version
+### Build
+
+If generate is ran above, then it does not need to run again.
+
+```bash
+go generate ./...
+go build
+go fmt ./...
+```
+
+### Unit Test
+
+```bash
+go test ./...
 ```
 
 ## Releasing
@@ -97,7 +34,7 @@ go run main.go version
 
     You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
 
-1. Prepare the release
+2. Prepare the release
 
     ```sh
     git checkout develop && git pull
@@ -122,13 +59,13 @@ go run main.go version
     ```
 
     1. Tags the commit with the release versions
-    1. pushes the tag to github `develop` branch
+    2. pushes the tag to github `develop` branch
 
-1. Review the release
+3. Review the release
 
     The easiest way to do this is to create a PR master <- develop. This should show all the changes about to be published, and give a good last review opportunity
 
-1. Merge the release to master
+4. Merge the release to master
 
     This **MUST** be a fast-forward merge, otherwise the release tag(s) will be lost.
 
@@ -139,7 +76,7 @@ go run main.go version
 
     If ff-only fails, you must resolve the merge so that it is linear, which could involve rebuilding the release tag(s).
 
-1. Watch for the release to pass CI
+5. Watch for the release to pass CI
 
 > TODO the tag+branch is a little tricky and one misstep can break the process. Look into a more foolproof or just simpler way to detect and release tags
 

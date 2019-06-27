@@ -1,6 +1,6 @@
 language: go
 go:
-  - "1.9"
+  - "1.12.x"
 
 services:
   - docker
@@ -23,9 +23,6 @@ env:
     - secure: "UIIIDqIjhp96RQ9StO4VVBRUhBENrhapYsf0wcbGBiVq4sl2Ct4D5vIyRr67lS2mpym4wlQfXigjAIn6X9fReXnGLcmJHE3jTPDirTPITbsArtkWjm/0nbN+cV6edhPi3yAD5JkIYGfjBe0Kb0Ge7a1iEpwND5qE7LrxD5o6gdAMuPhCFW+lHWNRRTB7kAfPHugF0A38BeUbOOXLmd0OKadDMAJAC1csPpgrqcyttsUl5wV8FHtg2bewfCQWVpT7tt2zTcKuEbEws0COhZ8uOE9/xhiVY+07b3XO4DtN5emo8gi+J51B8brkyQnMeNLz+RtOl4pcrZ2okdYMyZEUQgxSA0lBiH0xIogqku5upJa+8BKl/XnEuh+sZ3ms5TPRLWCxtGR6gyeuKVQ+nNCxKsBppayV7Phz22OOfg8dRsekRfdTkhkpLc3NaqLinOW7khrClszX7bazJGVzNGGYEyI1Vj8NINx5wklzIxxdQ0ZdusqcMJbb2LlHsbS6o5m2TYw9w/zWFvE/lozlRjDxkR+I4WWxxjzY/REED6pa9v2lgbDjyMlry3hmV3vHyXoaYOLxmkIpZYO04mlGSB4vjdltTL0SZT98hN6G7h6Mnl9ELB/499cJUYAdlVF3WTrnlNcMpYEYrZ368ZbMixQgBc0xQycTP9/MInW7bX04DAI=" #DH_PW
 
 before_install:
-  # https://github.com/golang/dep/blob/master/docs/FAQ.md#how-do-i-use-dep-in-ci
-  # Download the binary to bin folder in $GOPATH
-  - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
   # https://github.com/codeclimate/test-reporter#installation--usage
   # Download the binary to bin folder in $GOPATH
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > $GOPATH/bin/cc-test-reporter
@@ -33,9 +30,13 @@ before_install:
   - chmod +x $GOPATH/bin/cc-test-reporter
   - mkdir tmp || true
 
-install:
-  # default is `go get -t ./...` - we override that with dep
-  - dep ensure
+install: true
+
+cache:
+  directories:
+  - "$HOME/.local/bin"
+  - "$HOME/.local/lib/aws"
+  - "$HOME/gopath/pkg/mod"
 
 script:
   # See https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions
