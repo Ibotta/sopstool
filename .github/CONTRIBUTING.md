@@ -4,7 +4,7 @@
 
 ## Layout
 
-This is a single top-level namespace filled with packages.  Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
+This is a single top-level namespace filled with packages. Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
 
 ## Building Locally
 
@@ -12,49 +12,43 @@ This is a single top-level namespace filled with packages.  Each directory is po
 
 Requires Go `>= 1.12.6`.
 
-
 1. Install go (currently 1.12)
 
-    You may want to use a version manager.  
+   You may want to use a version manager.
 
-    [asdf](https://github.com/kennyp/asdf-golang)
+   - [asdf](https://github.com/kennyp/asdf-golang)
 
-    ```sh
-    asdf install golang 1.12.6
-    # use global to update default go version. local set just for current directory
-    asdf local golang 1.12.6
-    ```
+     ```sh
+     asdf install golang 1.12.6
+     # use global to update default go version. local set just for current directory
+     asdf local golang 1.12.6
+     ```
 
-    [goenv](https://github.com/syndbg/goenv),   are all options.
+   - [goenv](https://github.com/syndbg/goenv) is another option.
 
-    ```sh
-    goenv install 1.12.6
-    go version
-    # go version go1.12.6 darwin/amd64
-    ```
-        
-    * [gimme](https://github.com/travis-ci/gimme)
+     ```sh
+     goenv install 1.12.6
+     go version
+     # go version go1.12.6 darwin/amd64
+     ```
 
+   - [gimme](https://github.com/travis-ci/gimme)
 
 1. Install gomock
 
-    ```sh
-    go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
-    ```
-    
+   ```sh
+   go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
+   ```
+
 ### Build
 
+With go 1.11+ and addition of [Modules](https://github.com/golang/go/wiki/Modules), go projects can be located outside the GOPATH.
 
-With go 1.11 and addition of [Modules](https://github.com/golang/go/wiki/Modules),
-go projects can be located outside the GOPATH.
+If you are having issues review [faq](https://github.com/golang/go/wiki/Modules#faqs--most-common)
 
-If you are having issues review
-[faq](https://github.com/golang/go/wiki/Modules#faqs--most-common)
+If generate has already run, then it does not need to run again.
 
-
-If generate is ran above, then it does not need to run again.
-
-```bash
+```sh
 go build
 go fmt ./...
 golint ./...
@@ -62,7 +56,9 @@ golint ./...
 
 ### Unit Test
 
-```bash
+Each module is unit tested, and passes all tests.
+
+```sh
 go test ./...
 ```
 
@@ -70,57 +66,33 @@ go test ./...
 
 1. Preview the release (optional)
 
-    You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
+   You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
 
 1. Prepare the release
 
-    ```sh
-    git checkout develop && git pull
-    ```
+   ```sh
+   git checkout develop && git pull
+   ```
 
-    Commit and tag
+   Commit and tag with the intended version bump
 
-    ```sh
-    git commit -am "Tagging release $VERSION" && git tag v$VERSION
-    ```
+   ```sh
+   git commit -am "Tagging release $VERSION" && git tag v$VERSION
+   ```
 
-    example:
+   for example:
 
-    ```sh
-    git commit -am "Tagging release 0.1.1" && git tag v0.1.1
-    ```
+   ```sh
+   git commit -am "Tagging release 0.1.1" && git tag v0.1.1
+   ```
 
-    Then push to github
+   Then push the tag and commit to github
 
-    ```sh
-    git push && git push --tags # or git push --follow-tags but YMMV
-    ```
+   ```sh
+   git push && git push --tags # or git push --follow-tags but YMMV
+   ```
 
-    1. Tags the commit with the release versions
-    1. pushes the tag to github `develop` branch
-
-1. Review the release
-
-    The easiest way to do this is to create a PR master <- develop. This should show all the changes about to be published, and give a good last review opportunity
-
-1. Merge the release to master
-
-    This **MUST** be a fast-forward merge, otherwise the release tag(s) will be lost.
-
-    ```sh
-    git checkout master && git pull
-    git merge develop --ff-only
-    ```
-
-    If ff-only fails, you must resolve the merge so that it is linear, which could involve rebuilding the release tag(s).
-
-1. Watch for the release to pass CI
-
-> TODO the tag+branch is a little tricky and one misstep can break the process. Look into a more foolproof or just simpler way to detect and release tags
-
-### Release Gotchas
-
-> TODO This process under review
+1. Watch for the release to pass CI. CI publishes the release and pushes the artifacts.
 
 ## Versioning
 
@@ -139,23 +111,23 @@ Summary: Given a version number **MAJOR**.**MINOR**.**PATCH**, increment the:
 
 We use [godownloader](https://github.com/goreleaser/godownloader) to generate the installer scripts.
 
-* for sops, it uses the 'raw repo' method
+- for sops, it uses the 'raw repo' method
 
-    ```sh
-    godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
-    ```
+  ```sh
+  godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
+  ```
 
-* for sopstool, we can use the goreleaser file
+- for sopstool, we can use the goreleaser file
 
-    ```sh
-    godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
-    ```
+  ```sh
+  godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
+  ```
 
 ### Common third-party modules in use
 
-* cobra
-* yaml
-* mock
+- cobra
+- yaml
+- mock
 
 ### Errors
 
@@ -163,7 +135,7 @@ We use [godownloader](https://github.com/goreleaser/godownloader) to generate th
 
 ### Tests
 
-Write tests for all your public APIs.  It can also be useful to write unit tests for private APIs if the methods are complex. Use mocks intelligently. Remember to properly handle and return promises and other async code to avoid those tests getting missed. Don't check in tests with the 'only' flag.
+Write tests for all your public APIs. It can also be useful to write unit tests for private APIs if the methods are complex. Use mocks intelligently. Remember to properly handle and return promises and other async code to avoid those tests getting missed. Don't check in tests with the 'only' flag.
 
 ### Documentation
 
@@ -171,4 +143,4 @@ Document all public APIs to help users understand the module at a glance. Also c
 
 ### Style
 
-Clean up style warnings thrown by gofmt/golint (configured at the base of this repository).  These will be marked as build failures in CI.  Also consider using 'gofmt' to automatically clean up your code style while conforming to the configuration.
+Clean up style warnings thrown by gofmt/golint (configured at the base of this repository). These will be marked as build failures in CI. Also consider using 'gofmt' to automatically clean up your code style while conforming to the configuration.
