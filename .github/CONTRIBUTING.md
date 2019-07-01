@@ -2,150 +2,97 @@
 
 ## Getting Started
 
-> TODO
-
-1. Run the Brewfile bundle
-
-    ```sh
-    brew bundle
-    ```
-
-1. Install go (currently 1.9)
-
-    You may want to use a go version manager. [goenv](https://github.com/syndbg/goenv), [asdf](https://github.com/kennyp/asdf-golang), [gimme](https://github.com/travis-ci/gimme) are all options.
-
-    ```sh
-    go version
-    # go version go1.9 darwin/amd64
-    ```
-
-1. Instal dep (currently the version manager)
-
-    ```sh
-    curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-    ```
-
-1. Install gomock
-
-    ```sh
-    go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
-    ```
-
-1. Set your GOPATH in your startup scripts. This will need to be specific to your go version.
-
-    ```sh
-    export GOPATH="$HOME/go"
-    ```
-
-    This is the default path above, but it is always nice to specify it.
-
-1. Clone the repo
-
-    ```sh
-    git clone git clone git@github.com:Ibotta/sopstool.git $GOPATH/src/github.com/Ibotta/sopstool
-    ```
-
-    The path here is required by go tools and how packages are resolved.  [Read up on how to write go code](https://golang.org/doc/code.html#GOPATH). You can get away, sometimes, with symlinking the path, but YMMV.
-
-1. [optional] Install other go prerequisites (many [recommended by VSCode](https://github.com/Microsoft/vscode-go/wiki/Go-tools-that-the-Go-extension-depends-on) and used during development)
-
-    ```sh
-    go get -u -v github.com/ramya-rao-a/go-outline
-    go get -u -v github.com/acroca/go-symbols
-    go get -u -v github.com/mdempsky/gocode
-    go get -u -v github.com/rogpeppe/godef
-    go get -u -v golang.org/x/tools/cmd/godoc
-    go get -u -v github.com/zmb3/gogetdoc
-    go get -u -v golang.org/x/lint/golint
-    go get -u -v github.com/fatih/gomodifytags
-    go get -u -v golang.org/x/tools/cmd/gorename
-    go get -u -v sourcegraph.com/sqs/goreturns
-    go get -u -v golang.org/x/tools/cmd/goimports
-    go get -u -v github.com/cweill/gotests/...
-    go get -u -v golang.org/x/tools/cmd/guru
-    go get -u -v github.com/josharian/impl
-    go get -u -v github.com/haya14busa/goplay/cmd/goplay
-    go get -u -v github.com/uudashr/gopkgs/cmd/gopkgs
-    go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
-    go get -u -v github.com/alecthomas/gometalinter
-    gometalinter --install
-    ```
-
-1. Install packages required by packages in the repo
-
-    ```sh
-    dep ensure
-    ```
-
 ## Layout
 
-This is a single top-level namespace filled with packages.  Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
+This is a single top-level namespace filled with packages. Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
 
 ## Building Locally
 
-To get a binary locally, you can run `scripts/build` from the repo root. This will produce a `dist/sopstool` binary for you.
+### Go Version
 
-You can also use `go run` to instantly compile and run the main binary.
+Requires Go `>= 1.12.6`.
+
+1. Install go (currently 1.12)
+
+   You may want to use a version manager.
+
+   - [asdf](https://github.com/kennyp/asdf-golang)
+
+     ```sh
+     asdf install golang 1.12.6
+     # use global to update default go version. local set just for current directory
+     asdf local golang 1.12.6
+     ```
+
+   - [goenv](https://github.com/syndbg/goenv) is another option.
+
+     ```sh
+     goenv install 1.12.6
+     go version
+     # go version go1.12.6 darwin/amd64
+     ```
+
+   - [gimme](https://github.com/travis-ci/gimme)
+
+1. Install gomock
+
+   ```sh
+   go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
+   ```
+
+### Build
+
+With go 1.11+ and addition of [Modules](https://github.com/golang/go/wiki/Modules), go projects can be located outside the GOPATH.
+
+If you are having issues review [faq](https://github.com/golang/go/wiki/Modules#faqs--most-common)
+
+If generate has already run, then it does not need to run again.
 
 ```sh
-go run main.go version
+go build
+go fmt ./...
+golint ./...
+```
+
+### Unit Test
+
+Each module is unit tested, and passes all tests.
+
+```sh
+go test ./...
 ```
 
 ## Releasing
 
 1. Preview the release (optional)
 
-    You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
+   You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
 
 1. Prepare the release
 
-    ```sh
-    git checkout develop && git pull
-    ```
+   ```sh
+   git checkout develop && git pull
+   ```
 
-    Commit and tag
+   Commit and tag with the intended version bump
 
-    ```sh
-    git commit -am "Tagging release $VERSION" && git tag v$VERSION
-    ```
+   ```sh
+   git commit -am "Tagging release $VERSION" && git tag v$VERSION
+   ```
 
-    example:
+   for example:
 
-    ```sh
-    git commit -am "Tagging release 0.1.1" && git tag v0.1.1
-    ```
+   ```sh
+   git commit -am "Tagging release 0.1.1" && git tag v0.1.1
+   ```
 
-    Then push to github
+   Then push the tag and commit to github
 
-    ```sh
-    git push && git push --tags # or git push --follow-tags but YMMV
-    ```
+   ```sh
+   git push && git push --tags # or git push --follow-tags but YMMV
+   ```
 
-    1. Tags the commit with the release versions
-    1. pushes the tag to github `develop` branch
-
-1. Review the release
-
-    The easiest way to do this is to create a PR master <- develop. This should show all the changes about to be published, and give a good last review opportunity
-
-1. Merge the release to master
-
-    This **MUST** be a fast-forward merge, otherwise the release tag(s) will be lost.
-
-    ```sh
-    git checkout master && git pull
-    git merge develop --ff-only
-    ```
-
-    If ff-only fails, you must resolve the merge so that it is linear, which could involve rebuilding the release tag(s).
-
-1. Watch for the release to pass CI
-
-> TODO the tag+branch is a little tricky and one misstep can break the process. Look into a more foolproof or just simpler way to detect and release tags
-
-### Release Gotchas
-
-> TODO This process under review
+1. Watch for the release to pass CI. CI publishes the release and pushes the artifacts.
 
 ## Versioning
 
@@ -164,23 +111,23 @@ Summary: Given a version number **MAJOR**.**MINOR**.**PATCH**, increment the:
 
 We use [godownloader](https://github.com/goreleaser/godownloader) to generate the installer scripts.
 
-* for sops, it uses the 'raw repo' method
+- for sops, it uses the 'raw repo' method
 
-    ```sh
-    godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
-    ```
+  ```sh
+  godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
+  ```
 
-* for sopstool, we can use the goreleaser file
+- for sopstool, we can use the goreleaser file
 
-    ```sh
-    godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
-    ```
+  ```sh
+  godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
+  ```
 
 ### Common third-party modules in use
 
-* cobra
-* yaml
-* mock
+- cobra
+- yaml
+- mock
 
 ### Errors
 
@@ -188,7 +135,7 @@ We use [godownloader](https://github.com/goreleaser/godownloader) to generate th
 
 ### Tests
 
-Write tests for all your public APIs.  It can also be useful to write unit tests for private APIs if the methods are complex. Use mocks intelligently. Remember to properly handle and return promises and other async code to avoid those tests getting missed. Don't check in tests with the 'only' flag.
+Write tests for all your public APIs. It can also be useful to write unit tests for private APIs if the methods are complex. Use mocks intelligently. Remember to properly handle and return promises and other async code to avoid those tests getting missed. Don't check in tests with the 'only' flag.
 
 ### Documentation
 
@@ -196,4 +143,4 @@ Document all public APIs to help users understand the module at a glance. Also c
 
 ### Style
 
-Clean up style warnings thrown by gofmt/golint (configured at the base of this repository).  These will be marked as build failures in CI.  Also consider using 'gofmt' to automatically clean up your code style while conforming to the configuration.
+Clean up style warnings thrown by gofmt/golint (configured at the base of this repository). These will be marked as build failures in CI. Also consider using 'gofmt' to automatically clean up your code style while conforming to the configuration.

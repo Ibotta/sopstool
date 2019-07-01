@@ -22,92 +22,54 @@ checksum:
   # Default is `{{ .ProjectName }}_{{ .Version }}_checksums.txt`.
   name_template: "{{ .ProjectName }}_checksums.txt"
 
-nfpm:
-  name_template: "{{ .ProjectName }}_{{ .Os }}"
+nfpms:
+  - name_template: "{{ .ProjectName }}_{{ .Os }}"
+    vendor: Ibotta
+    homepage: https://github.com/Ibotta/sopstool
+    maintainer: Ibotta <oss@ibotta.com>
+    description: "A multi-file wrapper for Mozilla sops"
+    license: Apache 2.0
+    # Formats to be generated.
+    formats:
+      - deb
+      - rpm
+    # Packages your package depends on.
+    dependencies:
+      - sops
 
-  # Your app's vendor.
-  # Default is empty.
-  vendor: Ibotta
-
-  # Your app's homepage.
-  # Default is empty.
-  homepage: https://github.com/Ibotta/sopstool
-
-  # Your app's maintainer (probably you).
-  # Default is empty.
-  maintainer: Ibotta <oss@ibotta.com>
-
-  # Your app's description.
-  # Default is empty.
-  description: "A multi-file wrapper for Mozilla sops"
-
-  # Your app's license.
-  # Default is empty.
-  license: Apache 2.0
-
-  # Formats to be generated.
-  formats:
-    - deb
-    - rpm
-
-  # Packages your package depends on.
-  dependencies:
-    - sops
-
-brew:
-  # # Reporitory to push the tap to.
-  github:
-    owner: Ibotta
-    name: homebrew-public
-
-  # Git author used to commit to the repository.
-  # Defaults are shown.
-  commit_author:
-    name: sopstoolGoreleaser
-    email: oss@ibotta.com
-
-  # Folder inside the repository to put the formula.
-  # Default is the root folder.
-  folder: Formula
-
-  # Caveats for the user of your binary.
-  # Default is empty.
-  # caveats: "How to use this binary"
-
-  # Your app's homepage.
-  # Default is empty.
-  homepage: "https://github.com/Ibotta/sopstool"
-
-  # Your app's description.
-  # Default is empty.
-  description: "A multi-file wrapper for Mozilla sops"
-
-  # Setting this will prevent goreleaser to actually try to commit the updated
-  # formula - instead, the formula file will be stored on the dist folder only,
-  # leaving the responsibility of publishing it to the user.
-  # Default is false.
-  skip_upload: false
-
-  # Packages your package depends on.
-  dependencies:
-    - sops
-
-  # So you can `brew test` your formula.
-  # Default is empty.
-  test: |
-    system "#{bin}/sopstool version"
+brews:
+  - github:
+      # Repo to push the tap
+      owner: Ibotta
+      name: homebrew-public
+    # Git author used to commit to the repository.
+    commit_author:
+      name: sopstoolGoreleaser
+      email: oss@ibotta.com
+    # Folder inside the repository to put the formula.
+    folder: Formula
+    # caveats: "How to use this binary"
+    homepage: "https://github.com/Ibotta/sopstool"
+    description: "A multi-file wrapper for Mozilla sops"
+    # Setting this will prevent goreleaser to actually try to commit the updated
+    # formula - instead, the formula file will be stored on the dist folder only,
+    # leaving the responsibility of publishing it to the user.
+    # Default is false.
+    skip_upload: false
+    # Packages your package depends on.
+    dependencies:
+      - sops
+    # So you can `brew test` your formula.
+    test: |
+      system "#{bin}/sopstool version"
 
 s3:
   # You can have multiple s3 configs
   -
     # Bucket name (without the s3:// prefix)
-    # Default is empty.
     bucket: oss-pkg.ibotta.com
-
     # AWS Region to use.
-    # Defaults is us-east-1
     region: us-east-1
-
     # path inside the bucket.
     # This is parsed with the Go template engine and the following variables
     # are available:
@@ -118,17 +80,6 @@ s3:
     # string to insert a formated timestamp into the release name.
     # Default is `{{ .ProjectName }}/{{ .Tag }}`
     # folder:
-
-    # Set a custom profile to use for this s3 config. If you have multiple
-    # profiles setup in you ~/.aws config, this shall help defining which
-    # profile to use in which s3 bucket.
-    # Default is empty.
-    # profile: my-profile
-
-    # Endpoint allows you to set a custom endpoint, which is useful if you
-    # want to push your artifacts to a minio server for example.
-    # Default is AWS S3 URL.
-    # endpoint: "http://minio.foo.com"
   -
     bucket: oss-pkg.ibotta.com
     region: us-east-1

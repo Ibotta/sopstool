@@ -8,7 +8,7 @@ sopstool provides functionality to manage multiple secret files at once, and eve
 
 ## Installation
 
-The most direct install uses a shell script hosted in this repo. This script will install the latest sops (if the command does not exist) and sopstool to `./bin` by default.
+The most direct install uses a shell script hosted in this repository. This script will install the latest sops (if the command does not exist) and sopstool to `./bin` by default.
 
 ```sh
 curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | bash
@@ -49,7 +49,7 @@ docker run --rm -v $(pwd):/work -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e
 
 ### Homebrew
 
-Ibotta maintains a tap for their opensource projects, which includes sopstool. This will install sops as a requirement
+Ibotta maintains a tap for their open-source projects, which includes sopstool. This will install sops as a requirement
 
 ```sh
 brew install Ibotta/public/sopstool

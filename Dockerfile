@@ -2,7 +2,7 @@ FROM alpine:latest as build
 RUN apk --update add ca-certificates
 
 COPY sopsinstall.sh /tmp/sopsinstall.sh
-RUN /tmp/sopsinstall.sh -b /usr/local/bin
+RUN sh /tmp/sopsinstall.sh -b /usr/local/bin
 
 ##########
 
