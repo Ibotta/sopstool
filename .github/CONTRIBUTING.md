@@ -12,14 +12,52 @@ This is a single top-level namespace filled with packages.  Each directory is po
 
 Requires Go `>= 1.12.6`.
 
+
+1. Install go (currently 1.12)
+
+    You may want to use a version manager.  
+
+    [asdf](https://github.com/kennyp/asdf-golang)
+
+    ```sh
+    asdf install golang 1.12.6
+    # use global to update default go version. local set just for current directory
+    asdf local golang 1.12.6
+    ```
+
+    [goenv](https://github.com/syndbg/goenv),   are all options.
+
+    ```sh
+    goenv install 1.12.6
+    go version
+    # go version go1.12.6 darwin/amd64
+    ```
+        
+    * [gimme](https://github.com/travis-ci/gimme)
+
+
+1. Install gomock
+
+    ```sh
+    go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
+    ```
+    
 ### Build
+
+
+With go 1.11 and addition of [Modules](https://github.com/golang/go/wiki/Modules),
+go projects can be located outside the GOPATH.
+
+If you are having issues review
+[faq](https://github.com/golang/go/wiki/Modules#faqs--most-common)
+
 
 If generate is ran above, then it does not need to run again.
 
 ```bash
-go generate ./...
 go build
 go fmt ./...
+golint ./...
 ```
 
 ### Unit Test
@@ -34,7 +72,7 @@ go test ./...
 
     You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
 
-2. Prepare the release
+1. Prepare the release
 
     ```sh
     git checkout develop && git pull
@@ -59,13 +97,13 @@ go test ./...
     ```
 
     1. Tags the commit with the release versions
-    2. pushes the tag to github `develop` branch
+    1. pushes the tag to github `develop` branch
 
-3. Review the release
+1. Review the release
 
     The easiest way to do this is to create a PR master <- develop. This should show all the changes about to be published, and give a good last review opportunity
 
-4. Merge the release to master
+1. Merge the release to master
 
     This **MUST** be a fast-forward merge, otherwise the release tag(s) will be lost.
 
@@ -76,7 +114,7 @@ go test ./...
 
     If ff-only fails, you must resolve the merge so that it is linear, which could involve rebuilding the release tag(s).
 
-5. Watch for the release to pass CI
+1. Watch for the release to pass CI
 
 > TODO the tag+branch is a little tricky and one misstep can break the process. Look into a more foolproof or just simpler way to detect and release tags
 
