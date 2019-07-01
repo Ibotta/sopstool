@@ -39,12 +39,16 @@ cache:
   - "$HOME/.local/lib/aws"
   - "$HOME/gopath/pkg/mod"
 
+before_script:
+  - go mod download && go build
+
 script:
-  - go mod download
-  - go build
   # See https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions
   - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash go test ./...; fi'
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./scripts/coverage_test; fi'
+
+after_script:
+  - curl -sL https://git.io/goreleaser | bash -s -- --snapshot --skip-publish --rm-dist
 
 deploy:
   - provider: script
