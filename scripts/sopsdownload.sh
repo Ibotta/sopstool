@@ -135,7 +135,9 @@ log_crit() {
 uname_os() {
   os=$(uname -s | tr '[:upper:]' '[:lower:]')
   case "$os" in
-    msys_nt) os="windows" ;;
+    cygwin_nt*) os="windows" ;;
+    mingw*) os="windows" ;;
+    msys_nt*) os="windows" ;;
   esac
   echo "$os"
 }
@@ -321,7 +323,14 @@ tag_to_version
 
 log_info "found version ${VERSION} for ${TAG}/${OS}/${ARCH}"
 
-NAME=sops-${VERSION}.${OS}
+MIN_V_VERSION="3.5.0"
+LOWEST_V_VERSION=$(printf "$VERSION\n$MIN_V_VERSION" \
+  | sort -t "." -n -k1,1 -k2,2 -k3,3 -k4,4 | head -n 1)
+if [ "$LOWEST_V_VERSION" != "$MIN_V_VERSION" ]; then
+  NAME=sops-${VERSION}.${OS}
+else
+  NAME=sops-v${VERSION}.${OS}
+fi
 
 # compute URL to download
 TARBALL_URL=${GITHUB_DOWNLOAD}/${TAG}/${NAME}
