@@ -1,6 +1,8 @@
 # Build customization
 builds:
-  - binary: sopstool
+  - env:
+      - CGO_ENABLED=0
+    binary: sopstool
     goos:
       - darwin
       - linux
@@ -62,6 +64,8 @@ brews:
     # So you can `brew test` your formula.
     test: |
       system "#{bin}/sopstool version"
+    install: |
+      bin.install "sopstool"
 
 blobs:
   - provider: s3
