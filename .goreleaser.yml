@@ -23,7 +23,7 @@ checksum:
   name_template: "{{ .ProjectName }}_checksums.txt"
 
 nfpms:
-  - name_template: "{{ .ProjectName }}_{{ .Os }}"
+  - file_name_template: "{{ .ProjectName }}_{{ .Os }}"
     vendor: Ibotta
     homepage: https://github.com/Ibotta/sopstool
     maintainer: Ibotta <oss@ibotta.com>
@@ -63,9 +63,8 @@ brews:
     test: |
       system "#{bin}/sopstool version"
 
-s3:
-  # You can have multiple s3 configs
-  -
+blobs:
+  - provider: s3
     # Bucket name (without the s3:// prefix)
     bucket: oss-pkg.ibotta.com
     # AWS Region to use.
@@ -80,7 +79,7 @@ s3:
     # string to insert a formated timestamp into the release name.
     # Default is `{{ .ProjectName }}/{{ .Tag }}`
     # folder:
-  -
+  - provider: s3
     bucket: oss-pkg.ibotta.com
     region: us-east-1
     folder: "{{ .ProjectName }}"

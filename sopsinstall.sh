@@ -326,6 +326,7 @@ tag_to_version
 
 log_info "found version ${VERSION} for ${TAG}/${OS}/${ARCH}"
 
+# cribbed from https://havoc.io/post/shellsemver/
 MIN_V_VERSION="3.5.0"
 LOWEST_V_VERSION=$(printf "$VERSION\n$MIN_V_VERSION" \
   | sort -t "." -n -k1,1 -k2,2 -k3,3 -k4,4 | head -n 1)
