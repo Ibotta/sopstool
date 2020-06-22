@@ -10,26 +10,26 @@ This is a single top-level namespace filled with packages. Each directory is pot
 
 ### Go Version
 
-Requires Go `>= 1.12.6`.
+Requires Go `>= 1.14`.
 
-1. Install go (currently 1.12)
+1. Install go (currently 1.14)
 
    You may want to use a version manager.
 
    - [asdf](https://github.com/kennyp/asdf-golang)
 
      ```sh
-     asdf install golang 1.12.6
+     asdf install golang 1.14
      # use global to update default go version. local set just for current directory
-     asdf local golang 1.12.6
+     asdf local golang 1.14
      ```
 
    - [goenv](https://github.com/syndbg/goenv) is another option.
 
      ```sh
-     goenv install 1.12.6
+     goenv install 1.14
      go version
-     # go version go1.12.6 darwin/amd64
+     # go version go1.14 darwin/amd64
      ```
 
    - [gimme](https://github.com/travis-ci/gimme)
@@ -64,6 +64,8 @@ go test ./...
 
 ## Releasing
 
+This project uses [GoReleaser](https://goreleaser.com/) for builds and releases. Doing the tag/release below triggers the appropriate actions.
+
 1. Preview the release (optional)
 
    You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
@@ -71,7 +73,7 @@ go test ./...
 1. Prepare the release
 
    ```sh
-   git checkout develop && git pull
+   git checkout master && git pull
    ```
 
    Commit and tag with the intended version bump
@@ -109,19 +111,7 @@ Summary: Given a version number **MAJOR**.**MINOR**.**PATCH**, increment the:
 
 ### Godownloader
 
-We use [godownloader](https://github.com/goreleaser/godownloader) to generate the installer scripts.
-
-- for sops, it uses the 'raw repo' method
-
-  ```sh
-  godownloader -source raw -repo mozilla/sops -exe sops -nametpl 'sops-{{ .Version }}.{{ .Os }}' > sopsdownload.sh
-  ```
-
-- for sopstool, we can use the goreleaser file
-
-  ```sh
-  godownloader -repo Ibotta/sopstool .goreleaser.yml > sopstoolinstall.sh
-  ```
+We used to use [godownloader](https://github.com/goreleaser/godownloader) to generate the installer scripts. This is deprecated now, but the majority of the scripts used have not changed in a while. Any fixes will need to be by-hand.
 
 ### Common third-party modules in use
 
