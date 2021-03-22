@@ -22,7 +22,7 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | bash
 Example with overrides:
 
 ```sh
-curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | SOPS_VERSION=3.0.0 SOPSTOOL_VERSION=0.3.0 bash /usr/local/bin
+curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | SOPS_VERSION=3.0.0 SOPSTOOL_VERSION=0.3.0 bash -s /usr/local/bin
 ```
 
 ### Docker
