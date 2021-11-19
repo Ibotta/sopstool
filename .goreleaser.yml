@@ -7,6 +7,7 @@ builds:
       - darwin
       - linux
     goarch:
+      # sops is only available for amd64
       - amd64
 
 archives:
