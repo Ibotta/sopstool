@@ -58,6 +58,7 @@ deploy:
   - provider: script
     # calls goreleaser
     skip_cleanup: true
+    cleanup: false
     script: scripts/deploy
     on:
       tags: true
