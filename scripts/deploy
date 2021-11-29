@@ -17,7 +17,7 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 cd "$DIR/.."
 
 # run goreleaser
-curl -sL http://git.io/goreleaser | bash
+goreleaser
 
 if [ ! -e dist/sopstool_checksums.txt ]; then
   echo "Did not build checksums" && exit 1
