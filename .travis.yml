@@ -17,6 +17,8 @@ addons:
   snaps:
     - name: goreleaser
       confinement: classic
+    - name: aws-cli
+      confinement: classic
 
 env:
   global:
