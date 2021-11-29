@@ -1,6 +1,10 @@
+version: ~> 1.0
+os: linux
+dist: focal
+
 language: go
 go:
-  - 1.14.x
+  - 1.17.x
 
 services:
   - docker
@@ -54,6 +58,7 @@ deploy:
   - provider: script
     # calls goreleaser
     skip_cleanup: true
+    cleanup: false
     script: scripts/deploy
     on:
       tags: true
