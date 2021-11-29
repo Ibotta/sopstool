@@ -17,16 +17,16 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 cd "$DIR/.."
 
 # run goreleaser
-curl -sL http://git.io/goreleaser | bash
+goreleaser
 
 if [ ! -e dist/sopstool_checksums.txt ]; then
   echo "Did not build checksums" && exit 1
 fi
 
 # also copy up installers
-$DIR/aws s3 cp sopsinstall.sh "$S3URL/sopstool/"
-$DIR/aws s3 cp sopstoolinstall.sh "$S3URL/sopstool/"
-$DIR/aws s3 cp install.sh "$S3URL/sopstool/"
+aws s3 cp sopsinstall.sh "$S3URL/sopstool/"
+aws s3 cp sopstoolinstall.sh "$S3URL/sopstool/"
+aws s3 cp install.sh "$S3URL/sopstool/"
 
 # download sops for reupload to s3
 SOPSDIST="dist/sops"
@@ -39,4 +39,4 @@ $DIR/sopsdownload.sh -o linux "$SOPSDIST"
 $DIR/sopsdownload.sh -o darwin "$SOPSDIST"
 
 # put those on s3
-$DIR/aws s3 cp --recursive "$SOPSDIST/" "$S3URL/sops/"
+aws s3 cp --recursive "$SOPSDIST/" "$S3URL/sops/"
