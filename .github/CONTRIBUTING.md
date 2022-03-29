@@ -10,26 +10,26 @@ This is a single top-level namespace filled with packages. Each directory is pot
 
 ### Go Version
 
-Requires Go `>= 1.14`.
+Requires Go `>= 1.17`.
 
-1. Install go (currently 1.14)
+1. Install go
 
    You may want to use a version manager.
 
    - [asdf](https://github.com/kennyp/asdf-golang)
 
      ```sh
-     asdf install golang 1.14
+     asdf install golang 1.17
      # use global to update default go version. local set just for current directory
-     asdf local golang 1.14
+     asdf local golang 1.17
      ```
 
    - [goenv](https://github.com/syndbg/goenv) is another option.
 
      ```sh
-     goenv install 1.14
+     goenv install 1.17
      go version
-     # go version go1.14 darwin/amd64
+     # go version go1.17 darwin/amd64
      ```
 
    - [gimme](https://github.com/travis-ci/gimme)
@@ -51,7 +51,6 @@ If generate has already run, then it does not need to run again.
 ```sh
 go build
 go fmt ./...
-golint ./...
 ```
 
 ### Unit Test
