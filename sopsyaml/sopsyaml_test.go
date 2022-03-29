@@ -20,7 +20,7 @@ func TestFindConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil
 		})
 
@@ -42,10 +42,10 @@ func TestFindConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.git$`)).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.git$`)).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found") // Never git
 		}).AnyTimes()
-		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.sops.yaml$`)).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.sops.yaml$`)).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found")
 		}).AnyTimes()
 
@@ -64,17 +64,17 @@ func TestFindConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.git$`)).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.git$`)).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found") // Never git
 		}).AnyTimes()
 
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found")
 		})
-		mock.EXPECT().Stat(gomock.Eq("../.sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq("../.sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found")
 		})
-		mock.EXPECT().Stat(gomock.Eq("../../.sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq("../../.sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil //found
 		})
 
@@ -96,14 +96,14 @@ func TestFindConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.git$`)).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(test_helpers.RegexMatches(`^.*\.git$`)).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found") // Never git
 		}).AnyTimes()
 
-		mock.EXPECT().Stat(gomock.Not(gomock.Eq("directory/.sops.yaml"))).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Not(gomock.Eq("directory/.sops.yaml"))).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found")
 		}).AnyTimes()
-		mock.EXPECT().Stat(gomock.Eq("directory/.sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq("directory/.sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil //found
 		})
 
@@ -126,10 +126,10 @@ func TestFindConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(gomock.Eq(".git")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".git")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil //find git immediately
 		})
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found")
 		})
 
@@ -152,7 +152,7 @@ func TestLoadConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().ReadFile(gomock.Eq("filepath")).DoAndReturn(func(c string, args ...string) ([]byte, error) {
+		mock.EXPECT().ReadFile(gomock.Eq("filepath")).DoAndReturn(func(c string) ([]byte, error) {
 			return nil, fmt.Errorf("a file read error")
 		})
 
@@ -172,7 +172,7 @@ func TestLoadConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().ReadFile(gomock.Eq("filepath")).DoAndReturn(func(c string, args ...string) ([]byte, error) {
+		mock.EXPECT().ReadFile(gomock.Eq("filepath")).DoAndReturn(func(c string) ([]byte, error) {
 			yml := []byte(`
           ~~~not yaml
           at all
@@ -200,7 +200,7 @@ func TestLoadConfigFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().ReadFile(gomock.Eq("filepath")).DoAndReturn(func(c string, args ...string) ([]byte, error) {
+		mock.EXPECT().ReadFile(gomock.Eq("filepath")).DoAndReturn(func(c string) ([]byte, error) {
 			yml := []byte(`
 yaml:
 - in
@@ -364,10 +364,10 @@ func TestGetConfigEncryptFiles(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil
 		})
-		mock.EXPECT().ReadFile(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) ([]byte, error) {
+		mock.EXPECT().ReadFile(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) ([]byte, error) {
 			yml := []byte(`
 foo: bar
 encrypted_files:
@@ -398,10 +398,10 @@ encrypted_files:
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(gomock.Eq(".git")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".git")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil //find git immediately
 		}).AnyTimes()
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, fmt.Errorf("Not Found")
 		}).AnyTimes()
 
@@ -421,10 +421,10 @@ encrypted_files:
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil
 		})
-		mock.EXPECT().ReadFile(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) ([]byte, error) {
+		mock.EXPECT().ReadFile(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) ([]byte, error) {
 			yml := []byte(`~~not good`)
 
 			return yml, nil
@@ -446,10 +446,10 @@ encrypted_files:
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) (*os.FileInfo, error) {
+		mock.EXPECT().Stat(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) (*os.FileInfo, error) {
 			return nil, nil
 		})
-		mock.EXPECT().ReadFile(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string, args ...string) ([]byte, error) {
+		mock.EXPECT().ReadFile(gomock.Eq(".sops.yaml")).DoAndReturn(func(c string) ([]byte, error) {
 			yml := []byte(`encrypted_files: [1,2,3]`)
 
 			return yml, nil
