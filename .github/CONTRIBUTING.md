@@ -2,58 +2,61 @@
 
 ## Getting Started
 
-## Layout
-
 This is a single top-level namespace filled with packages. Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
 
-## Building Locally
+## Install Golang 
 
-### Go Version
+### Using asdf-vm
+We utilize a `.go-version` file that can be used by [asdf-vm](https://github.com/kennyp/asdf-golang) like so:
 
-Requires Go `>= 1.17`.
+```bash
+cd /path/to/sopstool/repository/
+asdf plugin add golang
+asdf install golang
+```
 
-1. Install go
+### Using goenv
 
-   You may want to use a version manager.
+[goenv](https://github.com/syndbg/goenv) will prefer the `GOENV_VERSION` environment variable first before looking for the `.go-version` file when [determining which Golang version](https://github.com/syndbg/goenv/blob/master/HOW_IT_WORKS.md#choosing-the-go-version) to install.  If you do not have this set (`echo $GOENV_VERSION` is empty), install like so:
 
-   - [asdf](https://github.com/kennyp/asdf-golang)
+```bash
+cd /path/to/sopstool/repository/
+goenv install
+```
 
-     ```sh
-     asdf install golang 1.17
-     # use global to update default go version. local set just for current directory
-     asdf local golang 1.17
-     ```
+### Using gimme
+[gimme](https://github.com/travis-ci/gimme) uses `eval` in a simple way:
 
-   - [goenv](https://github.com/syndbg/goenv) is another option.
+```bash
+eval "$(gimme 1.17)"
+```
 
-     ```sh
-     goenv install 1.17
-     go version
-     # go version go1.17 darwin/amd64
-     ```
+### From the developers
 
-   - [gimme](https://github.com/travis-ci/gimme)
+You can download and install the Golang [directly from the website](https://go.dev/dl/).
 
-1. Install gomock
+### Additional Go Libraries
 
-   ```sh
-   go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
-   ```
+Install gomock
 
-### Build
+```sh
+go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
+```
 
-With go 1.11+ and addition of [Modules](https://github.com/golang/go/wiki/Modules), go projects can be located outside the GOPATH.
+## Build
 
-If you are having issues review [faq](https://github.com/golang/go/wiki/Modules#faqs--most-common)
+With Go 1.11+ and addition of [Modules](https://github.com/golang/go/wiki/Modules), Go projects can be located outside the `$GOPATH`.
 
-If generate has already run, then it does not need to run again.
+If you are having issues, review the [FAQ](https://github.com/golang/go/wiki/Modules#faqs--most-common).
+
+If `generate` has already run, then it does not need to run again.
 
 ```sh
 go build
 go fmt ./...
 ```
 
-### Unit Test
+## Unit Tests
 
 Each module is unit tested, and passes all tests.
 
@@ -69,25 +72,25 @@ This project uses [GoReleaser](https://goreleaser.com/) for builds and releases.
 
    You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
 
-1. Prepare the release
+1. Prepare the release:
 
    ```sh
    git checkout master && git pull
    ```
 
-   Commit and tag with the intended version bump
+   Commit and tag with the intended version bump:
 
    ```sh
    git commit -am "Tagging release $VERSION" && git tag v$VERSION
    ```
 
-   for example:
+   For example:
 
    ```sh
    git commit -am "Tagging release 0.1.1" && git tag v0.1.1
    ```
 
-   Then push the tag and commit to github
+   Then push the tag and commit to Github:
 
    ```sh
    git push && git push --tags # or git push --follow-tags but YMMV
