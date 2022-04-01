@@ -63,6 +63,7 @@ execute() {
 get_binaries() {
   case "$PLATFORM" in
     darwin/amd64) BINARIES="sopstool" ;;
+    darwin/arm64) BINARIES="sopstool" ;;
     linux/amd64) BINARIES="sopstool" ;;
     *)
       log_crit "platform $PLATFORM is not supported.  Make sure this script is up-to-date and file request at https://github.com/${PREFIX}/issues/new"
