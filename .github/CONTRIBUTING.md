@@ -37,10 +37,16 @@ You can download and install the Golang [directly from the website](https://go.d
 
 ### Additional Go Libraries
 
-Install gomock
+Install [gomock](https://github.com/golang/mock)
 
 ```sh
 go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
+```
+
+Install [golangci-lint](https://golangci-lint.run/)
+
+```sh
+brew install golangci-lint
 ```
 
 ## Build
@@ -62,6 +68,14 @@ Each module is unit tested, and passes all tests.
 
 ```sh
 go test ./...
+```
+
+## Linting
+
+`golangci-lint` runs several popular Go linters quickly:
+
+```sh
+golangci-lint run
 ```
 
 ## Releasing

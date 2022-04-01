@@ -45,11 +45,12 @@ cache:
   - "$HOME/gopath/pkg/mod"
 
 before_script:
+  - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.45.2
   - go mod download && go build
 
 script:
   # See https://docs.travis-ci.com/user/pull-requests/#pull-requests-and-security-restrictions
-  - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash go test ./...; fi'
+  - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash go test ./...; golangci-lint run; fi'
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./scripts/coverage_test; fi'
 
 after_script:
