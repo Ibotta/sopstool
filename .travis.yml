@@ -53,8 +53,6 @@ script:
   - 'golangci-lint run'
   - 'if [ "$TRAVIS_PULL_REQUEST" = "true" ]; then bash go test ./...; fi'
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then bash ./scripts/coverage_test; fi'
-
-after_script:
   - goreleaser --snapshot --skip-publish --rm-dist
 
 deploy:
