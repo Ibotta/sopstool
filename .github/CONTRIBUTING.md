@@ -150,4 +150,4 @@ Document all public APIs to help users understand the module at a glance. Also c
 
 ### Style
 
-Clean up style warnings thrown by gofmt/golint (configured at the base of this repository). These will be marked as build failures in CI. Also consider using 'gofmt' to automatically clean up your code style while conforming to the configuration.
+Clean up style warnings thrown by gofmt/golangci-lint (configured at the base of this repository in `.golangci.yml`). These will be marked as build failures in CI. Also consider using these tools to automatically clean up your code style while conforming to the configuration.
