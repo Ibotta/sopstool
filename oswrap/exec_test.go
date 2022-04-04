@@ -2,6 +2,7 @@ package oswrap
 
 import (
 	"errors"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
@@ -31,7 +32,6 @@ func TestRunCommandDirect(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -51,7 +51,6 @@ func TestRunCommandDirect(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("run err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -70,7 +69,6 @@ func TestRunCommandDirect(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 }
 
@@ -87,7 +85,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
 			//TODO replace all file stuff with afero
-			return os.Create("/tmp/TestRunCommandStdoutToFile")
+			return ioutil.TempFile("/tmp", "TestRunCommandStdoutToFile")
 		})
 		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
@@ -100,7 +98,6 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -113,7 +110,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
 			//TODO replace all file stuff with afero
-			return os.Create("/tmp/TestRunCommandStdoutToFile")
+			return ioutil.TempFile("/tmp", "TestRunCommandStdoutToFile")
 		})
 		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
@@ -126,7 +123,6 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("run err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -139,7 +135,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
 			//TODO replace all file stuff with afero
-			return os.Create("/tmp/TestRunCommandStdoutToFile")
+			return ioutil.TempFile("/tmp", "TestRunCommandStdoutToFile")
 		})
 		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
@@ -154,7 +150,6 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("file err", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -176,7 +171,6 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	// TODO test when Close err, but requires mocking of file
 }
@@ -201,7 +195,6 @@ func TestRunSyscallExec(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("run given with no args", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -221,7 +214,6 @@ func TestRunSyscallExec(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("exec error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -241,7 +233,6 @@ func TestRunSyscallExec(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 	t.Run("lookpath error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -258,6 +249,5 @@ func TestRunSyscallExec(t *testing.T) {
 		}
 
 		ow = origOW
-		return
 	})
 }
