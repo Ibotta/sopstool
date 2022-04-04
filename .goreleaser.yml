@@ -13,6 +13,8 @@ builds:
 archives:
   - id: zips
     name_template: "{{ .ProjectName }}_{{ .Os }}"
+  - id: newzips
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
   # You can change the name of the checksums file.
@@ -41,7 +43,9 @@ nfpms:
       - sops
 
 brews:
-  - tap:
+  - ids:
+      - newzips
+    tap:
       # Repo to push the tap
       owner: Ibotta
       name: homebrew-public
