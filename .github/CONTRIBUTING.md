@@ -46,7 +46,8 @@ go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/moc
 Install [golangci-lint](https://golangci-lint.run/)
 
 ```sh
-brew install golangci-lint
+brew tap golangci/tap
+brew install golangci/tap/golangci-lint
 ```
 
 ## Build
