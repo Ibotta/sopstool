@@ -30,9 +30,9 @@ var encrypter filecrypt.FileCrypt = filecrypt.SopsCryptInstance()
 var RootCmd = &cobra.Command{
 	Use:   "sopstool",
 	Short: "Wrapper around sops for multiple files",
-	Long: fmt.Sprintf(`sopstool
+	Long: `sopstool
 
-sops wrapper supporting multiple files and helper commands.`),
+	sops wrapper supporting multiple files and helper commands.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
