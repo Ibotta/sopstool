@@ -12,7 +12,7 @@ type sopsCrypt struct {
 
 var sops = sopsCrypt{
 	execWrap: oswrap.ExecWrapInstance(),
-	osWrap:   oswrap.OsWrapInstance(),
+	osWrap:   oswrap.Instance(),
 }
 
 // SopsCryptInstance gets an instance of the sops wrapper
