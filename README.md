@@ -30,7 +30,7 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | SOPS_
 
 ### Docker
 
-**Note**: We currently only build a docker image for [Linux - amd64](.goreleaser.yml#100).
+**Note**: We currently only build a docker image for [Linux - amd64](.goreleaser.yml#L100).
 
 To use sopstool in your docker container, you can use the direct install method above, but since Docker 1.13, there is a better way by using build stages!
 
