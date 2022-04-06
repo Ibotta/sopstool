@@ -6,6 +6,9 @@ sopstool is a multi-file wrapper around [sops](https://github.com/mozilla/sops).
 
 sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images. Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).
 
+## 1.0.0 Release and Breaking Changes
+1.0.0 release of `sopstool` introduces M1 / darwin-arm64 support.  We also want to match build artifacts produced by GoReleaser to what `sops` produces.  Therefore, this version introduces a breaking change where we no longer produce artifacts like `sopstool-linux.(deb|rpm|tar.gz)` and `sopstool-darwin.tar.gz`.  Instead, you'll see artifacts like `sopstool_darwin_(arm64|amd64)_(deb|rpm|tar.gz)` and `sopstool_linux_(arm64|amd64)_(deb|rpm|tar.gz)` in future releases.
+
 ## Installation
 
 The most direct install uses a shell script hosted in this repository. This script will install the latest sops (if the command does not exist) and sopstool to `./bin` by default.
