@@ -7,12 +7,12 @@ builds:
       - darwin
       - linux
     goarch:
-      # sops is only available for amd64
       - amd64
+      - arm64
 
 archives:
-  - id: zips
-    name_template: "{{ .ProjectName }}_{{ .Os }}"
+  - id: newzips
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
 
 checksum:
   # You can change the name of the checksums file.
@@ -26,7 +26,12 @@ checksum:
   name_template: "{{ .ProjectName }}_checksums.txt"
 
 nfpms:
-  - file_name_template: "{{ .ProjectName }}_{{ .Os }}"
+  - id: default
+    # You can change the file name of the package.
+    #
+    # Default: `{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+    file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    # file_name_template: "{{ .ProjectName }}_{{ .Os }}"
     vendor: Ibotta
     homepage: https://github.com/Ibotta/sopstool
     maintainer: Ibotta <oss@ibotta.com>
@@ -41,7 +46,9 @@ nfpms:
       - sops
 
 brews:
-  - tap:
+  - ids:
+      - newzips
+    tap:
       # Repo to push the tap
       owner: Ibotta
       name: homebrew-public
@@ -90,7 +97,8 @@ blobs:
     folder: "{{ .ProjectName }}"
 
 dockers:
-  - goos: linux
+  - id: amd64image
+    goos: linux
     # GOARCH of the built binary that should be used.
     goarch: amd64
     # GOARM of the built binary that should be used.
@@ -102,6 +110,14 @@ dockers:
     image_templates:
       - "ibotta/{{ .ProjectName }}:latest"
       - "ibotta/{{ .ProjectName }}:{{ .Version }}"
+      - "ibotta/{{ .ProjectName }}:{{ .Tag }}"
+      - "ibotta/{{ .ProjectName }}:v{{ .Major }}"
+      - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
+      - "ibotta/{{ .ProjectName }}:latest-amd64"
+      - "ibotta/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
+      - "ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
+      - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
     # Skips the docker push. Could be useful if you also do draft releases.
     # If set to auto, the release will not be pushed to the docker repository
     # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1

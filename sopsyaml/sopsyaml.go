@@ -18,7 +18,7 @@ const (
 	encryptedFilesKey = "encrypted_files"
 )
 
-var osWrap = oswrap.OsWrapInstance()
+var osWrap = oswrap.Instance()
 
 // SopsConfig holds info about an instance of the config file
 type SopsConfig struct {

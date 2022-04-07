@@ -63,7 +63,9 @@ execute() {
 get_binaries() {
   case "$PLATFORM" in
     darwin/amd64) BINARIES="sopstool" ;;
+    darwin/arm64) BINARIES="sopstool" ;;
     linux/amd64) BINARIES="sopstool" ;;
+    linux/arm64) BINARIES="sopstool" ;;
     *)
       log_crit "platform $PLATFORM is not supported.  Make sure this script is up-to-date and file request at https://github.com/${PREFIX}/issues/new"
       exit 1
@@ -361,7 +363,7 @@ adjust_arch
 
 log_info "found version: ${VERSION} for ${TAG}/${OS}/${ARCH}"
 
-NAME=${PROJECT_NAME}_${OS}
+NAME=${PROJECT_NAME}_${OS}_${ARCH}
 TARBALL=${NAME}.${FORMAT}
 TARBALL_URL=${GITHUB_DOWNLOAD}/${TAG}/${TARBALL}
 CHECKSUM=${PROJECT_NAME}_checksums.txt

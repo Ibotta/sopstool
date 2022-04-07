@@ -13,7 +13,7 @@ type ExecWrap interface {
 
 type execWrap struct{}
 
-//todo use OsWrapInstance() instead of package local ow?
+//todo use oswrap.Instance() instead of package local ow?
 var ew ExecWrap = execWrap{}
 
 // ExecWrapInstance gets the execution wrapper interface

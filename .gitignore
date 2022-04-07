@@ -5,3 +5,4 @@ sopstool
 c.out
 *.cover
 .idea
+.vscode

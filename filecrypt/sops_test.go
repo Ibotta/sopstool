@@ -25,7 +25,6 @@ func TestEncryptFile(t *testing.T) {
 		}
 
 		sops.execWrap = origEw
-		return
 	})
 }
 
@@ -46,7 +45,6 @@ func TestDecryptFile(t *testing.T) {
 		}
 
 		sops.execWrap = origEw
-		return
 	})
 	t.Run("run dec returns error", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
@@ -63,7 +61,6 @@ func TestDecryptFile(t *testing.T) {
 		}
 
 		sops.execWrap = origEw
-		return
 	})
 }
 
@@ -84,7 +81,6 @@ func TestDecryptFilePrint(t *testing.T) {
 		}
 
 		sops.execWrap = origEw
-		return
 	})
 }
 
@@ -105,7 +101,6 @@ func TestRemoveFile(t *testing.T) {
 		}
 
 		sops.osWrap = origOw
-		return
 	})
 }
 
@@ -126,7 +121,6 @@ func TestRemoveCryptFile(t *testing.T) {
 		}
 
 		sops.osWrap = origOw
-		return
 	})
 }
 
@@ -146,7 +140,6 @@ func TestRotateFile(t *testing.T) {
 		}
 
 		sops.execWrap = origEw
-		return
 	})
 }
 
@@ -166,6 +159,5 @@ func TestEditFile(t *testing.T) {
 		}
 
 		sops.execWrap = origEw
-		return
 	})
 }

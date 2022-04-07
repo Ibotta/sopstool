@@ -333,7 +333,7 @@ LOWEST_V_VERSION=$(printf "$VERSION\n$MIN_V_VERSION" \
 if [ "$LOWEST_V_VERSION" != "$MIN_V_VERSION" ]; then
   NAME=sops-${VERSION}.${OS}
 else
-  NAME=sops-v${VERSION}.${OS}
+  NAME=sops-v${VERSION}.${OS}.${ARCH}
 fi
 
 # adjust binary name based on OS

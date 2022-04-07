@@ -24,8 +24,8 @@ type osWrap struct{}
 
 var ow OsWrap = osWrap{}
 
-// OsWrapInstance gets an instance of the os wrapper
-func OsWrapInstance() OsWrap {
+// oswrap.Instance gets an instance of the os wrapper
+func Instance() OsWrap {
 	return ow
 }
 

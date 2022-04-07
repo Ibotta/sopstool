@@ -2,64 +2,81 @@
 
 ## Getting Started
 
-## Layout
-
 This is a single top-level namespace filled with packages. Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
 
-## Building Locally
+## Install Golang 
 
-### Go Version
+### Using asdf-vm
+We utilize a `.go-version` file that can be used by [asdf-vm](https://github.com/kennyp/asdf-golang) like so:
 
-Requires Go `>= 1.14`.
+```bash
+cd /path/to/sopstool/repository/
+asdf plugin add golang
+asdf install golang
+```
 
-1. Install go (currently 1.14)
+### Using goenv
 
-   You may want to use a version manager.
+[goenv](https://github.com/syndbg/goenv) will prefer the `GOENV_VERSION` environment variable first before looking for the `.go-version` file when [determining which Golang version](https://github.com/syndbg/goenv/blob/master/HOW_IT_WORKS.md#choosing-the-go-version) to install.  If you do not have this set (`echo $GOENV_VERSION` is empty), install like so:
 
-   - [asdf](https://github.com/kennyp/asdf-golang)
+```bash
+cd /path/to/sopstool/repository/
+goenv install
+```
 
-     ```sh
-     asdf install golang 1.14
-     # use global to update default go version. local set just for current directory
-     asdf local golang 1.14
-     ```
+### Using gimme
+[gimme](https://github.com/travis-ci/gimme) uses `eval` in a simple way:
 
-   - [goenv](https://github.com/syndbg/goenv) is another option.
+```bash
+eval "$(gimme 1.17)"
+```
 
-     ```sh
-     goenv install 1.14
-     go version
-     # go version go1.14 darwin/amd64
-     ```
+### From the developers
 
-   - [gimme](https://github.com/travis-ci/gimme)
+You can download and install the Golang [directly from the website](https://go.dev/dl/).
 
-1. Install gomock
+### Additional Go Libraries
 
-   ```sh
-   go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
-   ```
+Install [gomock](https://github.com/golang/mock)
 
-### Build
+```sh
+go get -u github.com/golang/mock/gomock && go install github.com/golang/mock/mockgen
+```
 
-With go 1.11+ and addition of [Modules](https://github.com/golang/go/wiki/Modules), go projects can be located outside the GOPATH.
+Install [golangci-lint](https://golangci-lint.run/)
 
-If you are having issues review [faq](https://github.com/golang/go/wiki/Modules#faqs--most-common)
+```sh
+brew tap golangci/tap
+brew install golangci/tap/golangci-lint
+```
 
-If generate has already run, then it does not need to run again.
+## Build
+
+With Go 1.11+ and addition of [Modules](https://github.com/golang/go/wiki/Modules), Go projects can be located outside the `$GOPATH`.
+
+If you are having issues, review the [FAQ](https://github.com/golang/go/wiki/Modules#faqs--most-common).
+
+If `generate` has already run, then it does not need to run again.
 
 ```sh
 go build
 go fmt ./...
-golint ./...
 ```
 
-### Unit Test
+## Unit Tests
 
 Each module is unit tested, and passes all tests.
 
 ```sh
 go test ./...
+```
+
+## Linting
+
+`golangci-lint` runs several popular Go linters quickly:
+
+```sh
+golangci-lint run
 ```
 
 ## Releasing
@@ -70,25 +87,25 @@ This project uses [GoReleaser](https://goreleaser.com/) for builds and releases.
 
    You can preview the package changes by running `scripts/release-preview`. This will show a summary of changes since the last release.
 
-1. Prepare the release
+1. Prepare the release:
 
    ```sh
    git checkout master && git pull
    ```
 
-   Commit and tag with the intended version bump
+   Commit and tag with the intended version bump:
 
    ```sh
    git commit -am "Tagging release $VERSION" && git tag v$VERSION
    ```
 
-   for example:
+   For example:
 
    ```sh
    git commit -am "Tagging release 0.1.1" && git tag v0.1.1
    ```
 
-   Then push the tag and commit to github
+   Then push the tag and commit to Github:
 
    ```sh
    git push && git push --tags # or git push --follow-tags but YMMV
@@ -133,4 +150,4 @@ Document all public APIs to help users understand the module at a glance. Also c
 
 ### Style
 
-Clean up style warnings thrown by gofmt/golint (configured at the base of this repository). These will be marked as build failures in CI. Also consider using 'gofmt' to automatically clean up your code style while conforming to the configuration.
+Clean up style warnings thrown by gofmt/golangci-lint (configured at the base of this repository in `.golangci.yml`). These will be marked as build failures in CI. Also consider using these tools to automatically clean up your code style while conforming to the configuration.
