@@ -63,3 +63,10 @@ func (sops sopsCrypt) EditFile(fn string) error {
 
 	return sops.execWrap.RunCommandDirect([]string{"sops", cryptfile})
 }
+
+// UpdateKeysFile update the keys of a SOPS file
+func (sops sopsCrypt) UpdateKeysFile(fn string, extraArgs []string) error {
+	cryptfile := fileutil.NormalizeToSopsFile(fn)
+	cmd := append([]string{"sops", "updatekeys", cryptfile}, extraArgs...)
+	return sops.execWrap.RunCommandDirect(cmd)
+}
