@@ -78,7 +78,7 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 		return err
 	}
 	// Verify if last char is a new line
-	if string(b[len(b)-1]) != "\n" {
+	if len(b) > 0 && string(b[len(b)-1]) != "\n" {
 		line = "\n" + line
 	}
 
