@@ -1,12 +1,13 @@
 package scm
 
 import (
+	"bufio"
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"regexp"
-	"strings"
 )
 
 type Git struct {
@@ -89,15 +90,33 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 
 // removeLineFromFile removes provided line from filename
 func removeLineFromFile(line string, filename string) error {
-	b, err := os.ReadFile(filename)
-
+	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
+	defer file.Close()
 
-	newFileContent := strings.Replace(string(b), "\n"+line, "", -1)
+	var bs []byte
+	buf := bytes.NewBuffer(bs)
 
-	err = os.WriteFile(filename, []byte(newFileContent), 0)
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if scanner.Text() != line {
+			_, err := buf.Write(scanner.Bytes())
+			if err != nil {
+				return err
+			}
+			_, err = buf.WriteString("\n")
+			if err != nil {
+				return err
+			}
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	err = os.WriteFile(filename, buf.Bytes(), 0644)
 	if err != nil {
 		return err
 	}
