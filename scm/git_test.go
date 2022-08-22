@@ -8,7 +8,6 @@ import (
 )
 
 func TestRemoveFileFromIgnored(t *testing.T) {
-
 	tests := []struct {
 		name             string
 		gitIgnoreContent []byte
@@ -48,13 +47,11 @@ func TestRemoveFileFromIgnored(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("RemoveFileFromIgnored() = %v, want %v", got, tt.want)
 			}
-
 		})
 	}
 }
 
 func TestAddFileToIgnored(t *testing.T) {
-
 	tests := []struct {
 		name             string
 		gitIgnoreContent []byte
@@ -94,7 +91,6 @@ func TestAddFileToIgnored(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("AddFileToIgnored() = %v, want %v", got, tt.want)
 			}
-
 		})
 	}
 }
