@@ -7,17 +7,18 @@ import (
 	"os"
 
 	"github.com/Ibotta/sopstool/filecrypt"
+	"github.com/Ibotta/sopstool/scm"
 	"github.com/Ibotta/sopstool/sopsyaml"
 	"github.com/spf13/cobra"
 )
 
-//BuildVersion (updated by main)
+// BuildVersion (updated by main)
 var BuildVersion string
 
-//BuildCommit (updated by main)
+// BuildCommit (updated by main)
 var BuildCommit string
 
-//BuildDate (updated by main)
+// BuildDate (updated by main)
 var BuildDate string
 
 var cfgPath string
@@ -25,6 +26,8 @@ var sopsConfig sopsyaml.SopsConfig
 
 // global stuff. TODO, fix this
 var encrypter filecrypt.FileCrypt = filecrypt.SopsCryptInstance()
+
+var sourceCodeManager scm.SCM = &scm.Git{IgnoreFilePath: ".gitignore"}
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{

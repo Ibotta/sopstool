@@ -60,6 +60,10 @@ func AddCommand(cmd *cobra.Command, args []string) error {
 			}
 		}
 
+		err := sourceCodeManager.AddFileToIgnored(fn)
+		if err != nil {
+			return err
+		}
 		fmt.Println("added file to list:", fn)
 	}
 
