@@ -10,18 +10,19 @@ import (
 )
 
 type Git struct {
+	IgnoreFilePath string
 }
 
 // AddFileToIgnored adds filename to .gitignore
 func (g Git) AddFileToIgnored(fn string) error {
-	exists, err := lineInFileExists(fn, ".gitignore")
+	exists, err := lineInFileExists(fn, g.IgnoreFilePath)
 
 	if err != nil {
 		return err
 	}
 
 	if !exists {
-		return appendLineToFileIfNotExists(fn, ".gitignore")
+		return appendLineToFileIfNotExists(fn, g.IgnoreFilePath)
 	} else {
 		fmt.Println("File already exists in .gitignore file. Skipping.")
 		return nil
@@ -30,7 +31,7 @@ func (g Git) AddFileToIgnored(fn string) error {
 
 // RemoveFileFromIgnored removes filename from .gitignore
 func (g Git) RemoveFileFromIgnored(fn string) error {
-	exists, err := lineInFileExists(fn, ".gitignore")
+	exists, err := lineInFileExists(fn, g.IgnoreFilePath)
 
 	if err != nil {
 		return err
@@ -39,7 +40,7 @@ func (g Git) RemoveFileFromIgnored(fn string) error {
 		fmt.Println("file not exists in .gitignore file. Skipping.")
 		return nil
 	} else {
-		return removeLineFromFile(fn, ".gitignore")
+		return removeLineFromFile(fn, g.IgnoreFilePath)
 	}
 }
 
