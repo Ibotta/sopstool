@@ -47,6 +47,7 @@ func TestNormalizeToSopsFile(t *testing.T) {
 		{name: "With the segment twice", args: args{fn: "filename.sops.something.sops.yaml"}, want: "filename.sops.something.sops.yaml"},
 		{name: "With the segment in the wrong place", args: args{fn: "filename.sops.something.yaml"}, want: "filename.sops.something.sops.yaml"},
 		{name: "Ends with segment", args: args{fn: "filename.yaml.sops"}, want: "filename.yaml.sops"},
+		{name: "Without the extension", args: args{fn: "filename_no_ext"}, want: "filename_no_ext.sops"},
 	}
 
 	for _, tt := range tests {
