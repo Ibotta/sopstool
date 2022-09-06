@@ -124,6 +124,25 @@ func TestRemoveCryptFile(t *testing.T) {
 	})
 }
 
+func TestUpdateKeysFile(t *testing.T) {
+	origEw := sops.execWrap
+	t.Run("run updatekeys", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		mock := mock_oswrap.NewMockExecWrap(ctrl)
+
+		mock.EXPECT().RunCommandDirect(gomock.Eq([]string{"sops", "updatekeys", "myfile.sops.yaml"})).Return(nil)
+		sops.execWrap = mock
+
+		err := sops.UpdateKeysFile("myfile.yaml", []string{})
+		if err != nil {
+			t.Errorf("TestUpdateKeysFile() unexpected error %v", err)
+		}
+
+		sops.execWrap = origEw
+	})
+}
+
 func TestRotateFile(t *testing.T) {
 	origEw := sops.execWrap
 	t.Run("run rotate", func(t *testing.T) {
