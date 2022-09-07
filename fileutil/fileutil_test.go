@@ -21,6 +21,7 @@ func TestNormalizeToPlaintextFile(t *testing.T) {
 		{name: "Without the segment", args: args{fn: "filename.yaml"}, want: "filename.yaml"},
 		{name: "With the segment twice", args: args{fn: "filename.sops.something.sops.yaml"}, want: "filename.sops.something.yaml"},
 		{name: "With the segment last", args: args{fn: "something.bin.sops"}, want: "something.bin"},
+		{name: "With no extension", args: args{fn: "something.sops"}, want: "something"},
 	}
 
 	for _, tt := range tests {
@@ -102,6 +103,22 @@ func TestListIndexOf(t *testing.T) {
 			},
 			want: 0,
 		},
+		{
+			name: "no ext",
+			args: args{
+				files: []string{"filename.ext", "filename2.ext", "fnhere"},
+				fn:    "fnhere",
+			},
+			want: 2,
+		},
+		{
+			name: "no ext normalized",
+			args: args{
+				files: []string{"filename.ext", "filename2.ext", "fnhere"},
+				fn:    "fnhere.sops",
+			},
+			want: 2,
+		},
 	}
 
 	for _, tt := range tests {
@@ -149,6 +166,24 @@ func TestSomeOrAllFiles(t *testing.T) {
 				encFiles: []string{"filename.ext", "filename2.ext", "filename3.ext"},
 			},
 			want:    []string{"filename.ext"},
+			wantErr: false,
+		},
+		{
+			name: "one file no ext",
+			args: args{
+				args:     []string{"filename"},
+				encFiles: []string{"filename", "filename2.ext", "filename3.ext"},
+			},
+			want:    []string{"filename"},
+			wantErr: false,
+		},
+		{
+			name: "one file normalized no ext",
+			args: args{
+				args:     []string{"filename.sops"},
+				encFiles: []string{"filename", "filename2.ext", "filename3.ext"},
+			},
+			want:    []string{"filename"},
 			wantErr: false,
 		},
 		{
