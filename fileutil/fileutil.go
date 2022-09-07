@@ -31,7 +31,12 @@ func NormalizeToSopsFile(fn string) string {
 	}
 
 	ext := path.Ext(fn)
-	fn = strings.Replace(fn, ext, sopsCryptedFileSegment+ext, 1)
+
+	if len(ext) > 0 {
+		fn = strings.Replace(fn, ext, sopsCryptedFileSegment+ext, 1)
+	} else {
+		fn = fn + sopsCryptedFileSegment
+	}
 
 	return fn
 }
