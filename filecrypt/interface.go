@@ -8,4 +8,5 @@ type FileCrypt interface {
 	RemoveCryptFile(fn string) error
 	RotateFile(fn string) error
 	EditFile(fn string) error
+	UpdateKeysFile(fn string, extraArgs []string) error
 }
