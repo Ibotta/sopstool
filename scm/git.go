@@ -47,7 +47,7 @@ func (g Git) RemoveFileFromIgnored(fn string) error {
 
 // lineInFileExists verifies if line exists in provided file
 func lineInFileExists(line string, filename string) (bool, error) {
-	b, err := os.ReadFile(filename)
+	file, err := os.Open(filename)
 
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
@@ -58,10 +58,29 @@ func lineInFileExists(line string, filename string) (bool, error) {
 			return false, err
 		}
 	}
-	// Regex pattern captures line from the content.
-	match, _ := regexp.Match("(?m)^"+regexp.QuoteMeta(line)+"$", b)
 
-	return match, nil
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	// Regex pattern captures specific line in file
+	r, err := regexp.Compile("^" + regexp.QuoteMeta(line) + "$")
+
+	if err != nil {
+		return false, err
+	}
+
+	for scanner.Scan() {
+		if r.MatchString(scanner.Text()) {
+			return true, nil
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return false, err
+	}
+
+	return false, nil
 }
 
 // appendLineToFileIfNotExists appends line to file if not exists. It also creates file if not exists
