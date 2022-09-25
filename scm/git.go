@@ -135,17 +135,18 @@ func removeLineFromFile(line string, filename string) error {
 	}
 	defer file.Close()
 
-	var bs []byte
-	buf := bytes.NewBuffer(bs)
+	// Create temp file for storing new content of target file
+	tempFile, err := os.CreateTemp("/tmp", "sopstool")
+	if err != nil {
+		return err
+	}
 
+	defer tempFile.Close()
+	//Write file conent omitting specific line to tempFile
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if scanner.Text() != line {
-			_, err := buf.Write(scanner.Bytes())
-			if err != nil {
-				return err
-			}
-			_, err = buf.WriteString("\n")
+			_, err := tempFile.WriteString(scanner.Text() + "\n")
 			if err != nil {
 				return err
 			}
@@ -155,7 +156,8 @@ func removeLineFromFile(line string, filename string) error {
 		return err
 	}
 
-	err = os.WriteFile(filename, buf.Bytes(), 0644)
+	// Override target file with tempFile
+	err = os.Rename(tempFile.Name(), filename)
 	if err != nil {
 		return err
 	}
