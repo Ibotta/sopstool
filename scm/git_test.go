@@ -1,7 +1,6 @@
 package scm
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 	"testing"
@@ -32,14 +31,12 @@ func TestRemoveFileFromIgnored(t *testing.T) {
 			git := Git{
 				IgnoreFilePath: tempFilePath,
 			}
-
 			err = git.RemoveFileFromIgnored(tt.fileName)
 			if err != nil {
 				t.Errorf("RemoveFileFromIgnored() err=%v", err)
 			}
 
 			got, err := os.ReadFile(tempFilePath)
-			fmt.Println(string(got))
 			if err != nil {
 				t.Errorf("RemoveFileFromIgnored() err=%v", err)
 			}
@@ -83,7 +80,6 @@ func TestAddFileToIgnored(t *testing.T) {
 			}
 
 			got, err := os.ReadFile(tempFilePath)
-			fmt.Println(string(got))
 			if err != nil {
 				t.Errorf("AddFileToIgnored() err=%v", err)
 			}
