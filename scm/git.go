@@ -2,10 +2,8 @@ package scm
 
 import (
 	"bufio"
-	"bytes"
 	"errors"
 	"fmt"
-	"io"
 	"os"
 	"regexp"
 )
@@ -92,13 +90,35 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 	}
 	defer file.Close()
 
-	b, err := io.ReadAll(file)
+	// Get file info
+	fi, err := file.Stat()
+
 	if err != nil {
 		return err
 	}
-	// Verify if last char is a new line
-	if len(b) > 0 && string(b[len(b)-1]) != "\n" {
-		line = "\n" + line
+
+	// Verify last char only if file is not empty
+	if fi.Size() > 0 {
+		// Declare a buffer for storing last file character
+		b := make([]byte, 1)
+
+		// Set offset for the next Read to the last char
+		_, err = file.Seek(-1, 2)
+
+		if err != nil {
+			return err
+		}
+
+		// Read the last char
+		_, err = file.Read(b)
+		if err != nil {
+			return err
+		}
+
+		// Verify if last char is not a new line
+		if len(b) > 0 && string(b) != "\n" {
+			line = "\n" + line
+		}
 	}
 
 	if _, err := file.WriteString(line); err != nil {
