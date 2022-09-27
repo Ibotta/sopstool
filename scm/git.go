@@ -136,7 +136,7 @@ func removeLineFromFile(line string, filename string) error {
 	defer file.Close()
 
 	// Create temp file for storing new content of target file
-	tempFile, err := os.CreateTemp("/tmp", "sopstool")
+	tempFile, err := os.CreateTemp("", "sopstool")
 	if err != nil {
 		return err
 	}
