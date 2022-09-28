@@ -54,6 +54,10 @@ func RemoveCommand(cmd *cobra.Command, args []string) error {
 			}
 		}
 
+		err := sourceCodeManager.RemoveFileFromIgnored(fn)
+		if err != nil {
+			return err
+		}
 		fmt.Println("removed file from list:", fn)
 	}
 
