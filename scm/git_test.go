@@ -22,7 +22,7 @@ func TestRemoveFileFromIgnored(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tempFilePath := t.TempDir() + "/.gitignore"
-			err := os.WriteFile(tempFilePath, tt.gitIgnoreContent, 0644)
+			err := os.WriteFile(tempFilePath, tt.gitIgnoreContent, 0600)
 
 			if err != nil {
 				t.Errorf("RemoveFileFromIgnored() err=%v", err)
@@ -86,7 +86,7 @@ func TestAddFileToIgnored(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tempFilePath := t.TempDir() + "/.gitignore"
-			err := os.WriteFile(tempFilePath, tt.gitIgnoreContent, 0644)
+			err := os.WriteFile(tempFilePath, tt.gitIgnoreContent, 0600)
 
 			if err != nil {
 				t.Errorf("AddFileToIgnored() err=%v", err)

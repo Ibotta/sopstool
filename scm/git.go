@@ -21,10 +21,9 @@ func (g Git) AddFileToIgnored(fn string) error {
 
 	if !exists {
 		return appendLineToFileIfNotExists(fn, g.IgnoreFilePath)
-	} else {
-		fmt.Println("File already exists in .gitignore file. Skipping.")
-		return nil
 	}
+	fmt.Println("File already exists in .gitignore file. Skipping.")
+	return nil
 }
 
 // RemoveFileFromIgnored removes filename from .gitignore
@@ -37,9 +36,8 @@ func (g Git) RemoveFileFromIgnored(fn string) error {
 	if !exists {
 		fmt.Println("file not exists in .gitignore file. Skipping.")
 		return nil
-	} else {
-		return removeLineFromFile(fn, g.IgnoreFilePath)
 	}
+	return removeLineFromFile(fn, g.IgnoreFilePath)
 }
 
 // lineInFileExists verifies if line exists in provided file
