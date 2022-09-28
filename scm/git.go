@@ -156,6 +156,21 @@ func removeLineFromFile(line string, filename string) error {
 		return err
 	}
 
+	// Make sure that tempFile content is written to disk
+	if err := tempFile.Sync(); err != nil {
+		return err
+	}
+
+	// Make sure that target file is closed before being overwritten
+	if err := file.Close(); err != nil {
+		return err
+	}
+
+	// Make sure that tempFile is closed before renaming
+	if err := tempFile.Close(); err != nil {
+		return err
+	}
+
 	// Override target file with tempFile
 	err = os.Rename(tempFile.Name(), filename)
 	if err != nil {
