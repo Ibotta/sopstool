@@ -15,38 +15,34 @@ type Git struct {
 // AddFileToIgnored adds filename to .gitignore
 func (g Git) AddFileToIgnored(fn string) error {
 	exists, err := lineInFileExists(fn, g.IgnoreFilePath)
-
 	if err != nil {
 		return err
 	}
 
 	if !exists {
 		return appendLineToFileIfNotExists(fn, g.IgnoreFilePath)
-	} else {
-		fmt.Println("File already exists in .gitignore file. Skipping.")
-		return nil
 	}
+	fmt.Println("File already exists in .gitignore file. Skipping.")
+	return nil
 }
 
 // RemoveFileFromIgnored removes filename from .gitignore
 func (g Git) RemoveFileFromIgnored(fn string) error {
 	exists, err := lineInFileExists(fn, g.IgnoreFilePath)
-
 	if err != nil {
 		return err
 	}
+
 	if !exists {
 		fmt.Println("file not exists in .gitignore file. Skipping.")
 		return nil
-	} else {
-		return removeLineFromFile(fn, g.IgnoreFilePath)
 	}
+	return removeLineFromFile(fn, g.IgnoreFilePath)
 }
 
 // lineInFileExists verifies if line exists in provided file
 func lineInFileExists(line string, filename string) (bool, error) {
 	file, err := os.Open(filename)
-
 	if err != nil {
 		if errors.Is(err, os.ErrNotExist) {
 			return false, nil
@@ -63,7 +59,6 @@ func lineInFileExists(line string, filename string) (bool, error) {
 
 	// Regex pattern captures specific line in file
 	r, err := regexp.Compile("^" + regexp.QuoteMeta(line) + "$")
-
 	if err != nil {
 		return false, err
 	}
@@ -84,7 +79,6 @@ func lineInFileExists(line string, filename string) (bool, error) {
 // appendLineToFileIfNotExists appends line to file if not exists. It also creates file if not exists
 func appendLineToFileIfNotExists(line string, filename string) error {
 	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0644)
-
 	if err != nil {
 		return err
 	}
@@ -92,7 +86,6 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 
 	// Get file info
 	fi, err := file.Stat()
-
 	if err != nil {
 		return err
 	}
@@ -104,7 +97,6 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 
 		// Set offset for the next Read to the last char
 		_, err = file.Seek(-1, 2)
-
 		if err != nil {
 			return err
 		}
@@ -121,9 +113,10 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 		}
 	}
 
-	if _, err := file.WriteString(line); err != nil {
+	if _, err := file.WriteString(line + "\n"); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -140,8 +133,8 @@ func removeLineFromFile(line string, filename string) error {
 	if err != nil {
 		return err
 	}
-
 	defer tempFile.Close()
+
 	//Write file conent omitting specific line to tempFile
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -176,5 +169,6 @@ func removeLineFromFile(line string, filename string) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
