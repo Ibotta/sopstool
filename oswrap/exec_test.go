@@ -2,7 +2,6 @@ package oswrap
 
 import (
 	"errors"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"testing"
@@ -85,9 +84,8 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
 			//TODO replace all file stuff with afero
-			return ioutil.TempFile("/tmp", "TestRunCommandStdoutToFile")
+			return os.CreateTemp(t.TempDir(), "TestRunCommandStdoutToFile")
 		})
-		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
 		ow = mock
 
@@ -110,9 +108,8 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
 			//TODO replace all file stuff with afero
-			return ioutil.TempFile("/tmp", "TestRunCommandStdoutToFile")
+			return os.CreateTemp(t.TempDir(), "TestRunCommandStdoutToFile")
 		})
-		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
 		ow = mock
 
@@ -135,9 +132,8 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 
 		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
 			//TODO replace all file stuff with afero
-			return ioutil.TempFile("/tmp", "TestRunCommandStdoutToFile")
+			return os.CreateTemp(t.TempDir(), "TestRunCommandStdoutToFile")
 		})
-		defer os.Remove("/tmp/TestRunCommandStdoutToFile")
 
 		mock.EXPECT().Remove(gomock.Eq("filename")).Return(nil)
 
