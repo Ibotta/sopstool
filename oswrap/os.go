@@ -1,7 +1,6 @@
 package oswrap
 
 import (
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"syscall"
@@ -51,8 +50,8 @@ func (ow osWrap) Stat(name string) (os.FileInfo, error) {
 	return os.Stat(name)
 }
 func (ow osWrap) ReadFile(filename string) ([]byte, error) {
-	return ioutil.ReadFile(filename)
+	return os.ReadFile(filename)
 }
 func (ow osWrap) WriteFile(filename string, data []byte, perm os.FileMode) error {
-	return ioutil.WriteFile(filename, data, perm)
+	return os.WriteFile(filename, data, perm)
 }
