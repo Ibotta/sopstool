@@ -1,8 +1,7 @@
 #!/bin/sh
 set -e
 
-cc-test-reporter before-build
-
+mkdir -p tmp
 for pkg in $(go list ./...); do
   go test -coverprofile="./tmp/$(echo "$pkg" | tr / -).cover" "$pkg"
 done
@@ -10,8 +9,3 @@ done
 echo "mode: set" > c.out
 grep -h -v "^mode:" ./tmp/*.cover >> c.out
 rm -f ./tmp/*.cover
-
-cc-test-reporter after-build
-
-rm c.out
-
