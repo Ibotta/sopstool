@@ -118,6 +118,16 @@ dockers:
       - "ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
       - "ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
       - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:latest"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:latest-amd64"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}-amd64"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
+      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
     # Skips the docker push. Could be useful if you also do draft releases.
     # If set to auto, the release will not be pushed to the docker repository
     # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
