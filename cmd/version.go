@@ -25,7 +25,7 @@ func init() {
 }
 
 // VersionCommand prints the version
-func VersionCommand(cmd *cobra.Command, args []string) {
+func VersionCommand(_ *cobra.Command, _ []string) {
 	if shortString {
 		fmt.Println(BuildVersion)
 	} else {

@@ -29,7 +29,7 @@ func init() {
 }
 
 // DocsCommand the command for the add command
-func DocsCommand(cmd *cobra.Command, args []string) error {
+func DocsCommand(_ *cobra.Command, _ []string) error {
 	err := doc.GenMarkdownTree(RootCmd, "./docs")
 	if err != nil {
 		log.Fatal(err)

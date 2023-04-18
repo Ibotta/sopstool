@@ -23,7 +23,7 @@ func init() {
 }
 
 // UpdateKeysCommand updates recipients keys
-func UpdateKeysCommand(cmd *cobra.Command, args []string) error {
+func UpdateKeysCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 	var extraArgs []string
 
