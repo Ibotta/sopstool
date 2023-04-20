@@ -22,7 +22,7 @@ func init() {
 }
 
 // EditCommand edit a file
-func EditCommand(cmd *cobra.Command, args []string) error {
+func EditCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 
 	fn := fileutil.NormalizeToPlaintextFile(args[0])

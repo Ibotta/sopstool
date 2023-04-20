@@ -28,7 +28,7 @@ func init() {
 }
 
 // CompletionCommand the command for the add command
-func CompletionCommand(cmd *cobra.Command, args []string) error {
+func CompletionCommand(_ *cobra.Command, _ []string) error {
 	switch shellType {
 	case "bash":
 		return RootCmd.GenBashCompletion(os.Stdout)

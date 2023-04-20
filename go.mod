@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/golang/mock v1.6.0
 	github.com/mozilla-services/yaml v0.0.0-20201007153854-c369669a6625
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 )
 
 require (

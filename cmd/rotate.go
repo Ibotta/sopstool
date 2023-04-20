@@ -20,7 +20,7 @@ func init() {
 }
 
 // RotateCommand Rotates up files
-func RotateCommand(cmd *cobra.Command, args []string) error {
+func RotateCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 
 	filesToRotate, err := fileutil.SomeOrAllFiles(args, sopsConfig.EncryptedFiles)

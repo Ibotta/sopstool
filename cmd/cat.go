@@ -24,7 +24,7 @@ func init() {
 }
 
 // CatCommand prints a file to stdout
-func CatCommand(cmd *cobra.Command, args []string) error {
+func CatCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 
 	for _, fileArg := range args {

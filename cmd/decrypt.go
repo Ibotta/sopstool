@@ -24,7 +24,7 @@ func init() {
 }
 
 // DecryptCommand decrypts files
-func DecryptCommand(cmd *cobra.Command, args []string) error {
+func DecryptCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 
 	filesToDecrypt, err := fileutil.SomeOrAllFiles(args, sopsConfig.EncryptedFiles)

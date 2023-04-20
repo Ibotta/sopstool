@@ -29,7 +29,7 @@ func init() {
 }
 
 // RemoveCommand the command for the add command
-func RemoveCommand(cmd *cobra.Command, args []string) error {
+func RemoveCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 
 	for _, fileArg := range args {

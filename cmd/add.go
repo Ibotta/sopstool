@@ -31,7 +31,7 @@ func init() {
 }
 
 // AddCommand the command for the add command
-func AddCommand(cmd *cobra.Command, args []string) error {
+func AddCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 
 	for _, fileArg := range args {
