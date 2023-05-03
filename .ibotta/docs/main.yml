@@ -1,0 +1,4 @@
+name: sopstool
+description: multi-file handler for Mozilla Sops
+type: tool
+data_classification: 3
