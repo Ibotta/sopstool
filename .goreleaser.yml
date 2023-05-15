@@ -1,3 +1,5 @@
+report_sizes: true
+
 # Build customization
 builds:
   - env:
@@ -25,6 +27,9 @@ universal_binaries:
 archives:
   - id: newzips
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
 
 checksum:
   # Default is `{{ .ProjectName }}_{{ .Version }}_checksums.txt`.
@@ -96,87 +101,8 @@ blobs:
     extra_files:
       - glob: ./*install.sh
 
-# dockers:
-#   - id: amd64image
-#     use: buildx
-#     build_flag_templates:
-#       - "--pull"
-#       - "--platform=linux/amd64"
-#       - "--label=org.label-schema.schema-version=1.0"
-#       - "--label=org.label-schema.version={{.Version}}"
-#       - "--label=org.label-schema.name={{.ProjectName}}"
-#     goos: linux
-#     # GOARCH of the built binary that should be used.
-#     goarch: amd64
-#     ids:
-#       - sopstool
-#     # Templates of the Docker image names.
-#     image_templates:
-#       # - "ibotta/{{ .ProjectName }}:latest"
-#       # - "ibotta/{{ .ProjectName }}:{{ .Version }}"
-#       # - "ibotta/{{ .ProjectName }}:{{ .Tag }}"
-#       # - "ibotta/{{ .ProjectName }}:v{{ .Major }}"
-#       # - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
-#       - "ibotta/{{ .ProjectName }}:latest-amd64"
-#       - "ibotta/{{ .ProjectName }}:{{ .Version }}-amd64"
-#       - "ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
-#       - "ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
-#       - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
-#       # - "ghcr.io/ibotta/{{ .ProjectName }}:latest"
-#       # - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}"
-#       # - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}"
-#       # - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}"
-#       # - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:latest-amd64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}-amd64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
-#     # Skips the docker push. Could be useful if you also do draft releases.
-#     # If set to auto, the release will not be pushed to the docker repository
-#     # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
-#     # Defaults to false.
-#     skip_push: false
-#     # Path to the Dockerfile (from the project root).
-#     dockerfile: Dockerfile
-#     # If your Dockerfile copies files other than the binary itself,
-#     # you should list them here as well.
-#     # Note that goreleaser will create the same structure inside the temporary
-#     # folder, so if you add `foo/bar.json` here, on your Dockerfile you can
-#     # `COPY foo/bar.json /whatever.json`.
-#     # Also note that the paths here are relative to the folder in which
-#     # goreleaser is being run.
-#     # This field does not support wildcards, you can add an entire folder here
-#     # and use wildcards when you `COPY`/`ADD` in your Dockerfile.
-#     extra_files:
-#       - sopsinstall.sh
-#   - id: arm64image
-#     use: buildx
-#     build_flag_templates:
-#       - "--pull"
-#       - "--platform=linux/arm64"
-#       - "--label=org.label-schema.schema-version=1.0"
-#       - "--label=org.label-schema.version={{.Version}}"
-#       - "--label=org.label-schema.name={{.ProjectName}}"
-#     goos: linux
-#     # GOARCH of the built binary that should be used.
-#     goarch: arm64
-#     # Name templates of the built binaries that should be used.
-#     ids:
-#       - sopstool
-#     # Templates of the Docker image names.
-#     image_templates:
-#       - "ibotta/{{ .ProjectName }}:latest-arm64"
-#       - "ibotta/{{ .ProjectName }}:{{ .Version }}-arm64"
-#       - "ibotta/{{ .ProjectName }}:{{ .Tag }}-arm64"
-#       - "ibotta/{{ .ProjectName }}:v{{ .Major }}-arm64"
-#       - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-arm64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:latest-arm64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}-arm64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}-arm64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}-arm64"
-#       - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-arm64"
-#     skip_push: false
-#     dockerfile: Dockerfile
-#     extra_files:
-#       - sopsinstall.sh
+publishers:
+  - name: docker-buildx
+    cmd: ./scripts/deploy-docker {{ .Major }} {{ .Minor }} {{ .Patch }}
+  - name: deploy-sops
+    cmd: ./scripts/deploy-sops

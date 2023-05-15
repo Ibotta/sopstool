@@ -8,39 +8,69 @@ usage() {
 
 $this: download binaries for sopstool
 
-Usage: $this [bindir]
-  [bindir] sets bindir or installation directory, Defaults to ./bin
+Usage: $this [-b bindir] [-o OS] [-a ARCH] [-s SOPS_VERSION] [-t SOPSTOOL_VERSION] [-d] [bindir]
+  -b sets bindir or installation directory, Defaults to ./bin
+  -o target OS (windows, linux, darwin) - uses uname by default
+  -a target architecture (amd64, arm64) - uses uname by default
+  -s SOPS_VERSION tag to download
+  -t SOPSTOOL_VERSION tag to download
+	-f force download to the binary directory even if command exists
+  -d turns on debug logging
 
   SOPS_VERSION overrides the sops version tag downloaded
   SOPSTOOL_VERSION overrides the sopstool version tag downloaded
+  [bindir] arg sets the installation directory
 
-  Consider setting GITHUB_TOKEN to avoid triggering GitHub rate limits.
-  See the following for more details:
-  https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/
-
-Inspired by godownloader
- https://github.com/goreleaser/godownloader
+  Flags are passed to the installers (-a, -o, -d)
 
 EOF
   exit 2
 }
 
 parse_args() {
-  BINDIR=${1:-"./bin"}
+  BINDIR="${BINDIR:-./bin}"
+  while getopts "b:o:a:s:t:dfxh?" arg; do
+    case "${arg}" in
+      x) TARGET_X=1 && set -x ;;
+      b) BINDIR="${OPTARG}" ;;
+      o) TARGET_OS="${OPTARG}" ;;
+      a) TARGET_ARCH="${OPTARG}" ;;
+      s) SOPS_VERSION="${OPTARG}" ;;
+      t) SOPSTOOL_VERSION="${OPTARG}" ;;
+			f) FORCE=1 ;;
+      d) TARGET_DEBUG=1 ;;
+      h | \? | *) usage "$0" ;;
+    esac
+  done
+  shift $((OPTIND - 1))
+  BINDIR=${1:-${BINDIR}}
 }
 
 execute() {
-  if ! is_command sops; then
-    http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh -b "$BINDIR" "$SOPS_VERSION"
+  if [ -n "${TARGET_ARCH}" ]; then
+    set -- "$@" "-a" "${TARGET_ARCH}"
+  fi
+  if [ -n "${TARGET_OS}" ]; then
+    set -- "$@" "-o" "${TARGET_OS}"
+  fi
+  if [ -n "${TARGET_DEBUG}" ]; then
+    set -- "$@" "-d"
+  fi
+  if [ -n "${TARGET_X}" ]; then
+    set -- "$@" "-x"
   fi
 
-  http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh -b "$BINDIR" "$SOPSTOOL_VERSION"
+  if [ -n "${FORCE}" ] || ! is_command sops; then
+    http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh -b "${BINDIR}" "$@" "${SOPS_VERSION}"
+  fi
+
+  http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh -b "${BINDIR}" "$@" "${SOPSTOOL_VERSION}"
 
   echo "Both sops and sopstool installed"
 }
 
 http_exec() {
-  url=$1
+  url="$1"
   shift
   if is_command curl; then
     cmd='curl --fail -sSL'

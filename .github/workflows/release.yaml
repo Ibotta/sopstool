@@ -62,6 +62,3 @@ jobs:
         env:
           # this needs push access to the tap
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      - name: upload other artifacts
-        shell: bash
-        run: scripts/deploy

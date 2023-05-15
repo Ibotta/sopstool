@@ -17,11 +17,6 @@ if [ ! -e dist/sopstool_checksums.txt ]; then
   echo "Did not build checksums" && exit 1
 fi
 
-# also copy up installers
-aws s3 cp sopsinstall.sh "$S3URL/sopstool/"
-aws s3 cp sopstoolinstall.sh "$S3URL/sopstool/"
-aws s3 cp install.sh "$S3URL/sopstool/"
-
 # download sops for reupload to s3
 SOPSDIST="dist/sops"
 if [ -d "$SOPSDIST" ]; then
@@ -29,8 +24,11 @@ if [ -d "$SOPSDIST" ]; then
 fi
 
 mkdir -p "$SOPSDIST"
-$DIR/sopsdownload.sh -o linux "$SOPSDIST"
-$DIR/sopsdownload.sh -o darwin "$SOPSDIST"
+$DIR/../sopsinstall.sh -o linux -a amd64 "$SOPSDIST"
+$DIR/../sopsinstall.sh -o linux -a arm64 "$SOPSDIST"
+$DIR/../sopsinstall.sh -o darwin -a amd64 "$SOPSDIST"
+$DIR/../sopsinstall.sh -o darwin -a arm64 "$SOPSDIST"
+$DIR/../sopsinstall.sh -o windows -a amd64 "$SOPSDIST"
 
 # put those on s3
 aws s3 cp --recursive "$SOPSDIST/" "$S3URL/sops/"

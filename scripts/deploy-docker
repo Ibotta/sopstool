@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# enable interruption signal handling
+trap - INT TERM
+
+MAJOR=$1 MINOR=$2 PATCH=$3 docker-buildx bake --push

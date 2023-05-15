@@ -4,9 +4,10 @@
 
 This is a single top-level namespace filled with packages. Each directory is potentially a package. Binary builds are done on packages with a main subpackage.
 
-## Install Golang 
+## Install Golang
 
-### Using asdf-vm
+### Using asdf or rtx
+
 We utilize a `.go-version` file that can be used by [asdf-vm](https://github.com/kennyp/asdf-golang) like so:
 
 ```bash
@@ -22,13 +23,6 @@ asdf install golang
 ```bash
 cd /path/to/sopstool/repository/
 goenv install
-```
-
-### Using gimme
-[gimme](https://github.com/travis-ci/gimme) uses `eval` in a simple way:
-
-```bash
-eval "$(gimme 1.17)"
 ```
 
 ### From the developers
@@ -125,10 +119,6 @@ Summary: Given a version number **MAJOR**.**MINOR**.**PATCH**, increment the:
 1. In general, don't manually increment prerelease versions - we typically use that for automatic per-build numbering
 
 ## Patterns
-
-### Godownloader
-
-We used to use [godownloader](https://github.com/goreleaser/godownloader) to generate the installer scripts. This is deprecated now, but the majority of the scripts used have not changed in a while. Any fixes will need to be by-hand.
 
 ### Common third-party modules in use
 

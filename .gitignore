@@ -6,3 +6,4 @@ c.out
 *.cover
 .idea
 .vscode
+bin
