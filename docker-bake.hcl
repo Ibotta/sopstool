@@ -1,3 +1,9 @@
+variable "VERSION" {
+  default = "$VERSION"
+}
+variable "TAG" {
+  default = "$TAG"
+}
 variable "MAJOR" {
   default = "$MAJOR"
 }
@@ -10,13 +16,13 @@ variable "PATCH" {
 
 target "default" {
   dockerfile = "Dockerfile"
-  tags = [
+  tags = repo_tags([
     "latest",
-    "${MAJOR}.${MINOR}.${PATCH}",
-    "v${MAJOR}.${MINOR}.${PATCH}",
+    "${lower(VERSION)}",
+    "${TAG}",
     "v${MAJOR}.${MINOR}",
     "v${MAJOR}"
-  ]
+  ])
   labels = {
     "org.label-schema.schema-version"="1.0",
     "org.label-schema.version"="${MAJOR}.${MINOR}.${PATCH}",

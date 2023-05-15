@@ -37,6 +37,7 @@ checksum:
 
 sboms:
   - artifacts: binary
+    documents: ["{{ .Binary }}_{{ .Os }}_{{ .Arch }}.sbom"]
 
 nfpms:
   - id: default
@@ -102,7 +103,5 @@ blobs:
       - glob: ./*install.sh
 
 publishers:
-  - name: docker-buildx
-    cmd: ./scripts/deploy-docker {{ .Major }} {{ .Minor }} {{ .Patch }}
   - name: deploy-sops
     cmd: ./scripts/deploy-sops

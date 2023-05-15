@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 set -o errexit
 set -o nounset
@@ -7,4 +7,14 @@ set -o pipefail
 # enable interruption signal handling
 trap - INT TERM
 
-MAJOR=$1 MINOR=$2 PATCH=$3 docker-buildx bake --push
+REGEX="^v([0-9]+)\.([0-9]+)\.([0-9]+)"
+export VERSION=$(jq -r '.version' dist/metadata.json)
+export TAG=$(jq -r '.tag' dist/metadata.json)
+if [[ "${TAG}" =~ ${REGEX} ]]; then
+	export RAWVERSION=${BASH_REMATCH[0]}
+	export MAJOR=${BASH_REMATCH[1]}
+	export MINOR=${BASH_REMATCH[2]}
+	export PATCH=${BASH_REMATCH[3]}
+fi
+
+docker buildx bake --metadata-file dist/bake.json --sbom=true "$@"
