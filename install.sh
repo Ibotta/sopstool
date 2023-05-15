@@ -61,10 +61,10 @@ execute() {
   fi
 
   if [ -n "${FORCE}" ] || ! is_command sops; then
-    http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh -b "${BINDIR}" "$@" "${SOPS_VERSION}"
+    http_exec https://raw.githubusercontent.com/Ibotta/sopstool/main/sopsinstall.sh -b "${BINDIR}" "$@" "${SOPS_VERSION}"
   fi
 
-  http_exec https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh -b "${BINDIR}" "$@" "${SOPSTOOL_VERSION}"
+  http_exec https://raw.githubusercontent.com/Ibotta/sopstool/main/sopstoolinstall.sh -b "${BINDIR}" "$@" "${SOPSTOOL_VERSION}"
 
   echo "Both sops and sopstool installed"
 }
