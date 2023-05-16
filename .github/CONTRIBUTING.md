@@ -8,7 +8,7 @@ This is a single top-level namespace filled with packages. Each directory is pot
 
 ### Using asdf or rtx
 
-We utilize a `.go-version` file that can be used by [asdf-vm](https://github.com/kennyp/asdf-golang) like so:
+We utilize a `.go-version` file that can be used by [asdf-vm](https://github.com/kennyp/asdf-golang) or [rtx](https://github.com/jdxcode/rtx) like so:
 
 ```bash
 cd /path/to/sopstool/repository/
