@@ -84,7 +84,7 @@ This project uses [GoReleaser](https://goreleaser.com/) for builds and releases.
 1. Prepare the release:
 
    ```sh
-   git checkout master && git pull
+   git checkout main && git pull
    ```
 
    Commit and tag with the intended version bump:
