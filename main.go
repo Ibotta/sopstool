@@ -6,7 +6,7 @@ import "github.com/Ibotta/sopstool/cmd"
 
 // Goreleaser default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}`.
 var (
-	version = "master"
+	version = "main"
 	commit  = "dirty"
 	date    = "Now"
 )

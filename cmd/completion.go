@@ -1,5 +1,5 @@
 // Copyright © 2017 Ibotta
-// https://github.com/spf13/cobra/blob/master/bash_completions.md.
+// https://github.com/spf13/cobra/blob/main/bash_completions.md.
 
 package cmd
 

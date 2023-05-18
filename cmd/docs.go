@@ -1,5 +1,5 @@
 // Copyright © 2017 Ibotta
-// https://github.com/spf13/cobra/blob/master/doc/md_docs.md
+// https://github.com/spf13/cobra/blob/main/doc/md_docs.md
 
 package cmd
 

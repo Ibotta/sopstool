@@ -1,3 +1,5 @@
+report_sizes: true
+
 # Build customization
 builds:
   - env:
@@ -6,32 +8,41 @@ builds:
     goos:
       - darwin
       - linux
+      - windows
     goarch:
       - amd64
       - arm64
+    goarm:
+      - ""
+    goamd64:
+      - ""
+
+universal_binaries:
+  - id: sopstool
+    # Whether to remove the previous single-arch binaries from the artifact list.
+    # If left as false, your end release might have both several macOS archives:
+    # amd64, arm64 and all.
+    replace: true
 
 archives:
   - id: newzips
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
 
 checksum:
-  # You can change the name of the checksums file.
-  # This is parsed with the Go template engine and the following variables
-  # are available:
-  # - ProjectName
-  # - Tag
-  # - Version (Git tag without `v` prefix)
-  # - Env (environment variables)
   # Default is `{{ .ProjectName }}_{{ .Version }}_checksums.txt`.
   name_template: "{{ .ProjectName }}_checksums.txt"
+
+sboms:
+  - artifacts: binary
+    documents: ["{{ .Binary }}_{{ .Os }}_{{ .Arch }}.sbom"]
 
 nfpms:
   - id: default
     # You can change the file name of the package.
-    #
-    # Default: `{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
     file_name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
-    # file_name_template: "{{ .ProjectName }}_{{ .Os }}"
     vendor: Ibotta
     homepage: https://github.com/Ibotta/sopstool
     maintainer: Ibotta <oss@ibotta.com>
@@ -41,6 +52,7 @@ nfpms:
     formats:
       - deb
       - rpm
+      - apk
     # Packages your package depends on.
     dependencies:
       - sops
@@ -81,73 +93,15 @@ blobs:
     bucket: oss-pkg.ibotta.com
     # AWS Region to use.
     region: us-east-1
-    # path inside the bucket.
-    # This is parsed with the Go template engine and the following variables
-    # are available:
-    # - ProjectName
-    # - Tag
-    # - Version (Git tag without `v` prefix)
-    # There is also a template function "time" that takes a Go time format
-    # string to insert a formated timestamp into the release name.
-    # Default is `{{ .ProjectName }}/{{ .Tag }}`
-    # folder:
+    # Default: '{{ .ProjectName }}/{{ .Tag }}'
+    folder: "{{ .ProjectName }}/{{ .Tag }}"
   - provider: s3
     bucket: oss-pkg.ibotta.com
     region: us-east-1
     folder: "{{ .ProjectName }}"
-
-dockers:
-  - id: amd64image
-    goos: linux
-    # GOARCH of the built binary that should be used.
-    goarch: amd64
-    # GOARM of the built binary that should be used.
-    goarm: ""
-    # Name templates of the built binaries that should be used.
-    ids:
-      - sopstool
-    # Templates of the Docker image names.
-    image_templates:
-      - "ibotta/{{ .ProjectName }}:latest"
-      - "ibotta/{{ .ProjectName }}:{{ .Version }}"
-      - "ibotta/{{ .ProjectName }}:{{ .Tag }}"
-      - "ibotta/{{ .ProjectName }}:v{{ .Major }}"
-      - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
-      - "ibotta/{{ .ProjectName }}:latest-amd64"
-      - "ibotta/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
-      - "ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
-      - "ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:latest"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:latest-amd64"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Version }}-amd64"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:{{ .Tag }}-amd64"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}-amd64"
-      - "ghcr.io/ibotta/{{ .ProjectName }}:v{{ .Major }}.{{ .Minor }}-amd64"
-    # Skips the docker push. Could be useful if you also do draft releases.
-    # If set to auto, the release will not be pushed to the docker repository
-    # in case there is an indicator for prerelease in the tag e.g. v1.0.0-rc1
-    # Defaults to false.
-    skip_push: false
-    # Path to the Dockerfile (from the project root).
-    dockerfile: Dockerfile
-    # Template of the docker build flags.
-    build_flag_templates:
-      - "--label=org.label-schema.schema-version=1.0"
-      - "--label=org.label-schema.version={{.Version}}"
-      - "--label=org.label-schema.name={{.ProjectName}}"
-    # If your Dockerfile copies files other than the binary itself,
-    # you should list them here as well.
-    # Note that goreleaser will create the same structure inside the temporary
-    # folder, so if you add `foo/bar.json` here, on your Dockerfile you can
-    # `COPY foo/bar.json /whatever.json`.
-    # Also note that the paths here are relative to the folder in which
-    # goreleaser is being run.
-    # This field does not support wildcards, you can add an entire folder here
-    # and use wildcards when you `COPY`/`ADD` in your Dockerfile.
     extra_files:
-      - sopsinstall.sh
+      - glob: ./*install.sh
+
+publishers:
+  - name: deploy-sops
+    cmd: ./scripts/deploy-sops

@@ -1,136 +1,158 @@
 # sopstool
 
-[![Build Status](https://travis-ci.org/Ibotta/sopstool.svg?branch=master)](https://travis-ci.org/Ibotta/sopstool) [![Maintainability](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/maintainability)](https://codeclimate.com/github/Ibotta/sopstool/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/test_coverage)](https://codeclimate.com/github/Ibotta/sopstool/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/maintainability)](https://codeclimate.com/github/Ibotta/sopstool/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/test_coverage)](https://codeclimate.com/github/Ibotta/sopstool/test_coverage)
 
 sopstool is a multi-file wrapper around [sops](https://github.com/mozilla/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
 
 sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images. Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).
 
+- [sopstool](#sopstool)
+	- [1.0.0 Release and Breaking Changes](#100-release-and-breaking-changes)
+	- [Installation](#installation)
+		- [Package Repositories](#package-repositories)
+		- [Container Image](#container-image)
+		- [Packages or binaries from Releases](#packages-or-binaries-from-releases)
+		- [Shell installer](#shell-installer)
+		- [Installing sops manually](#installing-sops-manually)
+			- [Installing the sops binary with our script installer](#installing-the-sops-binary-with-our-script-installer)
+			- [Download sops from our https mirror](#download-sops-from-our-https-mirror)
+		- [Installing sopstool manually](#installing-sopstool-manually)
+			- [Installing the sopstool binary using our script installer](#installing-the-sopstool-binary-using-our-script-installer)
+			- [Download sopstool from our https mirror](#download-sopstool-from-our-https-mirror)
+	- [Usage](#usage)
+	- [Configuration](#configuration)
+	- [How-To](#how-to)
+		- [Walkthrough](#walkthrough)
+	- [Contributing](#contributing)
+		- [docs](#docs)
+
 ## 1.0.0 Release and Breaking Changes
-1.0.0 release of `sopstool` introduces M1 / darwin-arm64 support.  We also want to match build artifacts produced by GoReleaser to what `sops` produces.  Therefore, this version introduces a breaking change where we no longer produce artifacts like `sopstool_linux.(deb|rpm|tar.gz)` and `sopstool_darwin.tar.gz`.  Instead, you'll see artifacts like `sopstool_darwin_(arm64|amd64)_(deb|rpm|tar.gz)` and `sopstool_linux_(arm64|amd64)_(deb|rpm|tar.gz)` in future releases.
+
+1.0.0 release of `sopstool` introduces M1 / darwin-arm64 support. We also want to match build artifacts produced by GoReleaser to what `sops` produces. Therefore, this version introduces a breaking change where we no longer produce artifacts like `sopstool_linux.(deb|rpm|tar.gz)` and `sopstool_darwin.tar.gz`. Instead, you'll see artifacts like `sopstool_darwin_(arm64|amd64)_(deb|rpm|tar.gz)` and `sopstool_linux_(arm64|amd64)_(deb|rpm|tar.gz)` in future releases.
 
 ## Installation
 
-The most direct install uses a shell script hosted in this repository. This script will install the latest sops (if the command does not exist) and sopstool to `./bin` by default.
+### Package Repositories
 
-```sh
-curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | bash
-```
+sopstool is available in the following repositories
 
-- Override the sops version with the environment variable `SOPS_VERSION`
-- Override the sopstool version with the environment variable `SOPSTOOL_VERSION`
-- Override the binary install location with the first shell argument
-  - remember, you may need `sudo` or root access if you are installing to `/usr/*`
+- homebrew via the `Ibotta/public` tap: `brew install Ibotta/public/sopstool`
+- asdf (and rtx) via the `sopstool` plugin: `asdf plugin add sopstool`
 
-Example with overrides:
-
-```sh
-curl https://raw.githubusercontent.com/Ibotta/sopstool/master/install.sh | SOPS_VERSION=3.0.0 SOPSTOOL_VERSION=0.3.0 bash -s /usr/local/bin
-```
-
-### Docker
-
-**Note**: We currently only build a docker image for [Linux - amd64](.goreleaser.yml#L100).
-
-To use sopstool in your docker container, you can use the direct install method above, but since Docker 1.13, there is a better way by using build stages!
-
-In your Dockerfile:
-
-```docker
-COPY --from=ibotta/sopstool:latest usr/local/bin/sops usr/local/bin/sopstool /usr/local/bin/
-```
+### Container Image
 
 Images are tagged with the same version numbering as the releases, and `latest` always gets the latest release. Note that your image will need root CA certificates (typically installed with curl, or a `ca-certificates` package).
 
-To use sopstool in a docker container in other contexts (avoiding doing binary installs):
+To use sopstool from container (avoiding doing binary installs):
 
 ```sh
-docker run --rm -v $(pwd):/work -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_REGION -e AWS_SECURITY_TOKEN -e AWS_SESSION_TOKEN ibotta/sopstool:latest $COMMAND
+docker run --rm -v $(pwd):/work -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_REGION -e AWS_SECURITY_TOKEN -e AWS_SESSION_TOKEN ghcr.io/ibotta/sopstool:latest $COMMAND
 ```
 
 - `sopstool` is the entrypoint, so any sopstool subcommand can be run.
 - `/work` is the default WORKDIR - this should be mounted to the root where `.sops.yml` is stored.
 - the commands need access to your AWS credentials session to authenticate KMS.
 
-### Homebrew
+Or, use as a install source in your Dockerfile. `sops` and `sopstool` are in `/usr/local/bin/`:
 
-Ibotta maintains a tap for their open-source projects, which includes sopstool. This will install sops as a requirement
+```docker
+COPY --from=ghcr.io/ibotta/sopstool:latest usr/local/bin/sops usr/local/bin/sopstool /usr/local/bin/
+```
+
+### Packages or binaries from Releases
+
+Check the [Releases](https://github.com/Ibotta/sopstool/releases) for the latest artifacts
+
+- Binaries (compressed as .tar.gz or .zip) (note, you will need `sops` installed manually)
+- RPM, Debian and APK packages
+
+All artifacts have their sha256 checksums recorded in `sopstool_checksums.txt`, and SPDX SBOM artifacts are available.
+
+### Shell installer
+
+The most direct install uses a shell script hosted in this repository. This script will install the latest sops (if the command does not exist) and sopstool to `./bin` by default.
 
 ```sh
-brew install Ibotta/public/sopstool
+curl https://raw.githubusercontent.com/Ibotta/sopstool/main/install.sh | bash
+```
+
+- Override the sops version with the `-s` argument
+- Override the sopstool version with the `-t` argument
+- Override the binary install location with the `-b` argument
+  - remember, you may need `sudo` or root access if you are installing to `/usr/*`
+
+Example with overrides:
+
+```sh
+curl https://raw.githubusercontent.com/Ibotta/sopstool/main/install.sh | bash -s -- -b /usr/local/bin -s 3.0.0 -t 0.3.0
 ```
 
 ### Installing sops manually
 
-Since sopstool requires [sops](https://github.com/mozilla/sops), install it first. You can use one of the following methods:
+sopstool requires [sops](https://github.com/mozilla/sops). You can use one of the following methods:
+
+- From one of the public repositories (it is available in most)
+- From the [official releases](https://github.com/mozilla/sops/releases)
 
 #### Installing the sops binary with our script installer
 
 The install script above uses a separate script to download sops
 
 ```sh
-curl https://raw.githubusercontent.com/Ibotta/sopstool/master/sopsinstall.sh | bash
+curl https://raw.githubusercontent.com/Ibotta/sopstool/main/sopsinstall.sh | bash
 ```
 
 - Override the tag with the first shell argument (defaults to latest)
 - Override the binary install location with the -b flag (defaults to `/.bin`)
 
-(This script was generated by [godownloader](https://github.com/goreleaser/godownloader))
-
 #### Download sops from our https mirror
 
-To avoid needing to find the 'latest' binary by hand or by script, use our https server to download the binary. The latest binary is uploaded automatically whenever sopstool is deployed.
+To avoid needing to find the 'latest' binary by hand or by script, use our https server to download the binary. The latest binary is uploaded automatically whenever sopstool is deployed. The file has the pattern `sops_$OS_$ARCH`, except for `windows`
 
-- Always the Latest
-  - Linux: [`https://oss-pkg.ibotta.com/sops/sops_linux.tar.gz`](https://oss-pkg.ibotta.com/sops/sops_linux.tar.gz)
-  - MacOS: [`https://oss-pkg.ibotta.com/sops/sops_darwin.tar.gz`](https://oss-pkg.ibotta.com/sops/sops_darwin.tar.gz)
-- Versions: always the pattern: `https://oss-pkg.ibotta.com/sops/$TAG/sops_$OS.tar.gz`
-
-#### Download sops from github
-
-You can install it by hand [from a github release](https://github.com/mozilla/sops/releases).
-
-#### Installing sops using go (master branch)
-
-```sh
-go get -u go.mozilla.org/sops/cmd/sops
-```
+- OS: `linux`, `darwin`
+  - ARCH: `amd64`, `arm64`
+  - filenames: `sops_$OS_$ARCH.tar.gz`
+- OS: `windows`
+  - ARCH `amd64` only
+  - filename: `sops_windows.zip`
+- Versions
+  - latest: `https://oss-pkg.ibotta.com/sops/$filename`
+  - specific tags: `https://oss-pkg.ibotta.com/sops/$TAG/$filename`
 
 ### Installing sopstool manually
 
 Following the lead of [sops](https://github.com/mozilla/sops), we only build 64bit binaries.
 
-### Installing the sopstool binary using our script installer
+#### Installing the sopstool binary using our script installer
 
 The install script above uses a separate script to download sopstool
 
 ```sh
-curl https://raw.githubusercontent.com/Ibotta/sopstool/master/sopstoolinstall.sh | bash
+curl https://raw.githubusercontent.com/Ibotta/sopstool/main/sopstoolinstall.sh | bash
 ```
 
 - Override the tag with the first shell argument (defaults to latest)
 - Override the binary install location with the -b flag (defaults to `/.bin`)
 
-(This script was generated by [godownloader](https://github.com/goreleaser/godownloader))
-
 #### Download sopstool from our https mirror
 
 To avoid needing to find the 'latest' binary by hand or by script, use our https server to download the binary. The latest binary is uploaded automatically whenever sopstool is deployed.
 
-- Always the Latest
-  - Linux: [`https://oss-pkg.ibotta.com/sopstool/sopstool_linux.tar.gz`](https://oss-pkg.ibotta.com/sopstool/sopstool_linux.tar.gz)
-  - MacOS: [`https://oss-pkg.ibotta.com/sopstool/sopstool_darwin.tar.gz`](https://oss-pkg.ibotta.com/sopstool/sopstool_darwin.tar.gz)
-- Versions: always the pattern: `https://oss-pkg.ibotta.com/sopstool/$TAG/sopstool_$OS.tar.gz`
+- OS: `linux`, `darwin`
+  - ARCH: `amd64`, `arm64`
+  - filenames: `sopstool_$OS_$ARCH.tar.gz`
+- OS: `windows`
+  - ARCH: `amd64`, `arm64`
+  - filename: `sopstool_windows_$ARCH.zip`
+- Versions
+  - latest: `https://oss-pkg.ibotta.com/sopstool/$filename`
+  - specific tags: `https://oss-pkg.ibotta.com/sopstool/$TAG/$filename`
 
-#### Download sopstool from github
+Additionally, all other release assets are also within this folder. This includes the checksums, packages, sboms, as well as installers:
 
-Download the latest version for your platform from [a github release](https://github.com/Ibotta/sopstool/releases).
-
-### Installing sopstool using go (master branch)
-
-```sh
-go get -u github.com/Ibotta/sopstool
-```
+- `https://oss-pkg.ibotta.com/sopstool/install.sh` for the combined installer
+- `https://oss-pkg.ibotta.com/sopstool/sopsinstall.sh` for the sops installer
+- `https://oss-pkg.ibotta.com/sopstool/sopstoolinstall.sh` for the sopstool installer
 
 ## Usage
 
@@ -171,7 +193,7 @@ sopstool completion --sh zsh
 ## How-To
 
 1. Create a [KMS Key](https://aws.amazon.com/kms/).
-1. Follow along the [Configuration Steps](https://github.com/Ibotta/sopstool/tree/master/#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
+1. Follow along the [Configuration Steps](https://github.com/Ibotta/sopstool/tree/main/#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
    - All files added to SOPS are relative, or in child directories to the `.sops.yaml` configuration file.
 1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the values, but not it's keys.
    - You can read more about [SOPS Here](https://github.com/mozilla/sops).
