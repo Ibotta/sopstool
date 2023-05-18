@@ -68,3 +68,6 @@ jobs:
 
       - name: Push Docker
         run: scripts/deploy-docker --push
+
+      - name: Put Sops on S3
+        run: scripts/deploy-sops

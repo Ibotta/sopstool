@@ -101,7 +101,3 @@ blobs:
     folder: "{{ .ProjectName }}"
     extra_files:
       - glob: ./*install.sh
-
-publishers:
-  - name: deploy-sops
-    cmd: ./scripts/deploy-sops
