@@ -5,7 +5,7 @@ usage() {
   this=$1
   cat <<EOF
 
-$this: download binaries for mozilla/sops
+$this: download binaries for getsops/sops
 
 Usage: $this [-b bindir] [-o OS] [-a ARCH] [-z dir] [-d] [tag]
   -b sets bindir or installation directory, Defaults to ./bin
@@ -13,7 +13,7 @@ Usage: $this [-b bindir] [-o OS] [-a ARCH] [-z dir] [-d] [tag]
   -a target architecture (amd64, arm64) - uses uname by default
   -z save an archive instead of installing
   -d turns on debug logging
-  [tag] is a tag from https://github.com/mozilla/sops/releases
+  [tag] is a tag from https://github.com/getsops/sops/releases
         If tag is missing, then the latest release will be used.
 
 EOF
@@ -302,7 +302,7 @@ End of functions from https://github.com/client9/shlib
 ------------------------------------------------------------------------
 EOF
 
-OWNER="mozilla"
+OWNER="getsops"
 REPO="sops"
 BINARY="sops"
 BINDIR="${BINDIR:-./bin}"
