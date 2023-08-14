@@ -2,7 +2,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/maintainability)](https://codeclimate.com/github/Ibotta/sopstool/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/test_coverage)](https://codeclimate.com/github/Ibotta/sopstool/test_coverage)
 
-sopstool is a multi-file wrapper around [sops](https://github.com/mozilla/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
+sopstool is a multi-file wrapper around [sops](https://github.com/getsops/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
 
 sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images. Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).
 
@@ -89,10 +89,10 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/main/install.sh | bash -s
 
 ### Installing sops manually
 
-sopstool requires [sops](https://github.com/mozilla/sops). You can use one of the following methods:
+sopstool requires [sops](https://github.com/getsops/sops). You can use one of the following methods:
 
 - From one of the public repositories (it is available in most)
-- From the [official releases](https://github.com/mozilla/sops/releases)
+- From the [official releases](https://github.com/getsops/sops/releases)
 
 #### Installing the sops binary with our script installer
 
@@ -121,7 +121,7 @@ To avoid needing to find the 'latest' binary by hand or by script, use our https
 
 ### Installing sopstool manually
 
-Following the lead of [sops](https://github.com/mozilla/sops), we only build 64bit binaries.
+Following the lead of [sops](https://github.com/getsops/sops), we only build 64bit binaries.
 
 #### Installing the sopstool binary using our script installer
 
@@ -156,7 +156,7 @@ Additionally, all other release assets are also within this folder. This include
 
 ## Usage
 
-This is a package that builds a single binary (per architecture) for wrapping [sops](https://github.com/mozilla/sops) with multi-file capabilities.
+This is a package that builds a single binary (per architecture) for wrapping [sops](https://github.com/getsops/sops) with multi-file capabilities.
 
 for more details, use the built-in documentation on commands:
 
@@ -178,7 +178,7 @@ sopstool completion --sh zsh
 
 ## Configuration
 
-1. use a [`.sops.yaml`](https://github.com/mozilla/sops#using-sops-yaml-conf-to-select-kms-pgp-for-new-files) file
+1. use a [`.sops.yaml`](https://github.com/getsops/sops#using-sops-yaml-conf-to-select-kms-pgp-for-new-files) file
 
    - this will be at the root of your project. this file is used to both configure keys as well as hold the list of files managed.
    - it needs to specify at least one KMS key accessible by your environment
@@ -196,7 +196,7 @@ sopstool completion --sh zsh
 1. Follow along the [Configuration Steps](https://github.com/Ibotta/sopstool/tree/main/#configuration), and place the `.sops.yaml` file at the root directory where your scripts will run.
    - All files added to SOPS are relative, or in child directories to the `.sops.yaml` configuration file.
 1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the values, but not it's keys.
-   - You can read more about [SOPS Here](https://github.com/mozilla/sops).
+   - You can read more about [SOPS Here](https://github.com/getsops/sops).
 1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
    - When your files are properly encyrepted, you can run `sopstool clean` to remove the original plain text secret files.
 1. Now, you can interact via the command line in various ways.

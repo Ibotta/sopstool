@@ -86,6 +86,8 @@ brews:
       system "#{bin}/sopstool version"
     install: |
       bin.install "sopstool"
+    goarm: ""
+    goamd64: ""
 
 blobs:
   - provider: s3
