@@ -3,6 +3,9 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/Ibotta/sopstool/fileutil"
 	"github.com/spf13/cobra"
 )
@@ -32,13 +35,29 @@ func DecryptCommand(_ *cobra.Command, args []string) error {
 		return err
 	}
 
-	//decrypt all the files
+	decryptedCount := 0 // Counter for successfully decrypted files
+
+	// Decrypt all the files
 	for _, f := range filesToDecrypt {
+		cryptfile := fileutil.NormalizeToSopsFile(f)
+		if _, err := os.Stat(cryptfile); os.IsNotExist(err) {
+			fmt.Println("Encrypted version of file does not exist:", f)
+			// If the encrypted file doesn't exist, skip decryption for this file
+			continue
+		}
+
 		err := encrypter.DecryptFile(f)
-		if err != nil && !allowFail {
-			return err
+		if err != nil {
+			if !allowFail {
+				return err
+			}
+		} else {
+			decryptedCount++ // Increment the counter when decryption is successful
 		}
 	}
+
+	// Print out the total number of decrypted files
+	fmt.Printf("%d files decrypted successfully.\n", decryptedCount)
 
 	return nil
 }

@@ -46,6 +46,8 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 	if err != nil {
 		return err
 	}
+	defer outfile.Close() // Close the file after cmd completes
+	
 	cmd.Stdout = outfile
 
 	err = cmd.Start()
