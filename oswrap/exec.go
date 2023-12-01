@@ -46,13 +46,12 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 	if err != nil {
 		return err
 	}
+
 	cmd.Stdout = outfile
 
 	err = cmd.Start()
 	if err != nil {
-		// todo defer?
 		outfile.Close()
-		// todo defer?
 		ow.Remove(outfileName)
 		return err
 	}
@@ -63,7 +62,6 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 		return err
 	}
 	if ret != nil {
-		// todo defer?
 		ow.Remove(outfileName)
 	}
 

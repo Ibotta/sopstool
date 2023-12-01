@@ -48,9 +48,8 @@ func lineInFileExists(line string, filename string) (bool, error) {
 			return false, nil
 		} else if errors.Is(err, os.ErrPermission) {
 			return false, fmt.Errorf("insufficient permissions to read %s file", filename)
-		} else {
-			return false, err
 		}
+		return false, err
 	}
 
 	defer file.Close()
