@@ -45,7 +45,7 @@ jobs:
           prefix: github.com/Ibotta/sopstool
 
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v6
         with:
           distribution: goreleaser
           version: latest
