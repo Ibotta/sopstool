@@ -45,7 +45,7 @@ func FindConfigFile(start string) (string, error) {
 		}
 	}
 	//TODO gracefully create a file at `git root`
-	return "", fmt.Errorf("Config file not found")
+	return "", fmt.Errorf("config file not found")
 }
 
 // LoadConfigFile loads a yaml file path into a yaml map
@@ -57,7 +57,7 @@ func LoadConfigFile(confPath string) (*yaml.MapSlice, error) {
 
 	var data yaml.MapSlice
 	if err := (yaml.CommentUnmarshaler{}).Unmarshal(confBytes, &data); err != nil {
-		return nil, fmt.Errorf("Error unmarshaling input YAML: %s", err)
+		return nil, fmt.Errorf("error unmarshaling input YAML: %s", err)
 	}
 
 	return &data, nil
@@ -67,7 +67,7 @@ func LoadConfigFile(confPath string) (*yaml.MapSlice, error) {
 func WriteConfigFile(confPath string, yamlMap *yaml.MapSlice) error {
 	out, err := (&yaml.YAMLMarshaler{Indent: 2}).Marshal(yamlMap)
 	if err != nil {
-		return fmt.Errorf("Error marshaling to yaml: %s", err)
+		return fmt.Errorf("error marshaling to yaml: %s", err)
 	}
 	return osWrap.WriteFile(confPath, out, 0644)
 }
@@ -78,7 +78,7 @@ func ExtractConfigEncryptFiles(data *yaml.MapSlice) ([]string, error) {
 	for _, item := range *data {
 		if item.Key == encryptedFilesKey {
 			//assert that this is a slice
-			listSlice, ok := item.Value.([]interface{})
+			listSlice, ok := item.Value.([]any)
 			if !ok {
 				return nil, fmt.Errorf("encrypted_files is not an array")
 			}
@@ -103,11 +103,11 @@ func GetConfigEncryptFiles(basePath string) ([]string, error) {
 	}
 	data, err := LoadConfigFile(cfgFile)
 	if err != nil {
-		return nil, fmt.Errorf("Error loading config: %s", err)
+		return nil, fmt.Errorf("error loading config: %s", err)
 	}
 	encFiles, err := ExtractConfigEncryptFiles(data)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading config: %s", err)
+		return nil, fmt.Errorf("error reading config: %s", err)
 	}
 
 	return encFiles, nil
@@ -136,11 +136,11 @@ func ReplaceConfigEncryptFiles(data *yaml.MapSlice, encFiles []string) (*yaml.Ma
 func WriteEncryptFilesToDisk(confPath string, data *yaml.MapSlice, encFiles []string) error {
 	outdata, err := ReplaceConfigEncryptFiles(data, encFiles)
 	if err != nil {
-		return fmt.Errorf("Error replacing config: %s", err)
+		return fmt.Errorf("error replacing config: %s", err)
 	}
 	err = WriteConfigFile(confPath, outdata)
 	if err != nil {
-		return fmt.Errorf("Error writing config: %s", err)
+		return fmt.Errorf("error writing config: %s", err)
 	}
 	return nil
 }

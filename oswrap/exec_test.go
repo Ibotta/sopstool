@@ -18,7 +18,7 @@ func TestRunCommandDirect(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("true")
 		})
 
@@ -37,7 +37,7 @@ func TestRunCommandDirect(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("true")
 		})
 
@@ -56,7 +56,7 @@ func TestRunCommandDirect(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("false")
 		})
 
@@ -78,11 +78,11 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("true")
 		})
 
-		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
+		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(_ string) (*os.File, error) {
 			//TODO replace all file stuff with afero
 			return os.CreateTemp(t.TempDir(), "TestRunCommandStdoutToFile")
 		})
@@ -102,11 +102,11 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("true")
 		})
 
-		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
+		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(_ string) (*os.File, error) {
 			//TODO replace all file stuff with afero
 			return os.CreateTemp(t.TempDir(), "TestRunCommandStdoutToFile")
 		})
@@ -126,11 +126,11 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("false")
 		})
 
-		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(f string) (*os.File, error) {
+		mock.EXPECT().Create(gomock.Eq("filename")).DoAndReturn(func(_ string) (*os.File, error) {
 			//TODO replace all file stuff with afero
 			return os.CreateTemp(t.TempDir(), "TestRunCommandStdoutToFile")
 		})
@@ -152,7 +152,7 @@ func TestRunCommandStdoutToFile(t *testing.T) {
 		defer ctrl.Finish()
 		mock := mock_oswrap.NewMockOsWrap(ctrl)
 
-		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(c string, args ...string) *exec.Cmd {
+		mock.EXPECT().Command(gomock.Eq("sops"), gomock.Eq("myfile.sops.yaml")).DoAndReturn(func(_ string, _ ...string) *exec.Cmd {
 			return exec.Command("false")
 		})
 

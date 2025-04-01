@@ -62,7 +62,7 @@ func SomeOrAllFiles(args []string, encFiles []string) ([]string, error) {
 			//find mentioned file and decrypt
 			fn := NormalizeToPlaintextFile(fileArg)
 			if ListIndexOf(encFiles, fn) < 0 {
-				return nil, fmt.Errorf("File not found: %s", fn)
+				return nil, fmt.Errorf("file not found: %s", fn)
 			}
 			filesToReturn = append(filesToReturn, fn)
 		}

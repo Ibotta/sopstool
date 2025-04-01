@@ -49,7 +49,7 @@ func EntrypointCommand(cmd *cobra.Command, args []string) (rerr error) {
 		cleanupErr := CleanCommand(cmd, filesToDecrypt)
 		if cleanupErr != nil {
 			// Using the named return to stack errors.
-			rerr = fmt.Errorf("Encrypted file cleanup error:\n%s\n%s", cleanupErr, rerr)
+			rerr = fmt.Errorf("encrypted file cleanup error:\n%s\n%s", cleanupErr, rerr)
 		}
 	}()
 

@@ -67,11 +67,11 @@ func initConfig() {
 	}
 	data, err := sopsyaml.LoadConfigFile(cfgFile)
 	if err != nil {
-		panic(fmt.Errorf("Error loading config: %s", err))
+		panic(fmt.Errorf("error loading config: %s", err))
 	}
 	encFiles, err := sopsyaml.ExtractConfigEncryptFiles(data)
 	if err != nil {
-		panic(fmt.Errorf("Error reading config: %s", err))
+		panic(fmt.Errorf("error reading config: %s", err))
 	}
 
 	sopsConfig = sopsyaml.SopsConfig{

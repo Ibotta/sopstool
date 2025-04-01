@@ -37,7 +37,7 @@ func RemoveCommand(_ *cobra.Command, args []string) error {
 
 		i := fileutil.ListIndexOf(sopsConfig.EncryptedFiles, fn)
 		if i < 0 {
-			return fmt.Errorf("File not found: %s", fn)
+			return fmt.Errorf("file not found: %s", fn)
 		}
 
 		//splice file out of list

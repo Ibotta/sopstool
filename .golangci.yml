@@ -1,20 +1,30 @@
-run:
-  timeout: 2m
-
+version: "2"
 linters:
-  disable-all: true
+  default: none
   enable:
-    # defaults
-    - govet
-    - staticcheck
-    - gosimple
-    - typecheck
-    - revive
-    # additional
-    - goimports
     - gosec
+    - govet
     - misspell
+    - revive
+    - staticcheck
     - whitespace
-
-output:
-  format: colored-line-number
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - goimports
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

@@ -30,7 +30,7 @@ func CatCommand(_ *cobra.Command, args []string) error {
 	for _, fileArg := range args {
 		fn := fileutil.NormalizeToPlaintextFile(fileArg)
 		if fileutil.ListIndexOf(sopsConfig.EncryptedFiles, fn) < 0 {
-			return fmt.Errorf("File not found: %s", fn)
+			return fmt.Errorf("file not found: %s", fn)
 		}
 
 		err := encrypter.DecryptFilePrint(fn)
