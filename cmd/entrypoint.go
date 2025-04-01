@@ -54,7 +54,10 @@ func EntrypointCommand(cmd *cobra.Command, args []string) (rerr error) {
 	}()
 
 	if execCommand {
-		execWrap.RunSyscallExec(args)
+		err := execWrap.RunSyscallExec(args)
+		if err != nil {
+			return err
+		}
 	} else {
 		err := execWrap.RunCommandDirect(args)
 		if err != nil {

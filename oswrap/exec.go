@@ -1,6 +1,7 @@
 package oswrap
 
 import (
+	"errors"
 	"os"
 )
 
@@ -51,8 +52,8 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 
 	err = cmd.Start()
 	if err != nil {
-		outfile.Close()
-		ow.Remove(outfileName)
+		err = errors.Join(err, outfile.Close())
+		err = errors.Join(err, ow.Remove(outfileName))
 		return err
 	}
 
@@ -62,7 +63,10 @@ func (ew execWrap) RunCommandStdoutToFile(outfileName string, command []string) 
 		return err
 	}
 	if ret != nil {
-		ow.Remove(outfileName)
+		err = ow.Remove(outfileName)
+		if err != nil {
+			return err
+		}
 	}
 
 	return ret
