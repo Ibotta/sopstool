@@ -53,7 +53,7 @@ func lineInFileExists(line string, filename string) (bool, error) {
 	}
 
 	defer func() {
-		err = file.Close()
+		err = errors.Join(err, file.Close())
 	}()
 
 	scanner := bufio.NewScanner(file)
@@ -84,7 +84,7 @@ func appendLineToFileIfNotExists(line string, filename string) error {
 		return err
 	}
 	defer func() {
-		err = file.Close()
+		err = errors.Join(err, file.Close())
 	}()
 
 	// Get file info
@@ -130,7 +130,7 @@ func removeLineFromFile(line string, filename string) error {
 		return err
 	}
 	defer func() {
-		err = file.Close()
+		err = errors.Join(err, file.Close())
 	}()
 
 	// Create temp file for storing new content of target file
@@ -139,7 +139,7 @@ func removeLineFromFile(line string, filename string) error {
 		return err
 	}
 	defer func() {
-		err = tempFile.Close()
+		err = errors.Join(err, tempFile.Close())
 	}()
 
 	//Write file conent omitting specific line to tempFile
