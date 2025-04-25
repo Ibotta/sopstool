@@ -1,12 +1,18 @@
 # sopstool
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/maintainability)](https://codeclimate.com/github/Ibotta/sopstool/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/test_coverage)](https://codeclimate.com/github/Ibotta/sopstool/test_coverage)
+## sopstool EOL
+
+Please note, this project is no longer maintained. The [sops](https://getsops.io/) program itself has added a number of features that make this project redundant, and usage of the tool has largely migrated to using AWS Secrets Manager or AWS Parameter Store. This project is archived, and will not be updated.
+
+## Introduction
 
 sopstool is a multi-file wrapper around [sops](https://github.com/getsops/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
 
 sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images. Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).
 
 - [sopstool](#sopstool)
+	- [sopstool EOL](#sopstool-eol)
+	- [Introduction](#introduction)
 	- [1.0.0 Release and Breaking Changes](#100-release-and-breaking-changes)
 	- [Installation](#installation)
 		- [Package Repositories](#package-repositories)
