@@ -1,12 +1,22 @@
 # sopstool
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/maintainability)](https://codeclimate.com/github/Ibotta/sopstool/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/addf39da73692548e1e3/test_coverage)](https://codeclimate.com/github/Ibotta/sopstool/test_coverage)
+## sopstool EOL
+
+Please note, this project is no longer maintained. The [sops](https://getsops.io/) program itself has added a number of features that make this project redundant, and usage of the tool has largely migrated to using AWS Secrets Manager or AWS Parameter Store. This project is archived, and will not be updated.
+
+The additional install repositories (https) are also deprecated and will be removed in the future.
+
+The last release of sopstool was [1.2.1](https://github.com/Ibotta/sopstool/releases/tag/v1.2.1).
+
+## Introduction
 
 sopstool is a multi-file wrapper around [sops](https://github.com/getsops/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
 
 sopstool provides functionality to manage multiple secret files at once, and even use as an entrypoint to decrypt at startup, for container images. Much of this behavior is inspired by the great [blackbox project](https://github.com/StackExchange/blackbox).
 
 - [sopstool](#sopstool)
+	- [sopstool EOL](#sopstool-eol)
+	- [Introduction](#introduction)
 	- [1.0.0 Release and Breaking Changes](#100-release-and-breaking-changes)
 	- [Installation](#installation)
 		- [Package Repositories](#package-repositories)
@@ -15,10 +25,10 @@ sopstool provides functionality to manage multiple secret files at once, and eve
 		- [Shell installer](#shell-installer)
 		- [Installing sops manually](#installing-sops-manually)
 			- [Installing the sops binary with our script installer](#installing-the-sops-binary-with-our-script-installer)
-			- [Download sops from our https mirror](#download-sops-from-our-https-mirror)
+			- [Download sops from our https mirror (deprecated)](#download-sops-from-our-https-mirror-deprecated)
 		- [Installing sopstool manually](#installing-sopstool-manually)
 			- [Installing the sopstool binary using our script installer](#installing-the-sopstool-binary-using-our-script-installer)
-			- [Download sopstool from our https mirror](#download-sopstool-from-our-https-mirror)
+			- [Download sopstool from our https mirror (deprecated)](#download-sopstool-from-our-https-mirror-deprecated)
 	- [Usage](#usage)
 	- [Configuration](#configuration)
 	- [How-To](#how-to)
@@ -37,7 +47,7 @@ sopstool provides functionality to manage multiple secret files at once, and eve
 sopstool is available in the following repositories
 
 - homebrew via the `Ibotta/public` tap: `brew install Ibotta/public/sopstool`
-- asdf (and rtx) via the `sopstool` plugin: `asdf plugin add sopstool`
+- asdf (and mise) via the `sopstool` plugin: `asdf plugin add sopstool`
 
 ### Container Image
 
@@ -51,9 +61,9 @@ docker run --rm -v $(pwd):/work -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e
 
 - `sopstool` is the entrypoint, so any sopstool subcommand can be run.
 - `/work` is the default WORKDIR - this should be mounted to the root where `.sops.yml` is stored.
-- the commands need access to your AWS credentials session to authenticate KMS.
+- The commands need access to your AWS credentials session to authenticate KMS.
 
-Or, use as a install source in your Dockerfile. `sops` and `sopstool` are in `/usr/local/bin/`:
+Or, use as a COPY source in your Dockerfile. `sops` and `sopstool` are in `/usr/local/bin/`:
 
 ```docker
 COPY --from=ghcr.io/ibotta/sopstool:latest usr/local/bin/sops usr/local/bin/sopstool /usr/local/bin/
@@ -105,7 +115,9 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/main/sopsinstall.sh | bas
 - Override the tag with the first shell argument (defaults to latest)
 - Override the binary install location with the -b flag (defaults to `/.bin`)
 
-#### Download sops from our https mirror
+#### Download sops from our https mirror (deprecated)
+
+> Note this method is deprecated, and will be removed in the future. Use one of the other methods instead.
 
 To avoid needing to find the 'latest' binary by hand or by script, use our https server to download the binary. The latest binary is uploaded automatically whenever sopstool is deployed. The file has the pattern `sops_$OS_$ARCH`, except for `windows`
 
@@ -134,7 +146,9 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/main/sopstoolinstall.sh |
 - Override the tag with the first shell argument (defaults to latest)
 - Override the binary install location with the -b flag (defaults to `/.bin`)
 
-#### Download sopstool from our https mirror
+#### Download sopstool from our https mirror (deprecated)
+
+> Note this method is deprecated, and will be removed in the future. Use one of the other methods instead.
 
 To avoid needing to find the 'latest' binary by hand or by script, use our https server to download the binary. The latest binary is uploaded automatically whenever sopstool is deployed.
 
@@ -148,7 +162,7 @@ To avoid needing to find the 'latest' binary by hand or by script, use our https
   - latest: `https://oss-pkg.ibotta.com/sopstool/$filename`
   - specific tags: `https://oss-pkg.ibotta.com/sopstool/$TAG/$filename`
 
-Additionally, all other release assets are also within this folder. This includes the checksums, packages, sboms, as well as installers:
+Additionally, all other release assets are also within this folder. This includes the checksums, packages, SBOMS, as well as installers:
 
 - `https://oss-pkg.ibotta.com/sopstool/install.sh` for the combined installer
 - `https://oss-pkg.ibotta.com/sopstool/sopsinstall.sh` for the sops installer
@@ -158,7 +172,7 @@ Additionally, all other release assets are also within this folder. This include
 
 This is a package that builds a single binary (per architecture) for wrapping [sops](https://github.com/getsops/sops) with multi-file capabilities.
 
-for more details, use the built-in documentation on commands:
+For more details, use the built-in documentation on commands:
 
 ```sh
 sopstool -h
@@ -180,8 +194,8 @@ sopstool completion --sh zsh
 
 1. use a [`.sops.yaml`](https://github.com/getsops/sops#using-sops-yaml-conf-to-select-kms-pgp-for-new-files) file
 
-   - this will be at the root of your project. this file is used to both configure keys as well as hold the list of files managed.
-   - it needs to specify at least one KMS key accessible by your environment
+   - This will be at the root of your project. This file is used to both configure keys and hold the list of files managed.
+   - It needs to specify at least one KMS key accessible by your environment
 
      ```yaml
      creation_rules:
@@ -197,8 +211,8 @@ sopstool completion --sh zsh
    - All files added to SOPS are relative, or in child directories to the `.sops.yaml` configuration file.
 1. Create a file to encrypt(any extension other than `.yaml` if you wish to do the **ENTIRE** file), or create a yaml file with `key: value` pairs(and make sure it's extension is `.yaml`). Sops will encrypt the values, but not it's keys.
    - You can read more about [SOPS Here](https://github.com/getsops/sops).
-1. At this point, `sopstool` is ready and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
-   - When your files are properly encyrepted, you can run `sopstool clean` to remove the original plain text secret files.
+1. At this point, `sopstool` is ready, and you can now `sopstool add filename`. You'll notice it will create a `filename.sops.extension`. This is your newly encrypted file.
+   - When your files are properly encrypted, you can run `sopstool clean` to remove the original plain text secret files.
 1. Now, you can interact via the command line in various ways.
    - **Editing an encrypted file** - `sopstool edit filename.sops.extension`. You can also use your original filename too! `sopstool edit filename.extension`
    - **Listing all encrypted files** - `sopstool list`
@@ -259,7 +273,7 @@ In this walkthrough, we will go through the steps required to get a secure yaml 
 
 1. Accessing credentials
 
-   The flow should be as follows: unencrypt credentials -> run script -> destroy credentials. You can use the `sopstool entrypoint` to achieve this.
+   The flow should be as follows: decrypt credentials -> run script -> destroy credentials. You can use the `sopstool entrypoint` to achieve this.
 
    ```sh
    sopstool entrypoint python myscript.py
