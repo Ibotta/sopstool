@@ -36,14 +36,6 @@ jobs:
       - name: mod download
         run: go mod download && go build
 
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v9
-        env:
-          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
-        with:
-          coverageCommand: go test ./... -coverprofile c.out
-          prefix: github.com/Ibotta/sopstool
-
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
