@@ -16,7 +16,7 @@ var removeCmd = &cobra.Command{
 	Use:     "remove [files ...]",
 	Short:   "remove file from the encryption list",
 	Args:    cobra.MinimumNArgs(1),
-	Long:    `Remove files to the list of files managed by sopstool`,
+	Long:    `Remove files from the list of files managed by sopstool`,
 	RunE:    RemoveCommand,
 }
 
@@ -28,7 +28,7 @@ func init() {
 	removeCmd.Flags().BoolVarP(&deleteFiles, "delete", "d", false, "Also delete the file")
 }
 
-// RemoveCommand the command for the add command
+// RemoveCommand the command for the remove command
 func RemoveCommand(_ *cobra.Command, args []string) error {
 	initConfig()
 

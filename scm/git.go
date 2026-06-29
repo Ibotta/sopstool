@@ -34,7 +34,7 @@ func (g Git) RemoveFileFromIgnored(fn string) error {
 	}
 
 	if !exists {
-		fmt.Println("file not exists in .gitignore file. Skipping.")
+		fmt.Println("file does not exist in .gitignore file. Skipping.")
 		return nil
 	}
 	return removeLineFromFile(fn, g.IgnoreFilePath)
@@ -134,7 +134,7 @@ func removeLineFromFile(line string, filename string) error {
 	}
 	defer tempFile.Close()
 
-	//Write file conent omitting specific line to tempFile
+	//Write file content omitting specific line to tempFile
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if scanner.Text() != line {

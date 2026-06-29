@@ -31,7 +31,7 @@ func init() {
 	entrypointCmd.Flags().BoolVar(&allowFail, "allow-fail", false, "Do not fail if not all files can be decrypted")
 }
 
-// EntrypointCommand the command for the add command
+// EntrypointCommand the command for the entrypoint command
 // Note the named return parameter, it is used to tack on errors during
 // the deferred encrypted file cleanup.
 func EntrypointCommand(cmd *cobra.Command, args []string) (rerr error) {
