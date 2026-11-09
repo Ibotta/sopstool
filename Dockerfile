@@ -1,4 +1,4 @@
-FROM alpine:latest as build
+FROM alpine:latest AS build
 ARG TARGETARCH
 
 RUN apk --update add ca-certificates
@@ -8,7 +8,7 @@ COPY sopsinstall.sh /tmp/sopsinstall.sh
 RUN sh /tmp/sopsinstall.sh -b /usr/local/bin -a $TARGETARCH
 
 # grab appropriate sopstool binary from dist
-COPY dist/sopstool_linux_$TARGETARCH/sopstool /usr/local/bin/sopstool
+COPY dist/sopstool_linux_${TARGETARCH}*/sopstool /usr/local/bin/sopstool
 
 ##########
 

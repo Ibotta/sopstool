@@ -1,3 +1,7 @@
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+
+version: 2
+
 report_sizes: true
 
 # Build customization
@@ -29,7 +33,8 @@ archives:
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
       - goos: windows
-        format: zip
+        formats:
+          - zip
 
 checksum:
   # Default is `{{ .ProjectName }}_{{ .Version }}_checksums.txt`.
@@ -60,7 +65,7 @@ nfpms:
 brews:
   - ids:
       - newzips
-    tap:
+    repository:
       # Repo to push the tap
       owner: Ibotta
       name: homebrew-public
@@ -69,7 +74,7 @@ brews:
       name: sopstoolGoreleaser
       email: oss@ibotta.com
     # Folder inside the repository to put the formula.
-    folder: Formula
+    directory: Formula
     # caveats: "How to use this binary"
     homepage: "https://github.com/Ibotta/sopstool"
     description: "A multi-file wrapper for Mozilla sops"
@@ -96,10 +101,10 @@ blobs:
     # AWS Region to use.
     region: us-east-1
     # Default: '{{ .ProjectName }}/{{ .Tag }}'
-    folder: "{{ .ProjectName }}/{{ .Tag }}"
+    directory: "{{ .ProjectName }}/{{ .Tag }}"
   - provider: s3
     bucket: oss-pkg.ibotta.com
     region: us-east-1
-    folder: "{{ .ProjectName }}"
+    directory: "{{ .ProjectName }}"
     extra_files:
       - glob: ./*install.sh
