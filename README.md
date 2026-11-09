@@ -97,8 +97,8 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/main/install.sh | bash -s
 
 sopstool requires [sops](https://github.com/getsops/sops). You can use one of the following methods:
 
-- From one of the public repositories (it is available in most)
-- From the [official releases](https://github.com/getsops/sops/releases)
+- From one of the public repositories (it is available in most, e.g. `brew install sops`)
+- From the [official releases](https://github.com/getsops/sops/releases) (binaries, `.deb`, and `.rpm`; upstream does not publish an install script)
 
 #### Installing the sops binary with our script installer
 
@@ -110,22 +110,6 @@ curl https://raw.githubusercontent.com/Ibotta/sopstool/main/sopsinstall.sh | bas
 
 - Override the tag with the first shell argument (defaults to latest)
 - Override the binary install location with the -b flag (defaults to `/.bin`)
-
-#### Download sops from our https mirror (deprecated)
-
-> Note this method is deprecated, and will be removed in the future. Use one of the other methods instead.
-
-To avoid needing to find the 'latest' binary by hand or by script, use our https server to download the binary. The latest binary is uploaded automatically whenever sopstool is deployed. The file has the pattern `sops_$OS_$ARCH`, except for `windows`
-
-- OS: `linux`, `darwin`
-  - ARCH: `amd64`, `arm64`
-  - filenames: `sops_$OS_$ARCH.tar.gz`
-- OS: `windows`
-  - ARCH `amd64` only
-  - filename: `sops_windows.zip`
-- Versions
-  - latest: `https://oss-pkg.ibotta.com/sops/$filename`
-  - specific tags: `https://oss-pkg.ibotta.com/sops/$TAG/$filename`
 
 ### Installing sopstool manually
 
