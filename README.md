@@ -4,10 +4,6 @@
 
 Please note, this project is no longer actively developed. The [sops](https://getsops.io/) program itself has added a number of features that make this project redundant, and usage of the tool has largely migrated to using AWS Secrets Manager or AWS Parameter Store. This project is end-of-life and receives only occasional, rare maintenance updates (such as rebuilds on a current Go toolchain and dependency bumps to address CVEs). No new features are planned.
 
-The additional install repositories (https) are also deprecated and will be removed in the future.
-
-The last release of sopstool was [1.2.1](https://github.com/Ibotta/sopstool/releases/tag/v1.2.1).
-
 ## Introduction
 
 sopstool is a multi-file wrapper around [sops](https://github.com/getsops/sops). It uses the sops binary to encrypt and decrypt files, and piggybacks off the .sops.yaml configuration file.
