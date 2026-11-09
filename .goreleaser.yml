@@ -69,6 +69,8 @@ brews:
       # Repo to push the tap
       owner: Ibotta
       name: homebrew-public
+      pull_request:
+        enabled: true
     # Git author used to commit to the repository.
     commit_author:
       name: sopstoolGoreleaser
